@@ -1,0 +1,35 @@
+model Driver {
+  id            String    @id @default(uuid())
+
+  licenseNumber String    @unique
+  licenseUrl    String   // Driving License image/document URL
+  
+  licensePublicId String @unique
+
+  licenseExpiry DateTime // License expiration date
+  nidNumber     String   @unique // National ID Number
+
+  contactNumber String
+
+  isAvailable   Boolean   @default(false)
+
+  // Foreign Key to User
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // Foreign Key to Ambulance (Optional, assigned by Admin)
+  // ambulanceId String?
+  // ambulance   Ambulance? @relation(fields: [ambulanceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+
+  // Audit Fields
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Future Relations
+  // dispatches Dispatch[]
+
+  @@index([isAvailable])
+  @@map("drivers")
+}

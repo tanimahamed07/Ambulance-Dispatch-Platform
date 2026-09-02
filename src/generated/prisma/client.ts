@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type Caller = Prisma.CallerModel
 /**
+ * Model Driver
+ * 
+ */
+export type Driver = Prisma.DriverModel
+/**
  * Model User
  * 
  */

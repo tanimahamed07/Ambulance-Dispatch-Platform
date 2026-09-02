@@ -34,6 +34,8 @@ export type UserMinAggregateOutputType = {
   status: $Enums.UserStatus | null
   googleId: string | null
   authProvider: $Enums.AuthProvider | null
+  profileUrl: string | null
+  profilePublicId: string | null
   isDeleted: boolean | null
   deletedAt: Date | null
   createdAt: Date | null
@@ -50,6 +52,8 @@ export type UserMaxAggregateOutputType = {
   status: $Enums.UserStatus | null
   googleId: string | null
   authProvider: $Enums.AuthProvider | null
+  profileUrl: string | null
+  profilePublicId: string | null
   isDeleted: boolean | null
   deletedAt: Date | null
   createdAt: Date | null
@@ -66,6 +70,8 @@ export type UserCountAggregateOutputType = {
   status: number
   googleId: number
   authProvider: number
+  profileUrl: number
+  profilePublicId: number
   isDeleted: number
   deletedAt: number
   createdAt: number
@@ -84,6 +90,8 @@ export type UserMinAggregateInputType = {
   status?: true
   googleId?: true
   authProvider?: true
+  profileUrl?: true
+  profilePublicId?: true
   isDeleted?: true
   deletedAt?: true
   createdAt?: true
@@ -100,6 +108,8 @@ export type UserMaxAggregateInputType = {
   status?: true
   googleId?: true
   authProvider?: true
+  profileUrl?: true
+  profilePublicId?: true
   isDeleted?: true
   deletedAt?: true
   createdAt?: true
@@ -116,6 +126,8 @@ export type UserCountAggregateInputType = {
   status?: true
   googleId?: true
   authProvider?: true
+  profileUrl?: true
+  profilePublicId?: true
   isDeleted?: true
   deletedAt?: true
   createdAt?: true
@@ -205,6 +217,8 @@ export type UserGroupByOutputType = {
   status: $Enums.UserStatus
   googleId: string | null
   authProvider: $Enums.AuthProvider
+  profileUrl: string
+  profilePublicId: string
   isDeleted: boolean
   deletedAt: Date | null
   createdAt: Date
@@ -242,11 +256,14 @@ export type UserWhereInput = {
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   googleId?: Prisma.StringNullableFilter<"User"> | string | null
   authProvider?: Prisma.EnumAuthProviderFilter<"User"> | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFilter<"User"> | string
+  profilePublicId?: Prisma.StringFilter<"User"> | string
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   caller?: Prisma.XOR<Prisma.CallerNullableScalarRelationFilter, Prisma.CallerWhereInput> | null
+  driver?: Prisma.XOR<Prisma.DriverNullableScalarRelationFilter, Prisma.DriverWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -259,11 +276,14 @@ export type UserOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   authProvider?: Prisma.SortOrder
+  profileUrl?: Prisma.SortOrder
+  profilePublicId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   caller?: Prisma.CallerOrderByWithRelationInput
+  driver?: Prisma.DriverOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -279,11 +299,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
   authProvider?: Prisma.EnumAuthProviderFilter<"User"> | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFilter<"User"> | string
+  profilePublicId?: Prisma.StringFilter<"User"> | string
   isDeleted?: Prisma.BoolFilter<"User"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   caller?: Prisma.XOR<Prisma.CallerNullableScalarRelationFilter, Prisma.CallerWhereInput> | null
+  driver?: Prisma.XOR<Prisma.DriverNullableScalarRelationFilter, Prisma.DriverWhereInput> | null
 }, "id" | "email" | "googleId">
 
 export type UserOrderByWithAggregationInput = {
@@ -296,6 +319,8 @@ export type UserOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrderInput | Prisma.SortOrder
   authProvider?: Prisma.SortOrder
+  profileUrl?: Prisma.SortOrder
+  profilePublicId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -318,6 +343,8 @@ export type UserScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
   googleId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   authProvider?: Prisma.EnumAuthProviderWithAggregatesFilter<"User"> | $Enums.AuthProvider
+  profileUrl?: Prisma.StringWithAggregatesFilter<"User"> | string
+  profilePublicId?: Prisma.StringWithAggregatesFilter<"User"> | string
   isDeleted?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -334,11 +361,14 @@ export type UserCreateInput = {
   status?: $Enums.UserStatus
   googleId?: string | null
   authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   caller?: Prisma.CallerCreateNestedOneWithoutUserInput
+  driver?: Prisma.DriverCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -351,11 +381,14 @@ export type UserUncheckedCreateInput = {
   status?: $Enums.UserStatus
   googleId?: string | null
   authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   caller?: Prisma.CallerUncheckedCreateNestedOneWithoutUserInput
+  driver?: Prisma.DriverUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -368,11 +401,14 @@ export type UserUpdateInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   caller?: Prisma.CallerUpdateOneWithoutUserNestedInput
+  driver?: Prisma.DriverUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -385,11 +421,14 @@ export type UserUncheckedUpdateInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   caller?: Prisma.CallerUncheckedUpdateOneWithoutUserNestedInput
+  driver?: Prisma.DriverUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -402,6 +441,8 @@ export type UserCreateManyInput = {
   status?: $Enums.UserStatus
   googleId?: string | null
   authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -418,6 +459,8 @@ export type UserUpdateManyMutationInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -434,6 +477,8 @@ export type UserUncheckedUpdateManyInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -455,6 +500,8 @@ export type UserCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   authProvider?: Prisma.SortOrder
+  profileUrl?: Prisma.SortOrder
+  profilePublicId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -471,6 +518,8 @@ export type UserMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   authProvider?: Prisma.SortOrder
+  profileUrl?: Prisma.SortOrder
+  profilePublicId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -487,6 +536,8 @@ export type UserMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   googleId?: Prisma.SortOrder
   authProvider?: Prisma.SortOrder
+  profileUrl?: Prisma.SortOrder
+  profilePublicId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -507,8 +558,18 @@ export type UserUpdateOneRequiredWithoutCallerNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCallerInput, Prisma.UserUpdateWithoutCallerInput>, Prisma.UserUncheckedUpdateWithoutCallerInput>
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type UserCreateNestedOneWithoutDriverInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDriverInput, Prisma.UserUncheckedCreateWithoutDriverInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDriverInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDriverNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDriverInput, Prisma.UserUncheckedCreateWithoutDriverInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDriverInput
+  upsert?: Prisma.UserUpsertWithoutDriverInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDriverInput, Prisma.UserUpdateWithoutDriverInput>, Prisma.UserUncheckedUpdateWithoutDriverInput>
 }
 
 export type EnumRoleFieldUpdateOperationsInput = {
@@ -533,10 +594,13 @@ export type UserCreateWithoutCallerInput = {
   status?: $Enums.UserStatus
   googleId?: string | null
   authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  driver?: Prisma.DriverCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCallerInput = {
@@ -549,10 +613,13 @@ export type UserUncheckedCreateWithoutCallerInput = {
   status?: $Enums.UserStatus
   googleId?: string | null
   authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  driver?: Prisma.DriverUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCallerInput = {
@@ -581,10 +648,13 @@ export type UserUpdateWithoutCallerInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  driver?: Prisma.DriverUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCallerInput = {
@@ -597,10 +667,105 @@ export type UserUncheckedUpdateWithoutCallerInput = {
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
   googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  driver?: Prisma.DriverUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDriverInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified?: boolean
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  caller?: Prisma.CallerCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDriverInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  emailVerified?: boolean
+  role?: $Enums.Role
+  status?: $Enums.UserStatus
+  googleId?: string | null
+  authProvider?: $Enums.AuthProvider
+  profileUrl?: string
+  profilePublicId?: string
+  isDeleted?: boolean
+  deletedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  caller?: Prisma.CallerUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDriverInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDriverInput, Prisma.UserUncheckedCreateWithoutDriverInput>
+}
+
+export type UserUpsertWithoutDriverInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDriverInput, Prisma.UserUncheckedUpdateWithoutDriverInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDriverInput, Prisma.UserUncheckedCreateWithoutDriverInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDriverInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDriverInput, Prisma.UserUncheckedUpdateWithoutDriverInput>
+}
+
+export type UserUpdateWithoutDriverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  caller?: Prisma.CallerUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDriverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  googleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  authProvider?: Prisma.EnumAuthProviderFieldUpdateOperationsInput | $Enums.AuthProvider
+  profileUrl?: Prisma.StringFieldUpdateOperationsInput | string
+  profilePublicId?: Prisma.StringFieldUpdateOperationsInput | string
+  isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  caller?: Prisma.CallerUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -615,11 +780,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   status?: boolean
   googleId?: boolean
   authProvider?: boolean
+  profileUrl?: boolean
+  profilePublicId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   caller?: boolean | Prisma.User$callerArgs<ExtArgs>
+  driver?: boolean | Prisma.User$driverArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -632,6 +800,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   googleId?: boolean
   authProvider?: boolean
+  profileUrl?: boolean
+  profilePublicId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
   createdAt?: boolean
@@ -648,6 +818,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   status?: boolean
   googleId?: boolean
   authProvider?: boolean
+  profileUrl?: boolean
+  profilePublicId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
   createdAt?: boolean
@@ -664,15 +836,18 @@ export type UserSelectScalar = {
   status?: boolean
   googleId?: boolean
   authProvider?: boolean
+  profileUrl?: boolean
+  profilePublicId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "emailVerified" | "role" | "status" | "googleId" | "authProvider" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "emailVerified" | "role" | "status" | "googleId" | "authProvider" | "profileUrl" | "profilePublicId" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   caller?: boolean | Prisma.User$callerArgs<ExtArgs>
+  driver?: boolean | Prisma.User$driverArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -681,6 +856,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     caller: Prisma.$CallerPayload<ExtArgs> | null
+    driver: Prisma.$DriverPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -692,6 +868,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     status: $Enums.UserStatus
     googleId: string | null
     authProvider: $Enums.AuthProvider
+    profileUrl: string
+    profilePublicId: string
     isDeleted: boolean
     deletedAt: Date | null
     createdAt: Date
@@ -1091,6 +1269,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   caller<T extends Prisma.User$callerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$callerArgs<ExtArgs>>): Prisma.Prisma__CallerClient<runtime.Types.Result.GetResult<Prisma.$CallerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  driver<T extends Prisma.User$driverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$driverArgs<ExtArgs>>): Prisma.Prisma__DriverClient<runtime.Types.Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1129,6 +1308,8 @@ export interface UserFieldRefs {
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
   readonly googleId: Prisma.FieldRef<"User", 'String'>
   readonly authProvider: Prisma.FieldRef<"User", 'AuthProvider'>
+  readonly profileUrl: Prisma.FieldRef<"User", 'String'>
+  readonly profilePublicId: Prisma.FieldRef<"User", 'String'>
   readonly isDeleted: Prisma.FieldRef<"User", 'Boolean'>
   readonly deletedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -1542,6 +1723,25 @@ export type User$callerArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.CallerInclude<ExtArgs> | null
   where?: Prisma.CallerWhereInput
+}
+
+/**
+ * User.driver
+ */
+export type User$driverArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Driver
+   */
+  select?: Prisma.DriverSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Driver
+   */
+  omit?: Prisma.DriverOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DriverInclude<ExtArgs> | null
+  where?: Prisma.DriverWhereInput
 }
 
 /**

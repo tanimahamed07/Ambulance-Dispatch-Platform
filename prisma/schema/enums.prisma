@@ -32,3 +32,20 @@ enum AuthProvider {
   GOOGLE
   CREDENTIAL
 }
+
+enum AmbulanceStatus {
+  AVAILABLE
+  ASSIGNED
+  EN_ROUTE
+  ON_TRIP
+  MAINTENANCE
+  OFFLINE
+}
+
+enum AmbulanceType {
+  AC
+  NON_AC
+  ICU
+  FREEZER
+  AIR
+}

@@ -57,3 +57,26 @@ export const AuthProvider = {
 } as const
 
 export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
+
+
+export const AmbulanceStatus = {
+  AVAILABLE: 'AVAILABLE',
+  ASSIGNED: 'ASSIGNED',
+  EN_ROUTE: 'EN_ROUTE',
+  ON_TRIP: 'ON_TRIP',
+  MAINTENANCE: 'MAINTENANCE',
+  OFFLINE: 'OFFLINE'
+} as const
+
+export type AmbulanceStatus = (typeof AmbulanceStatus)[keyof typeof AmbulanceStatus]
+
+
+export const AmbulanceType = {
+  AC: 'AC',
+  NON_AC: 'NON_AC',
+  ICU: 'ICU',
+  FREEZER: 'FREEZER',
+  AIR: 'AIR'
+} as const
+
+export type AmbulanceType = (typeof AmbulanceType)[keyof typeof AmbulanceType]

@@ -52,6 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Caller: 'Caller',
+  Driver: 'Driver',
   User: 'User'
 } as const
 
@@ -86,6 +87,25 @@ export const CallerScalarFieldEnum = {
 export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof CallerScalarFieldEnum]
 
 
+export const DriverScalarFieldEnum = {
+  id: 'id',
+  licenseNumber: 'licenseNumber',
+  licenseUrl: 'licenseUrl',
+  licensePublicId: 'licensePublicId',
+  licenseExpiry: 'licenseExpiry',
+  nidNumber: 'nidNumber',
+  contactNumber: 'contactNumber',
+  isAvailable: 'isAvailable',
+  userId: 'userId',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -96,6 +116,8 @@ export const UserScalarFieldEnum = {
   status: 'status',
   googleId: 'googleId',
   authProvider: 'authProvider',
+  profileUrl: 'profileUrl',
+  profilePublicId: 'profilePublicId',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
