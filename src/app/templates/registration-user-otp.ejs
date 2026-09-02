@@ -1,0 +1,106 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verify Your Email - Emergency Ambulance Dispatch</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      h2 {
+        margin-top: 0;
+        color: #dc2626;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      .otp-wrapper {
+        text-align: center;
+        margin: 25px 0;
+      }
+
+      .otp {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #fef2f2;
+        color: #dc2626;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 8px;
+        border-radius: 6px;
+      }
+
+      .notice {
+        font-size: 14px;
+        color: #666;
+      }
+
+      .footer {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #888;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Verify Your Email Address</h2>
+
+      <p>Hello <strong><%= name %></strong>,</p>
+
+      <p>
+        Welcome to the
+        <strong>Emergency Ambulance Dispatch System</strong>. We received a
+        request to verify the email address
+        <strong><%= email %></strong> associated with your account.
+      </p>
+
+      <p>
+        Please use the OTP below to verify your email address and activate your
+        account:
+      </p>
+
+      <div class="otp-wrapper">
+        <div class="otp"><%= otp %></div>
+      </div>
+
+      <p class="notice">
+        This verification code will expire in
+        <strong><%= expirationMinutes %> minutes</strong>. For your security,
+        please do not share this OTP with anyone.
+      </p>
+
+      <p class="notice">
+        If you did not request this verification, please ignore this email. Your
+        account will remain unverified.
+      </p>
+
+      <div class="footer">
+        &copy; <%= new Date().getFullYear() %> Emergency Ambulance Dispatch
+        System. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>
+```

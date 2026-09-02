@@ -1,11 +1,11 @@
 model Caller {
   id        String   @id @default(uuid())
-
+  contactNumber String?
   dateOfBirth DateTime?
   bloodGroup  BloodGroup?
   gender Gender?
   address     String?
-  contactName  String?
+
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

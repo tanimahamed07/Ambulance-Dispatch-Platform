@@ -611,7 +611,7 @@ export const CallerScalarFieldEnum = {
   bloodGroup: 'bloodGroup',
   gender: 'gender',
   address: 'address',
-  contactName: 'contactName',
+  contactNumber: 'contactNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'

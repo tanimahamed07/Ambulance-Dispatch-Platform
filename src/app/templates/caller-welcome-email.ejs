@@ -1,0 +1,94 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Emergency Ambulance Dispatch System</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      h2 {
+        margin-top: 0;
+        color: #dc2626;
+      }
+
+      p {
+        line-height: 1.6;
+      }
+
+      .highlight {
+        background: #fef2f2;
+        border-left: 4px solid #dc2626;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
+
+      .footer {
+        margin-top: 30px;
+        font-size: 12px;
+        color: #888;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Welcome to Emergency Ambulance Dispatch System, <%= name %>!</h2>
+
+      <p>
+        Thanks for joining the
+        <strong>Emergency Ambulance Dispatch System</strong>. Your account has
+        been created successfully.
+      </p>
+
+      <div class="highlight">
+        <p>
+          Our system is designed to coordinate emergency ambulance services
+          quickly and efficiently, connecting callers, dispatchers, drivers, and
+          hospitals when every second matters.
+        </p>
+      </div>
+
+      <p>
+        Your account gives you access to the services and features available for
+        your role, including emergency requests, ambulance dispatch, trip
+        tracking, hospital coordination, and payment management.
+      </p>
+
+      <p>
+        We're glad to have you with us and are committed to making emergency
+        response faster, safer, and more organized.
+      </p>
+
+      <p>
+        Best regards,<br />
+        <strong>Emergency Ambulance Dispatch System Team</strong>
+      </p>
+
+      <div class="footer">
+        &copy; <%= new Date().getFullYear() %> Emergency Ambulance Dispatch
+        System. All rights reserved.
+      </div>
+    </div>
+  </body>
+</html>
+```

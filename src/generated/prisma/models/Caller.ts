@@ -30,7 +30,7 @@ export type CallerMinAggregateOutputType = {
   bloodGroup: $Enums.BloodGroup | null
   gender: $Enums.Gender | null
   address: string | null
-  contactName: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -42,7 +42,7 @@ export type CallerMaxAggregateOutputType = {
   bloodGroup: $Enums.BloodGroup | null
   gender: $Enums.Gender | null
   address: string | null
-  contactName: string | null
+  contactNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
@@ -54,7 +54,7 @@ export type CallerCountAggregateOutputType = {
   bloodGroup: number
   gender: number
   address: number
-  contactName: number
+  contactNumber: number
   createdAt: number
   updatedAt: number
   userId: number
@@ -68,7 +68,7 @@ export type CallerMinAggregateInputType = {
   bloodGroup?: true
   gender?: true
   address?: true
-  contactName?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -80,7 +80,7 @@ export type CallerMaxAggregateInputType = {
   bloodGroup?: true
   gender?: true
   address?: true
-  contactName?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -92,7 +92,7 @@ export type CallerCountAggregateInputType = {
   bloodGroup?: true
   gender?: true
   address?: true
-  contactName?: true
+  contactNumber?: true
   createdAt?: true
   updatedAt?: true
   userId?: true
@@ -177,7 +177,7 @@ export type CallerGroupByOutputType = {
   bloodGroup: $Enums.BloodGroup | null
   gender: $Enums.Gender | null
   address: string | null
-  contactName: string | null
+  contactNumber: string | null
   createdAt: Date
   updatedAt: Date
   userId: string
@@ -210,7 +210,7 @@ export type CallerWhereInput = {
   bloodGroup?: Prisma.EnumBloodGroupNullableFilter<"Caller"> | $Enums.BloodGroup | null
   gender?: Prisma.EnumGenderNullableFilter<"Caller"> | $Enums.Gender | null
   address?: Prisma.StringNullableFilter<"Caller"> | string | null
-  contactName?: Prisma.StringNullableFilter<"Caller"> | string | null
+  contactNumber?: Prisma.StringNullableFilter<"Caller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   userId?: Prisma.StringFilter<"Caller"> | string
@@ -223,7 +223,7 @@ export type CallerOrderByWithRelationInput = {
   bloodGroup?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -240,7 +240,7 @@ export type CallerWhereUniqueInput = Prisma.AtLeast<{
   bloodGroup?: Prisma.EnumBloodGroupNullableFilter<"Caller"> | $Enums.BloodGroup | null
   gender?: Prisma.EnumGenderNullableFilter<"Caller"> | $Enums.Gender | null
   address?: Prisma.StringNullableFilter<"Caller"> | string | null
-  contactName?: Prisma.StringNullableFilter<"Caller"> | string | null
+  contactNumber?: Prisma.StringNullableFilter<"Caller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -252,7 +252,7 @@ export type CallerOrderByWithAggregationInput = {
   bloodGroup?: Prisma.SortOrderInput | Prisma.SortOrder
   gender?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
-  contactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  contactNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -270,7 +270,7 @@ export type CallerScalarWhereWithAggregatesInput = {
   bloodGroup?: Prisma.EnumBloodGroupNullableWithAggregatesFilter<"Caller"> | $Enums.BloodGroup | null
   gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"Caller"> | $Enums.Gender | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Caller"> | string | null
-  contactName?: Prisma.StringNullableWithAggregatesFilter<"Caller"> | string | null
+  contactNumber?: Prisma.StringNullableWithAggregatesFilter<"Caller"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Caller"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Caller"> | Date | string
   userId?: Prisma.StringWithAggregatesFilter<"Caller"> | string
@@ -282,7 +282,7 @@ export type CallerCreateInput = {
   bloodGroup?: $Enums.BloodGroup | null
   gender?: $Enums.Gender | null
   address?: string | null
-  contactName?: string | null
+  contactNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutCallerInput
@@ -294,7 +294,7 @@ export type CallerUncheckedCreateInput = {
   bloodGroup?: $Enums.BloodGroup | null
   gender?: $Enums.Gender | null
   address?: string | null
-  contactName?: string | null
+  contactNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -306,7 +306,7 @@ export type CallerUpdateInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutCallerNestedInput
@@ -318,7 +318,7 @@ export type CallerUncheckedUpdateInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -330,7 +330,7 @@ export type CallerCreateManyInput = {
   bloodGroup?: $Enums.BloodGroup | null
   gender?: $Enums.Gender | null
   address?: string | null
-  contactName?: string | null
+  contactNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
@@ -342,7 +342,7 @@ export type CallerUpdateManyMutationInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -353,7 +353,7 @@ export type CallerUncheckedUpdateManyInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -365,7 +365,7 @@ export type CallerCountOrderByAggregateInput = {
   bloodGroup?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  contactName?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -377,7 +377,7 @@ export type CallerMaxOrderByAggregateInput = {
   bloodGroup?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  contactName?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -389,7 +389,7 @@ export type CallerMinOrderByAggregateInput = {
   bloodGroup?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   address?: Prisma.SortOrder
-  contactName?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -462,7 +462,7 @@ export type CallerCreateWithoutUserInput = {
   bloodGroup?: $Enums.BloodGroup | null
   gender?: $Enums.Gender | null
   address?: string | null
-  contactName?: string | null
+  contactNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -473,7 +473,7 @@ export type CallerUncheckedCreateWithoutUserInput = {
   bloodGroup?: $Enums.BloodGroup | null
   gender?: $Enums.Gender | null
   address?: string | null
-  contactName?: string | null
+  contactNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -500,7 +500,7 @@ export type CallerUpdateWithoutUserInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -511,7 +511,7 @@ export type CallerUncheckedUpdateWithoutUserInput = {
   bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -524,7 +524,7 @@ export type CallerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   bloodGroup?: boolean
   gender?: boolean
   address?: boolean
-  contactName?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -537,7 +537,7 @@ export type CallerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   bloodGroup?: boolean
   gender?: boolean
   address?: boolean
-  contactName?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -550,7 +550,7 @@ export type CallerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   bloodGroup?: boolean
   gender?: boolean
   address?: boolean
-  contactName?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
@@ -563,13 +563,13 @@ export type CallerSelectScalar = {
   bloodGroup?: boolean
   gender?: boolean
   address?: boolean
-  contactName?: boolean
+  contactNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
 }
 
-export type CallerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dateOfBirth" | "bloodGroup" | "gender" | "address" | "contactName" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["caller"]>
+export type CallerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "dateOfBirth" | "bloodGroup" | "gender" | "address" | "contactNumber" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["caller"]>
 export type CallerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -591,7 +591,7 @@ export type $CallerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     bloodGroup: $Enums.BloodGroup | null
     gender: $Enums.Gender | null
     address: string | null
-    contactName: string | null
+    contactNumber: string | null
     createdAt: Date
     updatedAt: Date
     userId: string
@@ -1024,7 +1024,7 @@ export interface CallerFieldRefs {
   readonly bloodGroup: Prisma.FieldRef<"Caller", 'BloodGroup'>
   readonly gender: Prisma.FieldRef<"Caller", 'Gender'>
   readonly address: Prisma.FieldRef<"Caller", 'String'>
-  readonly contactName: Prisma.FieldRef<"Caller", 'String'>
+  readonly contactNumber: Prisma.FieldRef<"Caller", 'String'>
   readonly createdAt: Prisma.FieldRef<"Caller", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Caller", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Caller", 'String'>
