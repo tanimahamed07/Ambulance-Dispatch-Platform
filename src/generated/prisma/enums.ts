@@ -37,6 +37,28 @@ export const Gender = {
 export type Gender = (typeof Gender)[keyof typeof Gender]
 
 
+export const DriverApprovalStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type DriverApprovalStatus = (typeof DriverApprovalStatus)[keyof typeof DriverApprovalStatus]
+
+
+export const RejectionReason = {
+  INVALID_LICENSE: 'INVALID_LICENSE',
+  EXPIRED_LICENSE: 'EXPIRED_LICENSE',
+  INVALID_NID: 'INVALID_NID',
+  DOCUMENT_UNCLEAR: 'DOCUMENT_UNCLEAR',
+  AGE_RESTRICTION: 'AGE_RESTRICTION',
+  SUSPENDED_PROFILE: 'SUSPENDED_PROFILE',
+  OTHER: 'OTHER'
+} as const
+
+export type RejectionReason = (typeof RejectionReason)[keyof typeof RejectionReason]
+
+
 export const BloodGroup = {
   A_POSITIVE: 'A_POSITIVE',
   A_NEGATIVE: 'A_NEGATIVE',

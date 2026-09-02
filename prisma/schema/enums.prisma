@@ -17,6 +17,23 @@ enum Gender {
   OTHER
 }
 
+enum DriverApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RejectionReason {
+  INVALID_LICENSE        
+  EXPIRED_LICENSE        
+  INVALID_NID            
+  DOCUMENT_UNCLEAR      
+  AGE_RESTRICTION       
+  SUSPENDED_PROFILE     
+  OTHER                  
+}
+
+
 enum BloodGroup {
   A_POSITIVE
   A_NEGATIVE

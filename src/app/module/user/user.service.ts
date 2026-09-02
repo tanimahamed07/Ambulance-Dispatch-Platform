@@ -1,5 +1,4 @@
 import type { UploadApiResponse } from "cloudinary";
-
 import { prisma } from "../../lib/prisma";
 import { cloudinary } from "../../lib/cloudinary";
 
@@ -74,8 +73,8 @@ const uploadProfileImage = async (buffer: Buffer, userId: string) => {
     },
 
     data: {
-      imageUrl: cloudinaryResult.secure_url,
-      imagePublicId: cloudinaryResult.public_id,
+      profileUrl: cloudinaryResult.secure_url,
+      profilePublicId: cloudinaryResult.public_id,
     },
 
     omit: {

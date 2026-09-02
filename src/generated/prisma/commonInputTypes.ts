@@ -169,9 +169,33 @@ export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type EnumDriverApprovalStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DriverApprovalStatus | Prisma.EnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel> | $Enums.DriverApprovalStatus
+}
+
 export type BoolFilter<$PrismaModel = never> = {
   equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
+}
+
+export type EnumRejectionReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel> | $Enums.RejectionReason | null
+}
+
+export type EnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DriverApprovalStatus | Prisma.EnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.DriverApprovalStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
 }
 
 export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -180,6 +204,16 @@ export type BoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type EnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.RejectionReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel>
 }
 
 export type EnumRoleFilter<$PrismaModel = never> = {
@@ -401,9 +435,33 @@ export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedDateTimeFilter<$PrismaModel>
 }
 
+export type NestedEnumDriverApprovalStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DriverApprovalStatus | Prisma.EnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel> | $Enums.DriverApprovalStatus
+}
+
 export type NestedBoolFilter<$PrismaModel = never> = {
   equals?: boolean | Prisma.BooleanFieldRefInput<$PrismaModel>
   not?: Prisma.NestedBoolFilter<$PrismaModel> | boolean
+}
+
+export type NestedEnumRejectionReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel> | $Enums.RejectionReason | null
+}
+
+export type NestedEnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DriverApprovalStatus | Prisma.EnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel> | $Enums.DriverApprovalStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
 }
 
 export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -412,6 +470,16 @@ export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedBoolFilter<$PrismaModel>
   _max?: Prisma.NestedBoolFilter<$PrismaModel>
+}
+
+export type NestedEnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.RejectionReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumRejectionReasonNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumRoleFilter<$PrismaModel = never> = {

@@ -26,13 +26,17 @@ export type AggregateDriver = {
 
 export type DriverMinAggregateOutputType = {
   id: string | null
+  contactNumber: string | null
   licenseNumber: string | null
   licenseUrl: string | null
   licensePublicId: string | null
   licenseExpiry: Date | null
   nidNumber: string | null
-  contactNumber: string | null
+  approvalStatus: $Enums.DriverApprovalStatus | null
   isAvailable: boolean | null
+  rejectionReason: $Enums.RejectionReason | null
+  rejectionNote: string | null
+  rejectedAt: Date | null
   userId: string | null
   isDeleted: boolean | null
   deletedAt: Date | null
@@ -42,13 +46,17 @@ export type DriverMinAggregateOutputType = {
 
 export type DriverMaxAggregateOutputType = {
   id: string | null
+  contactNumber: string | null
   licenseNumber: string | null
   licenseUrl: string | null
   licensePublicId: string | null
   licenseExpiry: Date | null
   nidNumber: string | null
-  contactNumber: string | null
+  approvalStatus: $Enums.DriverApprovalStatus | null
   isAvailable: boolean | null
+  rejectionReason: $Enums.RejectionReason | null
+  rejectionNote: string | null
+  rejectedAt: Date | null
   userId: string | null
   isDeleted: boolean | null
   deletedAt: Date | null
@@ -58,13 +66,17 @@ export type DriverMaxAggregateOutputType = {
 
 export type DriverCountAggregateOutputType = {
   id: number
+  contactNumber: number
   licenseNumber: number
   licenseUrl: number
   licensePublicId: number
   licenseExpiry: number
   nidNumber: number
-  contactNumber: number
+  approvalStatus: number
   isAvailable: number
+  rejectionReason: number
+  rejectionNote: number
+  rejectedAt: number
   userId: number
   isDeleted: number
   deletedAt: number
@@ -76,13 +88,17 @@ export type DriverCountAggregateOutputType = {
 
 export type DriverMinAggregateInputType = {
   id?: true
+  contactNumber?: true
   licenseNumber?: true
   licenseUrl?: true
   licensePublicId?: true
   licenseExpiry?: true
   nidNumber?: true
-  contactNumber?: true
+  approvalStatus?: true
   isAvailable?: true
+  rejectionReason?: true
+  rejectionNote?: true
+  rejectedAt?: true
   userId?: true
   isDeleted?: true
   deletedAt?: true
@@ -92,13 +108,17 @@ export type DriverMinAggregateInputType = {
 
 export type DriverMaxAggregateInputType = {
   id?: true
+  contactNumber?: true
   licenseNumber?: true
   licenseUrl?: true
   licensePublicId?: true
   licenseExpiry?: true
   nidNumber?: true
-  contactNumber?: true
+  approvalStatus?: true
   isAvailable?: true
+  rejectionReason?: true
+  rejectionNote?: true
+  rejectedAt?: true
   userId?: true
   isDeleted?: true
   deletedAt?: true
@@ -108,13 +128,17 @@ export type DriverMaxAggregateInputType = {
 
 export type DriverCountAggregateInputType = {
   id?: true
+  contactNumber?: true
   licenseNumber?: true
   licenseUrl?: true
   licensePublicId?: true
   licenseExpiry?: true
   nidNumber?: true
-  contactNumber?: true
+  approvalStatus?: true
   isAvailable?: true
+  rejectionReason?: true
+  rejectionNote?: true
+  rejectedAt?: true
   userId?: true
   isDeleted?: true
   deletedAt?: true
@@ -197,13 +221,17 @@ export type DriverGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type DriverGroupByOutputType = {
   id: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date
-  nidNumber: string
-  contactNumber: string
+  nidNumber: string | null
+  approvalStatus: $Enums.DriverApprovalStatus
   isAvailable: boolean
+  rejectionReason: $Enums.RejectionReason | null
+  rejectionNote: string | null
+  rejectedAt: Date | null
   userId: string
   isDeleted: boolean
   deletedAt: Date | null
@@ -234,13 +262,17 @@ export type DriverWhereInput = {
   OR?: Prisma.DriverWhereInput[]
   NOT?: Prisma.DriverWhereInput | Prisma.DriverWhereInput[]
   id?: Prisma.StringFilter<"Driver"> | string
+  contactNumber?: Prisma.StringFilter<"Driver"> | string
   licenseNumber?: Prisma.StringFilter<"Driver"> | string
   licenseUrl?: Prisma.StringFilter<"Driver"> | string
   licensePublicId?: Prisma.StringFilter<"Driver"> | string
   licenseExpiry?: Prisma.DateTimeFilter<"Driver"> | Date | string
-  nidNumber?: Prisma.StringFilter<"Driver"> | string
-  contactNumber?: Prisma.StringFilter<"Driver"> | string
+  nidNumber?: Prisma.StringNullableFilter<"Driver"> | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFilter<"Driver"> | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFilter<"Driver"> | boolean
+  rejectionReason?: Prisma.EnumRejectionReasonNullableFilter<"Driver"> | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.StringNullableFilter<"Driver"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
   userId?: Prisma.StringFilter<"Driver"> | string
   isDeleted?: Prisma.BoolFilter<"Driver"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
@@ -251,13 +283,17 @@ export type DriverWhereInput = {
 
 export type DriverOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   licenseUrl?: Prisma.SortOrder
   licensePublicId?: Prisma.SortOrder
   licenseExpiry?: Prisma.SortOrder
-  nidNumber?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
+  nidNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -269,32 +305,40 @@ export type DriverOrderByWithRelationInput = {
 export type DriverWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   licenseNumber?: string
-  licensePublicId?: string
   nidNumber?: string
   userId?: string
   AND?: Prisma.DriverWhereInput | Prisma.DriverWhereInput[]
   OR?: Prisma.DriverWhereInput[]
   NOT?: Prisma.DriverWhereInput | Prisma.DriverWhereInput[]
-  licenseUrl?: Prisma.StringFilter<"Driver"> | string
-  licenseExpiry?: Prisma.DateTimeFilter<"Driver"> | Date | string
   contactNumber?: Prisma.StringFilter<"Driver"> | string
+  licenseUrl?: Prisma.StringFilter<"Driver"> | string
+  licensePublicId?: Prisma.StringFilter<"Driver"> | string
+  licenseExpiry?: Prisma.DateTimeFilter<"Driver"> | Date | string
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFilter<"Driver"> | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFilter<"Driver"> | boolean
+  rejectionReason?: Prisma.EnumRejectionReasonNullableFilter<"Driver"> | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.StringNullableFilter<"Driver"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
   isDeleted?: Prisma.BoolFilter<"Driver"> | boolean
   deletedAt?: Prisma.DateTimeNullableFilter<"Driver"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Driver"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Driver"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "licenseNumber" | "licensePublicId" | "nidNumber" | "userId">
+}, "id" | "licenseNumber" | "nidNumber" | "userId">
 
 export type DriverOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   licenseUrl?: Prisma.SortOrder
   licensePublicId?: Prisma.SortOrder
   licenseExpiry?: Prisma.SortOrder
-  nidNumber?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
+  nidNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectionNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -310,13 +354,17 @@ export type DriverScalarWhereWithAggregatesInput = {
   OR?: Prisma.DriverScalarWhereWithAggregatesInput[]
   NOT?: Prisma.DriverScalarWhereWithAggregatesInput | Prisma.DriverScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Driver"> | string
+  contactNumber?: Prisma.StringWithAggregatesFilter<"Driver"> | string
   licenseNumber?: Prisma.StringWithAggregatesFilter<"Driver"> | string
   licenseUrl?: Prisma.StringWithAggregatesFilter<"Driver"> | string
   licensePublicId?: Prisma.StringWithAggregatesFilter<"Driver"> | string
   licenseExpiry?: Prisma.DateTimeWithAggregatesFilter<"Driver"> | Date | string
-  nidNumber?: Prisma.StringWithAggregatesFilter<"Driver"> | string
-  contactNumber?: Prisma.StringWithAggregatesFilter<"Driver"> | string
+  nidNumber?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusWithAggregatesFilter<"Driver"> | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolWithAggregatesFilter<"Driver"> | boolean
+  rejectionReason?: Prisma.EnumRejectionReasonNullableWithAggregatesFilter<"Driver"> | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.StringNullableWithAggregatesFilter<"Driver"> | string | null
+  rejectedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Driver"> | Date | string | null
   userId?: Prisma.StringWithAggregatesFilter<"Driver"> | string
   isDeleted?: Prisma.BoolWithAggregatesFilter<"Driver"> | boolean
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Driver"> | Date | string | null
@@ -326,13 +374,17 @@ export type DriverScalarWhereWithAggregatesInput = {
 
 export type DriverCreateInput = {
   id?: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date | string
-  nidNumber: string
-  contactNumber: string
+  nidNumber?: string | null
+  approvalStatus?: $Enums.DriverApprovalStatus
   isAvailable?: boolean
+  rejectionReason?: $Enums.RejectionReason | null
+  rejectionNote?: string | null
+  rejectedAt?: Date | string | null
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -342,13 +394,17 @@ export type DriverCreateInput = {
 
 export type DriverUncheckedCreateInput = {
   id?: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date | string
-  nidNumber: string
-  contactNumber: string
+  nidNumber?: string | null
+  approvalStatus?: $Enums.DriverApprovalStatus
   isAvailable?: boolean
+  rejectionReason?: $Enums.RejectionReason | null
+  rejectionNote?: string | null
+  rejectedAt?: Date | string | null
   userId: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
@@ -358,13 +414,17 @@ export type DriverUncheckedCreateInput = {
 
 export type DriverUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -374,13 +434,17 @@ export type DriverUpdateInput = {
 
 export type DriverUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -390,13 +454,17 @@ export type DriverUncheckedUpdateInput = {
 
 export type DriverCreateManyInput = {
   id?: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date | string
-  nidNumber: string
-  contactNumber: string
+  nidNumber?: string | null
+  approvalStatus?: $Enums.DriverApprovalStatus
   isAvailable?: boolean
+  rejectionReason?: $Enums.RejectionReason | null
+  rejectionNote?: string | null
+  rejectedAt?: Date | string | null
   userId: string
   isDeleted?: boolean
   deletedAt?: Date | string | null
@@ -406,13 +474,17 @@ export type DriverCreateManyInput = {
 
 export type DriverUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -421,13 +493,17 @@ export type DriverUpdateManyMutationInput = {
 
 export type DriverUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -437,13 +513,17 @@ export type DriverUncheckedUpdateManyInput = {
 
 export type DriverCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   licenseUrl?: Prisma.SortOrder
   licensePublicId?: Prisma.SortOrder
   licenseExpiry?: Prisma.SortOrder
   nidNumber?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  rejectionNote?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -453,13 +533,17 @@ export type DriverCountOrderByAggregateInput = {
 
 export type DriverMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   licenseUrl?: Prisma.SortOrder
   licensePublicId?: Prisma.SortOrder
   licenseExpiry?: Prisma.SortOrder
   nidNumber?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  rejectionNote?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -469,13 +553,17 @@ export type DriverMaxOrderByAggregateInput = {
 
 export type DriverMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  contactNumber?: Prisma.SortOrder
   licenseNumber?: Prisma.SortOrder
   licenseUrl?: Prisma.SortOrder
   licensePublicId?: Prisma.SortOrder
   licenseExpiry?: Prisma.SortOrder
   nidNumber?: Prisma.SortOrder
-  contactNumber?: Prisma.SortOrder
+  approvalStatus?: Prisma.SortOrder
   isAvailable?: Prisma.SortOrder
+  rejectionReason?: Prisma.SortOrder
+  rejectionNote?: Prisma.SortOrder
+  rejectedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   isDeleted?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -488,8 +576,16 @@ export type DriverNullableScalarRelationFilter = {
   isNot?: Prisma.DriverWhereInput | null
 }
 
+export type EnumDriverApprovalStatusFieldUpdateOperationsInput = {
+  set?: $Enums.DriverApprovalStatus
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableEnumRejectionReasonFieldUpdateOperationsInput = {
+  set?: $Enums.RejectionReason | null
 }
 
 export type DriverCreateNestedOneWithoutUserInput = {
@@ -526,13 +622,17 @@ export type DriverUncheckedUpdateOneWithoutUserNestedInput = {
 
 export type DriverCreateWithoutUserInput = {
   id?: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date | string
-  nidNumber: string
-  contactNumber: string
+  nidNumber?: string | null
+  approvalStatus?: $Enums.DriverApprovalStatus
   isAvailable?: boolean
+  rejectionReason?: $Enums.RejectionReason | null
+  rejectionNote?: string | null
+  rejectedAt?: Date | string | null
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -541,13 +641,17 @@ export type DriverCreateWithoutUserInput = {
 
 export type DriverUncheckedCreateWithoutUserInput = {
   id?: string
+  contactNumber: string
   licenseNumber: string
   licenseUrl: string
   licensePublicId: string
   licenseExpiry: Date | string
-  nidNumber: string
-  contactNumber: string
+  nidNumber?: string | null
+  approvalStatus?: $Enums.DriverApprovalStatus
   isAvailable?: boolean
+  rejectionReason?: $Enums.RejectionReason | null
+  rejectionNote?: string | null
+  rejectedAt?: Date | string | null
   isDeleted?: boolean
   deletedAt?: Date | string | null
   createdAt?: Date | string
@@ -572,13 +676,17 @@ export type DriverUpdateToOneWithWhereWithoutUserInput = {
 
 export type DriverUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -587,13 +695,17 @@ export type DriverUpdateWithoutUserInput = {
 
 export type DriverUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseNumber?: Prisma.StringFieldUpdateOperationsInput | string
   licenseUrl?: Prisma.StringFieldUpdateOperationsInput | string
   licensePublicId?: Prisma.StringFieldUpdateOperationsInput | string
   licenseExpiry?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  nidNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  contactNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  nidNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvalStatus?: Prisma.EnumDriverApprovalStatusFieldUpdateOperationsInput | $Enums.DriverApprovalStatus
   isAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  rejectionReason?: Prisma.NullableEnumRejectionReasonFieldUpdateOperationsInput | $Enums.RejectionReason | null
+  rejectionNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isDeleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -604,13 +716,17 @@ export type DriverUncheckedUpdateWithoutUserInput = {
 
 export type DriverSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  contactNumber?: boolean
   licenseNumber?: boolean
   licenseUrl?: boolean
   licensePublicId?: boolean
   licenseExpiry?: boolean
   nidNumber?: boolean
-  contactNumber?: boolean
+  approvalStatus?: boolean
   isAvailable?: boolean
+  rejectionReason?: boolean
+  rejectionNote?: boolean
+  rejectedAt?: boolean
   userId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
@@ -621,13 +737,17 @@ export type DriverSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type DriverSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  contactNumber?: boolean
   licenseNumber?: boolean
   licenseUrl?: boolean
   licensePublicId?: boolean
   licenseExpiry?: boolean
   nidNumber?: boolean
-  contactNumber?: boolean
+  approvalStatus?: boolean
   isAvailable?: boolean
+  rejectionReason?: boolean
+  rejectionNote?: boolean
+  rejectedAt?: boolean
   userId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
@@ -638,13 +758,17 @@ export type DriverSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type DriverSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  contactNumber?: boolean
   licenseNumber?: boolean
   licenseUrl?: boolean
   licensePublicId?: boolean
   licenseExpiry?: boolean
   nidNumber?: boolean
-  contactNumber?: boolean
+  approvalStatus?: boolean
   isAvailable?: boolean
+  rejectionReason?: boolean
+  rejectionNote?: boolean
+  rejectedAt?: boolean
   userId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
@@ -655,13 +779,17 @@ export type DriverSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type DriverSelectScalar = {
   id?: boolean
+  contactNumber?: boolean
   licenseNumber?: boolean
   licenseUrl?: boolean
   licensePublicId?: boolean
   licenseExpiry?: boolean
   nidNumber?: boolean
-  contactNumber?: boolean
+  approvalStatus?: boolean
   isAvailable?: boolean
+  rejectionReason?: boolean
+  rejectionNote?: boolean
+  rejectedAt?: boolean
   userId?: boolean
   isDeleted?: boolean
   deletedAt?: boolean
@@ -669,7 +797,7 @@ export type DriverSelectScalar = {
   updatedAt?: boolean
 }
 
-export type DriverOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "licenseNumber" | "licenseUrl" | "licensePublicId" | "licenseExpiry" | "nidNumber" | "contactNumber" | "isAvailable" | "userId" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["driver"]>
+export type DriverOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactNumber" | "licenseNumber" | "licenseUrl" | "licensePublicId" | "licenseExpiry" | "nidNumber" | "approvalStatus" | "isAvailable" | "rejectionReason" | "rejectionNote" | "rejectedAt" | "userId" | "isDeleted" | "deletedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["driver"]>
 export type DriverInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -687,13 +815,17 @@ export type $DriverPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    contactNumber: string
     licenseNumber: string
     licenseUrl: string
     licensePublicId: string
     licenseExpiry: Date
-    nidNumber: string
-    contactNumber: string
+    nidNumber: string | null
+    approvalStatus: $Enums.DriverApprovalStatus
     isAvailable: boolean
+    rejectionReason: $Enums.RejectionReason | null
+    rejectionNote: string | null
+    rejectedAt: Date | null
     userId: string
     isDeleted: boolean
     deletedAt: Date | null
@@ -1124,13 +1256,17 @@ export interface Prisma__DriverClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface DriverFieldRefs {
   readonly id: Prisma.FieldRef<"Driver", 'String'>
+  readonly contactNumber: Prisma.FieldRef<"Driver", 'String'>
   readonly licenseNumber: Prisma.FieldRef<"Driver", 'String'>
   readonly licenseUrl: Prisma.FieldRef<"Driver", 'String'>
   readonly licensePublicId: Prisma.FieldRef<"Driver", 'String'>
   readonly licenseExpiry: Prisma.FieldRef<"Driver", 'DateTime'>
   readonly nidNumber: Prisma.FieldRef<"Driver", 'String'>
-  readonly contactNumber: Prisma.FieldRef<"Driver", 'String'>
+  readonly approvalStatus: Prisma.FieldRef<"Driver", 'DriverApprovalStatus'>
   readonly isAvailable: Prisma.FieldRef<"Driver", 'Boolean'>
+  readonly rejectionReason: Prisma.FieldRef<"Driver", 'RejectionReason'>
+  readonly rejectionNote: Prisma.FieldRef<"Driver", 'String'>
+  readonly rejectedAt: Prisma.FieldRef<"Driver", 'DateTime'>
   readonly userId: Prisma.FieldRef<"Driver", 'String'>
   readonly isDeleted: Prisma.FieldRef<"Driver", 'Boolean'>
   readonly deletedAt: Prisma.FieldRef<"Driver", 'DateTime'>

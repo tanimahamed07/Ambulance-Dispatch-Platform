@@ -1,35 +1,37 @@
 model Driver {
-  id            String    @id @default(uuid())
+  id             String               @id @default(uuid())
+  contactNumber  String
+  licenseNumber  String               @unique
+  licenseUrl     String
+  licensePublicId String
+  licenseExpiry  DateTime
+  nidNumber      String?              @unique
 
-  licenseNumber String    @unique
-  licenseUrl    String   // Driving License image/document URL
+  // Verification Status & Shift Logic
+  approvalStatus DriverApprovalStatus @default(PENDING)
+  isAvailable    Boolean              @default(false)
   
-  licensePublicId String @unique
+  // Rejection Tracking Fields 👈
+  rejectionReason RejectionReason?    
+  rejectionNote   String?             
+  rejectedAt      DateTime?           
 
-  licenseExpiry DateTime // License expiration date
-  nidNumber     String   @unique // National ID Number
+  // User & Ambulance Relations
+  userId         String               @unique
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  contactNumber String
+  // ambulanceId    String?              @unique
+  // ambulance      Ambulance?           @relation(fields: [ambulanceId], references: [id])
 
-  isAvailable   Boolean   @default(false)
+  // Soft Delete Fields
+  isDeleted      Boolean              @default(false)
+  deletedAt      DateTime?
 
-  // Foreign Key to User
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  // Foreign Key to Ambulance (Optional, assigned by Admin)
-  // ambulanceId String?
-  // ambulance   Ambulance? @relation(fields: [ambulanceId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-
-  // Audit Fields
-  isDeleted Boolean   @default(false)
-  deletedAt DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  // Future Relations
-  // dispatches Dispatch[]
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
 
   @@index([isAvailable])
+  @@index([approvalStatus])
+  @@index([isDeleted])
   @@map("drivers")
 }

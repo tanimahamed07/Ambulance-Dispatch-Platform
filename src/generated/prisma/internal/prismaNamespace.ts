@@ -697,13 +697,17 @@ export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof 
 
 export const DriverScalarFieldEnum = {
   id: 'id',
+  contactNumber: 'contactNumber',
   licenseNumber: 'licenseNumber',
   licenseUrl: 'licenseUrl',
   licensePublicId: 'licensePublicId',
   licenseExpiry: 'licenseExpiry',
   nidNumber: 'nidNumber',
-  contactNumber: 'contactNumber',
+  approvalStatus: 'approvalStatus',
   isAvailable: 'isAvailable',
+  rejectionReason: 'rejectionReason',
+  rejectionNote: 'rejectionNote',
+  rejectedAt: 'rejectedAt',
   userId: 'userId',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
@@ -822,9 +826,37 @@ export type ListEnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 
 
 /**
+ * Reference to a field of type 'DriverApprovalStatus'
+ */
+export type EnumDriverApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverApprovalStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DriverApprovalStatus[]'
+ */
+export type ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverApprovalStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'RejectionReason'
+ */
+export type EnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RejectionReason'>
+    
+
+
+/**
+ * Reference to a field of type 'RejectionReason[]'
+ */
+export type ListEnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RejectionReason[]'>
     
 
 

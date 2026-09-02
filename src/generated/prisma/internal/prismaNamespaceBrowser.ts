@@ -89,13 +89,17 @@ export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof 
 
 export const DriverScalarFieldEnum = {
   id: 'id',
+  contactNumber: 'contactNumber',
   licenseNumber: 'licenseNumber',
   licenseUrl: 'licenseUrl',
   licensePublicId: 'licensePublicId',
   licenseExpiry: 'licenseExpiry',
   nidNumber: 'nidNumber',
-  contactNumber: 'contactNumber',
+  approvalStatus: 'approvalStatus',
   isAvailable: 'isAvailable',
+  rejectionReason: 'rejectionReason',
+  rejectionNote: 'rejectionNote',
+  rejectedAt: 'rejectedAt',
   userId: 'userId',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',

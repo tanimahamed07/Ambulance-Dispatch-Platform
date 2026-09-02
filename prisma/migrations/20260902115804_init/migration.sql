@@ -8,6 +8,12 @@ CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BLOCKED', 'DELETED');
 CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHER');
 
 -- CreateEnum
+CREATE TYPE "DriverApprovalStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
+
+-- CreateEnum
+CREATE TYPE "RejectionReason" AS ENUM ('INVALID_LICENSE', 'EXPIRED_LICENSE', 'INVALID_NID', 'DOCUMENT_UNCLEAR', 'AGE_RESTRICTION', 'SUSPENDED_PROFILE', 'OTHER');
+
+-- CreateEnum
 CREATE TYPE "BloodGroup" AS ENUM ('A_POSITIVE', 'A_NEGATIVE', 'B_POSITIVE', 'B_NEGATIVE', 'AB_POSITIVE', 'AB_NEGATIVE', 'O_POSITIVE', 'O_NEGATIVE');
 
 -- CreateEnum
@@ -37,13 +43,17 @@ CREATE TABLE "patient_callers" (
 -- CreateTable
 CREATE TABLE "drivers" (
     "id" TEXT NOT NULL,
+    "contactNumber" TEXT NOT NULL,
     "licenseNumber" TEXT NOT NULL,
     "licenseUrl" TEXT NOT NULL,
     "licensePublicId" TEXT NOT NULL,
     "licenseExpiry" TIMESTAMP(3) NOT NULL,
-    "nidNumber" TEXT NOT NULL,
-    "contactNumber" TEXT NOT NULL,
+    "nidNumber" TEXT,
+    "approvalStatus" "DriverApprovalStatus" NOT NULL DEFAULT 'PENDING',
     "isAvailable" BOOLEAN NOT NULL DEFAULT false,
+    "rejectionReason" "RejectionReason",
+    "rejectionNote" TEXT,
+    "rejectedAt" TIMESTAMP(3),
     "userId" TEXT NOT NULL,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "deletedAt" TIMESTAMP(3),
@@ -81,9 +91,6 @@ CREATE UNIQUE INDEX "patient_callers_userId_key" ON "patient_callers"("userId");
 CREATE UNIQUE INDEX "drivers_licenseNumber_key" ON "drivers"("licenseNumber");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "drivers_licensePublicId_key" ON "drivers"("licensePublicId");
-
--- CreateIndex
 CREATE UNIQUE INDEX "drivers_nidNumber_key" ON "drivers"("nidNumber");
 
 -- CreateIndex
@@ -91,6 +98,12 @@ CREATE UNIQUE INDEX "drivers_userId_key" ON "drivers"("userId");
 
 -- CreateIndex
 CREATE INDEX "drivers_isAvailable_idx" ON "drivers"("isAvailable");
+
+-- CreateIndex
+CREATE INDEX "drivers_approvalStatus_idx" ON "drivers"("approvalStatus");
+
+-- CreateIndex
+CREATE INDEX "drivers_isDeleted_idx" ON "drivers"("isDeleted");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
