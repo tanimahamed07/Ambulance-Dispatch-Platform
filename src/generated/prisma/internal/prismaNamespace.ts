@@ -698,13 +698,16 @@ export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof 
 export const DriverScalarFieldEnum = {
   id: 'id',
   contactNumber: 'contactNumber',
+  address: 'address',
   licenseNumber: 'licenseNumber',
   licenseUrl: 'licenseUrl',
   licensePublicId: 'licensePublicId',
   licenseExpiry: 'licenseExpiry',
   nidNumber: 'nidNumber',
   approvalStatus: 'approvalStatus',
-  isAvailable: 'isAvailable',
+  dutyStatus: 'dutyStatus',
+  currentLatitude: 'currentLatitude',
+  currentLongitude: 'currentLongitude',
   rejectionReason: 'rejectionReason',
   rejectionNote: 'rejectionNote',
   rejectedAt: 'rejectedAt',
@@ -840,9 +843,30 @@ export type ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
- * Reference to a field of type 'Boolean'
+ * Reference to a field of type 'DriverDutyStatus'
  */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+export type EnumDriverDutyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverDutyStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DriverDutyStatus[]'
+ */
+export type ListEnumDriverDutyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverDutyStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -857,6 +881,13 @@ export type EnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'RejectionReason[]'
  */
 export type ListEnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RejectionReason[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

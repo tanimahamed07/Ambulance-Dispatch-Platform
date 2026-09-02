@@ -66,3 +66,11 @@ enum AmbulanceType {
   FREEZER
   AIR
 }
+
+enum DriverDutyStatus {
+  OFF_DUTY      
+  AVAILABLE     
+  ON_DISPATCH   
+  ON_TRIP      
+}
+

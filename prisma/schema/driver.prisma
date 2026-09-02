@@ -1,15 +1,19 @@
 model Driver {
   id             String               @id @default(uuid())
   contactNumber  String
+  address        String
   licenseNumber  String               @unique
   licenseUrl     String
   licensePublicId String
   licenseExpiry  DateTime
-  nidNumber      String?              @unique
+  nidNumber      String              @unique
 
   // Verification Status & Shift Logic
-  approvalStatus DriverApprovalStatus @default(PENDING)
-  isAvailable    Boolean              @default(false)
+  approvalStatus   DriverApprovalStatus @default(PENDING)
+  dutyStatus       DriverDutyStatus     @default(OFF_DUTY)
+
+  currentLatitude  Float?
+  currentLongitude Float?
   
   // Rejection Tracking Fields 👈
   rejectionReason RejectionReason?    
@@ -30,8 +34,5 @@ model Driver {
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
 
-  @@index([isAvailable])
-  @@index([approvalStatus])
-  @@index([isDeleted])
   @@map("drivers")
 }

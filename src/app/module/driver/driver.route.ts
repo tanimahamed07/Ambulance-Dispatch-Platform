@@ -6,6 +6,17 @@ import { DriverController } from "./driver.controller";
 
 const router = Router();
 
-router.post("apply-as-driver", DriverController.applyAsDoctor);
+router.post(
+  "/apply-as-driver",
+  auth(Role.CALLER),
+  DriverController.applyAsDriver,
+);
+
+
+router.patch(
+  "/approve-doctor",
+  auth(Role.ADMIN),
+  DriverController.approveDriver,
+);
 
 export const DriverRoutes = router;

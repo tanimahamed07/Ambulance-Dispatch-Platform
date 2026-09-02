@@ -25,6 +25,9 @@ CREATE TYPE "AmbulanceStatus" AS ENUM ('AVAILABLE', 'ASSIGNED', 'EN_ROUTE', 'ON_
 -- CreateEnum
 CREATE TYPE "AmbulanceType" AS ENUM ('AC', 'NON_AC', 'ICU', 'FREEZER', 'AIR');
 
+-- CreateEnum
+CREATE TYPE "DriverDutyStatus" AS ENUM ('OFF_DUTY', 'AVAILABLE', 'ON_DISPATCH', 'ON_TRIP');
+
 -- CreateTable
 CREATE TABLE "patient_callers" (
     "id" TEXT NOT NULL,
@@ -44,13 +47,16 @@ CREATE TABLE "patient_callers" (
 CREATE TABLE "drivers" (
     "id" TEXT NOT NULL,
     "contactNumber" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
     "licenseNumber" TEXT NOT NULL,
     "licenseUrl" TEXT NOT NULL,
     "licensePublicId" TEXT NOT NULL,
     "licenseExpiry" TIMESTAMP(3) NOT NULL,
-    "nidNumber" TEXT,
+    "nidNumber" TEXT NOT NULL,
     "approvalStatus" "DriverApprovalStatus" NOT NULL DEFAULT 'PENDING',
-    "isAvailable" BOOLEAN NOT NULL DEFAULT false,
+    "dutyStatus" "DriverDutyStatus" NOT NULL DEFAULT 'OFF_DUTY',
+    "currentLatitude" DOUBLE PRECISION,
+    "currentLongitude" DOUBLE PRECISION,
     "rejectionReason" "RejectionReason",
     "rejectionNote" TEXT,
     "rejectedAt" TIMESTAMP(3),
@@ -95,15 +101,6 @@ CREATE UNIQUE INDEX "drivers_nidNumber_key" ON "drivers"("nidNumber");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "drivers_userId_key" ON "drivers"("userId");
-
--- CreateIndex
-CREATE INDEX "drivers_isAvailable_idx" ON "drivers"("isAvailable");
-
--- CreateIndex
-CREATE INDEX "drivers_approvalStatus_idx" ON "drivers"("approvalStatus");
-
--- CreateIndex
-CREATE INDEX "drivers_isDeleted_idx" ON "drivers"("isDeleted");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");

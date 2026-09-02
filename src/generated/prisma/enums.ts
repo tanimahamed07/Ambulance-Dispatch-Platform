@@ -102,3 +102,13 @@ export const AmbulanceType = {
 } as const
 
 export type AmbulanceType = (typeof AmbulanceType)[keyof typeof AmbulanceType]
+
+
+export const DriverDutyStatus = {
+  OFF_DUTY: 'OFF_DUTY',
+  AVAILABLE: 'AVAILABLE',
+  ON_DISPATCH: 'ON_DISPATCH',
+  ON_TRIP: 'ON_TRIP'
+} as const
+
+export type DriverDutyStatus = (typeof DriverDutyStatus)[keyof typeof DriverDutyStatus]

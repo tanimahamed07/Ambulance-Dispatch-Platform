@@ -60,13 +60,14 @@ export const seedTesterDriver = async () => {
         emailVerified: true,
         driver: {
           create: {
+            address: "Mirpur, Dhaka, Bangladesh",
             licenseNumber: "DL-99999999",
             licenseUrl: "https://example.com/license.pdf",
             licensePublicId: "licenses/test_driver_lic",
             licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
             nidNumber: "1990000000000",
             contactNumber: "+8801700000000",
-            isAvailable: true,
+            dutyStatus: "AVAILABLE",
           },
         },
       },
