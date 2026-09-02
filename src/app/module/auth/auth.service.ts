@@ -10,11 +10,12 @@ import { prisma } from "../../lib/prisma";
 import { jwtUtils } from "../../utils/jwt";
 import httpStatus from "http-status";
 import {
-    IForgotPasswordPayload,
+  IForgotPasswordPayload,
   IGoogleLoginPayload,
   ILoginUserPayload,
   IRegisterCallerPayload,
   IRequestUser,
+  IResetPasswordPayload,
   IVerifyEmailPayload,
 } from "./auth.interface";
 import { AppError } from "../../utils/AppError";
@@ -543,6 +544,84 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
   });
 };
 
+const resetPassword = async (payload: IResetPasswordPayload) => {
+  const { email, otp, newPassword } = payload;
+
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new Error("User Does Not Exist!");
+  }
+
+  if (isUserExist.status === "BLOCKED") {
+    throw new Error("User is Blocked");
+  }
+
+  if (!isUserExist.emailVerified) {
+    throw new Error("User Not Verified");
+  }
+
+  if (isUserExist.isDeleted || isUserExist.status === "DELETED") {
+    throw new Error("User is Deleted");
+  }
+
+  if (isUserExist.googleId && isUserExist.authProvider === "GOOGLE") {
+    throw new Error("User Has Account With Google");
+  }
+
+  const key = `forgor-password-otp:${isUserExist.email}`;
+
+  const redisOtp = await redisClient.get(key);
+
+  if (!redisOtp) {
+    throw new Error("Invalid OTP");
+  }
+
+  if (redisOtp !== otp) {
+    throw new Error("OTP Does Not Match");
+  }
+
+  const hashedNewPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await prisma.user.update({
+    where: {
+      email: isUserExist.email,
+    },
+    data: {
+      password: hashedNewPassword,
+    },
+  });
+
+  await redisClient.del([key]);
+
+  const templatePath = path.join(
+    process.cwd(),
+    "src/app/templates/reset-password-success.ejs",
+  );
+
+  const templateData = {
+    name: isUserExist.name,
+  };
+
+  const html = await ejs.renderFile(templatePath, templateData);
+
+  await transporter.sendMail({
+    from: config.email_sender,
+    to: isUserExist.email,
+    subject: "Password Changed",
+    // text : `Your OTP is ${otp}`
+    // html: `<h1>Your Password Is Changed</h1>`
+    html,
+  });
+};
+
 export const AuthService = {
   registerPatient,
   loginUser,
@@ -551,4 +630,5 @@ export const AuthService = {
   verifyCallerEmail,
   googleLogin,
   forgotPassword,
+  resetPassword,
 };
