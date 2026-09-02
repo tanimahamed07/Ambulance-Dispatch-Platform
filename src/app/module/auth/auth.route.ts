@@ -7,10 +7,7 @@ const router = Router();
 
 router.post("/register", AuthController.registerPatient);
 
-router.post(
-  "/verify-email",
-  AuthController.verifyCallerEmail,
-);
+router.post("/verify-email", AuthController.verifyCallerEmail);
 
 router.post("/login", AuthController.loginUser);
 router.get(
@@ -19,4 +16,6 @@ router.get(
   AuthController.getMe,
 );
 router.post("/refresh-token", AuthController.refreshToken);
+router.post("/google", AuthController.googleLogin);
+
 export const AuthRoutes = router;

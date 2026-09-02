@@ -49,3 +49,11 @@ export const BloodGroup = {
 } as const
 
 export type BloodGroup = (typeof BloodGroup)[keyof typeof BloodGroup]
+
+
+export const AuthProvider = {
+  GOOGLE: 'GOOGLE',
+  CREDENTIAL: 'CREDENTIAL'
+} as const
+
+export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]

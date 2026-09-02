@@ -27,3 +27,8 @@ enum BloodGroup {
   O_POSITIVE
   O_NEGATIVE
 }
+
+enum AuthProvider {
+  GOOGLE
+  CREDENTIAL
+}

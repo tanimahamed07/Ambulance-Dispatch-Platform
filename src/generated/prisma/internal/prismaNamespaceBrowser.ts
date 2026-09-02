@@ -73,11 +73,11 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const CallerScalarFieldEnum = {
   id: 'id',
+  contactNumber: 'contactNumber',
   dateOfBirth: 'dateOfBirth',
   bloodGroup: 'bloodGroup',
   gender: 'gender',
   address: 'address',
-  contactNumber: 'contactNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   userId: 'userId'
@@ -94,6 +94,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   role: 'role',
   status: 'status',
+  googleId: 'googleId',
+  authProvider: 'authProvider',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
