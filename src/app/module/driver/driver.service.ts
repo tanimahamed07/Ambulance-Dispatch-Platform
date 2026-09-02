@@ -149,7 +149,33 @@ const approveDriver = async (payload: IApproveDriverPayload) => {
   return updatedDriver;
 };
 
+const applicationStatus = async (user: IRequestUser) => {
+  const driver = await prisma.driver.findUnique({
+    where: { userId: user.userId },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          profileUrl: true,
+          role: true,
+          status: true,
+        },
+      },
+    },
+  });
+  if (!driver) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Driver application not found. Please apply first.",
+    );
+  }
+
+  return driver;
+};
+
 export const DriverService = {
   applyAsDriver,
   approveDriver,
+  applicationStatus,
 };

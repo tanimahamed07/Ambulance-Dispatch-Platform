@@ -37,7 +37,20 @@ const approveDriver = catchAsync(async (req, res) => {
   });
 });
 
+const applicationStatus = catchAsync(async (req, res) => {
+  const user = req.user!;
+  const result = await DriverService.applicationStatus(user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Application status retrieved successfully.", // ✅ সঠিক message
+    data: result,
+  });
+});
+
 export const DriverController = {
   applyAsDriver,
   approveDriver,
+  applicationStatus,
 };

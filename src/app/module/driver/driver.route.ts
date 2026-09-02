@@ -12,11 +12,16 @@ router.post(
   DriverController.applyAsDriver,
 );
 
-
 router.patch(
   "/approve-doctor",
   auth(Role.ADMIN),
   DriverController.approveDriver,
+);
+
+router.get(
+  "/application-status",
+  auth(Role.CALLER),
+  DriverController.applicationStatus,
 );
 
 export const DriverRoutes = router;
