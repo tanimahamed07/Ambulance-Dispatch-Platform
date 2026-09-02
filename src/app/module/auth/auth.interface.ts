@@ -20,9 +20,12 @@ export interface IVerifyEmailPayload {
 }
 
 export interface IGoogleLoginPayload {
-	idToken: string;
+  idToken: string;
 }
 
+export interface IForgotPasswordPayload {
+  email: string;
+}
 
 export interface IRequestUser {
   userId: string;
