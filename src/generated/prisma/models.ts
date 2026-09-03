@@ -8,6 +8,7 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/Ambulance'
 export type * from './models/Caller'
 export type * from './models/Driver'
 export type * from './models/User'

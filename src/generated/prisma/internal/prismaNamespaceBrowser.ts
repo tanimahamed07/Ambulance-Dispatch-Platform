@@ -51,6 +51,7 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  Ambulance: 'Ambulance',
   Caller: 'Caller',
   Driver: 'Driver',
   User: 'User'
@@ -70,6 +71,26 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 } as const)
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+export const AmbulanceScalarFieldEnum = {
+  id: 'id',
+  ambulanceNumber: 'ambulanceNumber',
+  registrationNumber: 'registrationNumber',
+  registrationExpiry: 'registrationExpiry',
+  vehicleType: 'vehicleType',
+  model: 'model',
+  capacity: 'capacity',
+  status: 'status',
+  currentLatitude: 'currentLatitude',
+  currentLongitude: 'currentLongitude',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AmbulanceScalarFieldEnum = (typeof AmbulanceScalarFieldEnum)[keyof typeof AmbulanceScalarFieldEnum]
 
 
 export const CallerScalarFieldEnum = {
@@ -104,6 +125,7 @@ export const DriverScalarFieldEnum = {
   rejectionNote: 'rejectionNote',
   rejectedAt: 'rejectedAt',
   userId: 'userId',
+  ambulanceId: 'ambulanceId',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',

@@ -24,8 +24,8 @@ model Driver {
   userId         String               @unique
   user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // ambulanceId    String?              @unique
-  // ambulance      Ambulance?           @relation(fields: [ambulanceId], references: [id])
+  ambulanceId    String?              @unique
+  ambulance      Ambulance?           @relation(fields: [ambulanceId], references: [id])
 
   // Soft Delete Fields
   isDeleted      Boolean              @default(false)

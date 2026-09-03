@@ -400,16 +400,8 @@ export type CallerNullableScalarRelationFilter = {
   isNot?: Prisma.CallerWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
 }
 
 export type NullableEnumBloodGroupFieldUpdateOperationsInput = {
@@ -418,10 +410,6 @@ export type NullableEnumBloodGroupFieldUpdateOperationsInput = {
 
 export type NullableEnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender | null
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type CallerCreateNestedOneWithoutUserInput = {

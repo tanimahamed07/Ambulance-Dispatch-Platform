@@ -113,6 +113,7 @@ const updateDutyStatus = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
 export const DriverController = {
   applyAsDriver,
   approveDriver,

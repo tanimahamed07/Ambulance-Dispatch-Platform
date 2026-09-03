@@ -397,6 +397,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  Ambulance: 'Ambulance',
   Caller: 'Caller',
   Driver: 'Driver',
   User: 'User'
@@ -415,10 +416,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "caller" | "driver" | "user"
+    modelProps: "ambulance" | "caller" | "driver" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    Ambulance: {
+      payload: Prisma.$AmbulancePayload<ExtArgs>
+      fields: Prisma.AmbulanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AmbulanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AmbulanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        findFirst: {
+          args: Prisma.AmbulanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AmbulanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        findMany: {
+          args: Prisma.AmbulanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>[]
+        }
+        create: {
+          args: Prisma.AmbulanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        createMany: {
+          args: Prisma.AmbulanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AmbulanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>[]
+        }
+        delete: {
+          args: Prisma.AmbulanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        update: {
+          args: Prisma.AmbulanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        deleteMany: {
+          args: Prisma.AmbulanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AmbulanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AmbulanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>[]
+        }
+        upsert: {
+          args: Prisma.AmbulanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AmbulancePayload>
+        }
+        aggregate: {
+          args: Prisma.AmbulanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAmbulance>
+        }
+        groupBy: {
+          args: Prisma.AmbulanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AmbulanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AmbulanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AmbulanceCountAggregateOutputType> | number
+        }
+      }
+    }
     Caller: {
       payload: Prisma.$CallerPayload<ExtArgs>
       fields: Prisma.CallerFieldRefs
@@ -680,6 +755,26 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const AmbulanceScalarFieldEnum = {
+  id: 'id',
+  ambulanceNumber: 'ambulanceNumber',
+  registrationNumber: 'registrationNumber',
+  registrationExpiry: 'registrationExpiry',
+  vehicleType: 'vehicleType',
+  model: 'model',
+  capacity: 'capacity',
+  status: 'status',
+  currentLatitude: 'currentLatitude',
+  currentLongitude: 'currentLongitude',
+  isDeleted: 'isDeleted',
+  deletedAt: 'deletedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AmbulanceScalarFieldEnum = (typeof AmbulanceScalarFieldEnum)[keyof typeof AmbulanceScalarFieldEnum]
+
+
 export const CallerScalarFieldEnum = {
   id: 'id',
   contactNumber: 'contactNumber',
@@ -712,6 +807,7 @@ export const DriverScalarFieldEnum = {
   rejectionNote: 'rejectionNote',
   rejectedAt: 'rejectedAt',
   userId: 'userId',
+  ambulanceId: 'ambulanceId',
   isDeleted: 'isDeleted',
   deletedAt: 'deletedAt',
   createdAt: 'createdAt',
@@ -801,6 +897,69 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'AmbulanceType'
+ */
+export type EnumAmbulanceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AmbulanceType'>
+    
+
+
+/**
+ * Reference to a field of type 'AmbulanceType[]'
+ */
+export type ListEnumAmbulanceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AmbulanceType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AmbulanceStatus'
+ */
+export type EnumAmbulanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AmbulanceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AmbulanceStatus[]'
+ */
+export type ListEnumAmbulanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AmbulanceStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'BloodGroup'
  */
 export type EnumBloodGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BloodGroup'>
@@ -857,20 +1016,6 @@ export type ListEnumDriverDutyStatusFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
-    
-
-
-/**
  * Reference to a field of type 'RejectionReason'
  */
 export type EnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RejectionReason'>
@@ -881,13 +1026,6 @@ export type EnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'RejectionReason[]'
  */
 export type ListEnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RejectionReason[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -930,20 +1068,6 @@ export type EnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'AuthProvider[]'
  */
 export type ListEnumAuthProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuthProvider[]'>
-    
-
-
-/**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 /**
@@ -1097,6 +1221,7 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
  */
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
+  ambulance?: Prisma.AmbulanceOmit
   caller?: Prisma.CallerOmit
   driver?: Prisma.DriverOmit
   user?: Prisma.UserOmit

@@ -1,27 +1,25 @@
-// model Ambulance {
-//   id                 String          @id @default(uuid())
-//   ambulanceNumber    String          @unique // e.g. "AMB-101"
-//   registrationNumber String          @unique // e.g. "DHAKA-METRO-CHA-11-2233"
-//   vehicleType        AmbulanceType   @default(AC)
-//   model              String?         // e.g. "Toyota HiAce 2022"
-//   capacity           Int             @default(1)
-//   status             AmbulanceStatus @default(AVAILABLE)
+model Ambulance {
+  id                 String          @id @default(uuid())
+  ambulanceNumber    String          @unique // e.g. "AMB-101"
+  registrationNumber String          @unique // e.g. "DHAKA-METRO-CHA-11-2233" 
+  registrationExpiry     DateTime
+  vehicleType        AmbulanceType   @default(AC)
+  model              String         // e.g. "Toyota HiAce 2022"
+  capacity           Int             @default(1)
+  status             AmbulanceStatus @default(AVAILABLE)
 
-//   // Real-time GPS Location tracking
-//   currentLatitude    Float?
-//   currentLongitude   Float?
+  // Real-time GPS Location tracking
+  currentLatitude    Float?
+  currentLongitude   Float?
 
-//   // Relations
-//   drivers            Driver[]
-// //   dispatches         Dispatch[]
+  // Relations
 
-//   // Audit Fields
-//   isDeleted          Boolean         @default(false)
-//   deletedAt          DateTime?
-//   createdAt          DateTime        @default(now())
-//   updatedAt          DateTime        @updatedAt
+  driver             Driver?
+  // Audit Fields
+  isDeleted          Boolean         @default(false)
+  deletedAt          DateTime?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
 
-//   @@index([status])
-//   @@index([vehicleType])
-//   @@map("ambulances")
-// }
+  @@map("ambulances")
+}

@@ -29,6 +29,26 @@ CREATE TYPE "AmbulanceType" AS ENUM ('AC', 'NON_AC', 'ICU', 'FREEZER', 'AIR');
 CREATE TYPE "DriverDutyStatus" AS ENUM ('OFF_DUTY', 'AVAILABLE', 'ON_DISPATCH', 'ON_TRIP');
 
 -- CreateTable
+CREATE TABLE "ambulances" (
+    "id" TEXT NOT NULL,
+    "ambulanceNumber" TEXT NOT NULL,
+    "registrationNumber" TEXT NOT NULL,
+    "registrationExpiry" TIMESTAMP(3) NOT NULL,
+    "vehicleType" "AmbulanceType" NOT NULL DEFAULT 'AC',
+    "model" TEXT NOT NULL,
+    "capacity" INTEGER NOT NULL DEFAULT 1,
+    "status" "AmbulanceStatus" NOT NULL DEFAULT 'AVAILABLE',
+    "currentLatitude" DOUBLE PRECISION,
+    "currentLongitude" DOUBLE PRECISION,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
+    "deletedAt" TIMESTAMP(3),
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ambulances_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "patient_callers" (
     "id" TEXT NOT NULL,
     "contactNumber" TEXT,
@@ -61,6 +81,7 @@ CREATE TABLE "drivers" (
     "rejectionNote" TEXT,
     "rejectedAt" TIMESTAMP(3),
     "userId" TEXT NOT NULL,
+    "ambulanceId" TEXT,
     "isDeleted" BOOLEAN NOT NULL DEFAULT false,
     "deletedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -91,6 +112,12 @@ CREATE TABLE "users" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "ambulances_ambulanceNumber_key" ON "ambulances"("ambulanceNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ambulances_registrationNumber_key" ON "ambulances"("registrationNumber");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "patient_callers_userId_key" ON "patient_callers"("userId");
 
 -- CreateIndex
@@ -103,6 +130,9 @@ CREATE UNIQUE INDEX "drivers_nidNumber_key" ON "drivers"("nidNumber");
 CREATE UNIQUE INDEX "drivers_userId_key" ON "drivers"("userId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "drivers_ambulanceId_key" ON "drivers"("ambulanceId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
@@ -113,3 +143,6 @@ ALTER TABLE "patient_callers" ADD CONSTRAINT "patient_callers_userId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "drivers" ADD CONSTRAINT "drivers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "drivers" ADD CONSTRAINT "drivers_ambulanceId_fkey" FOREIGN KEY ("ambulanceId") REFERENCES "ambulances"("id") ON DELETE SET NULL ON UPDATE CASCADE;
