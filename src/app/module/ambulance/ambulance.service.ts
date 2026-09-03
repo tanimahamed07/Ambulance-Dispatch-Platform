@@ -1,4 +1,7 @@
-import { ICreateAmbulancePayload } from "./ambulance.interface";
+import {
+  ICreateAmbulancePayload,
+  IUpdateAmbulancePayload,
+} from "./ambulance.interface";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
@@ -316,7 +319,27 @@ const getAmbulanceById = async (id: string) => {
   return ambulance;
 };
 
-const updateAmbulance = async () => {};
+const updateAmbulance = async (
+  id: string,
+  payload: IUpdateAmbulancePayload,
+) => {
+  // Check if ambulance exists
+  const existingAmbulance = await prisma.ambulance.findFirst({
+    where: { id, isDeleted: false },
+  });
+
+  if (!existingAmbulance) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  // Update ambulance
+  const updatedAmbulance = await prisma.ambulance.update({
+    where: { id },
+    data: payload,
+  });
+
+  return updatedAmbulance;
+};
 
 const softDeleteAmbulance = async () => {};
 

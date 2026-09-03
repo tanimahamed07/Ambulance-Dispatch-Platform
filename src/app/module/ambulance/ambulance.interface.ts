@@ -19,5 +19,4 @@ export interface IUpdateAmbulancePayload {
   vehicleType?: AmbulanceType;
   model?: string;
   capacity?: number;
-  status?: AmbulanceStatus;
 }

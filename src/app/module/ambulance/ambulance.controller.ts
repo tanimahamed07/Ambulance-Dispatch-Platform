@@ -52,7 +52,19 @@ const getAmbulanceById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateAmbulance = catchAsync(async (req: Request, res: Response) => {});
+const updateAmbulance = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const payload = req.body;
+
+  const result = await AmbulanceService.updateAmbulance(id, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Ambulance updated successfully.",
+    data: result,
+  });
+});
 
 const softDeleteAmbulance = catchAsync(
   async (req: Request, res: Response) => {},

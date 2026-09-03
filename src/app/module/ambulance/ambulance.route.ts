@@ -27,9 +27,18 @@ router.get(
   AmbulanceController.getAvailableAmbulances,
 );
 
-router.get("/:id", auth(Role.ADMIN, Role.DISPATCHER), AmbulanceController.getAmbulanceById);
+router.get(
+  "/:id",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  AmbulanceController.getAmbulanceById,
+);
 
-router.patch("/:id", auth(Role.ADMIN), AmbulanceController.updateAmbulance);
+router.patch(
+  "/:id",
+  auth(Role.ADMIN),
+  validateRequest(AmbulanceValidation.UpdateAmbulanceZodSchema),
+  AmbulanceController.updateAmbulance,
+);
 
 router.delete(
   "/:id",
