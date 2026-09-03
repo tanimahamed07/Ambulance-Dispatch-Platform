@@ -72,10 +72,22 @@ const getApplicationById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllApprovedDriver = catchAsync(async (req: Request, res: Response) => {
+  const result = await DriverService.getAllApprovedDriver(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Driver applications retrieved successfully.",
+    data: result,
+  });
+});
+
 export const DriverController = {
   applyAsDriver,
   approveDriver,
   applicationStatus,
   getAllApplications,
   getApplicationById,
+  getAllApprovedDriver,
 };

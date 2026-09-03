@@ -316,10 +316,138 @@ const getApplicationById = async (id: string) => {
   return application;
 };
 
+const getAllApprovedDriver = async (query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+  const sortBy = query.sortBy ? query.sortBy : "createdAt";
+  const sortOrder = query.sortOrder ? query.sortOrder : "desc";
+  const andConditions: DriverWhereInput[] = [];
+
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          licenseNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          nidNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          contactNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          address: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          user: {
+            name: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          user: {
+            email: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+      ],
+    });
+  }
+
+  if (query.email) {
+    andConditions.push({
+      user: {
+        email: {
+          contains: query.email,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+
+  // License number filter
+  if (query.licenseNumber) {
+    andConditions.push({
+      licenseNumber: {
+        equals: query.licenseNumber,
+        mode: "insensitive",
+      },
+    });
+  }
+
+  if (query.dutyStatus) {
+    andConditions.push({
+      dutyStatus: query.dutyStatus,
+    });
+  }
+
+  andConditions.push({
+    isDeleted: false,
+    approvalStatus: DriverApprovalStatus.APPROVED,
+  });
+
+  const drivers = await prisma.driver.findMany({
+    where: {
+      AND: andConditions.length > 0 ? andConditions : undefined,
+    },
+    omit: {
+      rejectionReason: true,
+      rejectionNote: true,
+      rejectedAt: true,
+    },
+    take: limit,
+    skip: skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    include: {
+      user: {
+        omit: {
+          password: true,
+        },
+      },
+    },
+  });
+
+  const totalApplicationCount = await prisma.driver.count({
+    where: {
+      AND: andConditions,
+    },
+  });
+
+  return {
+    data: drivers,
+    meta: {
+      page: page,
+      limit: limit,
+      total: totalApplicationCount,
+      totalPages: Math.ceil(totalApplicationCount / limit),
+    },
+  };
+};
+
 export const DriverService = {
   applyAsDriver,
   approveDriver,
   applicationStatus,
   getAllApplications,
   getApplicationById,
+  getAllApprovedDriver,
 };

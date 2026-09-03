@@ -267,21 +267,30 @@ const loginUser = async (payload: ILoginUserPayload) => {
   };
 };
 
-const getMe = async (user: IRequestUser) => {
+export const getMe = async (user: IRequestUser) => {
+  // 1. Dynamic include configuration solely targeting present DB relations
+  const includeClause: { caller?: boolean; driver?: boolean } = {};
+
+  if (user.role === Role.CALLER) {
+    includeClause.caller = true;
+  } else if (user.role === Role.DRIVER) {
+    includeClause.driver = true;
+  }
+
+  // 2. Query execution with conditional relational payloads
   const isUserExists = await prisma.user.findUnique({
     where: {
       id: user.userId,
+      isDeleted: false,
     },
-    include: {
-      caller: true,
-    },
+    include: Object.keys(includeClause).length > 0 ? includeClause : undefined,
     omit: {
       password: true,
     },
   });
 
   if (!isUserExists) {
-    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+    throw new AppError(httpStatus.NOT_FOUND, "User profile not found");
   }
 
   return isUserExists;

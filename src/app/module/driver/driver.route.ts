@@ -23,7 +23,7 @@ router.get(
   auth(Role.CALLER),
   DriverController.applicationStatus,
 );
-
+// all pending application
 router.get(
   "/applications",
   auth(Role.ADMIN),
@@ -35,5 +35,13 @@ router.get(
   auth(Role.ADMIN),
   DriverController.getApplicationById,
 );
+
+router.get(
+  "/all-driver",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  DriverController.getAllApprovedDriver,
+);
+
+
 
 export const DriverRoutes = router;
