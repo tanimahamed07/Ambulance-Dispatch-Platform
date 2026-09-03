@@ -6,14 +6,13 @@ model Ambulance {
   vehicleType        AmbulanceType   @default(AC)
   model              String         // e.g. "Toyota HiAce 2022"
   capacity           Int             @default(1)
-  status             AmbulanceStatus @default(AVAILABLE)
+  status             AmbulanceStatus @default(OFFLINE)
 
   // Real-time GPS Location tracking
   currentLatitude    Float?
   currentLongitude   Float?
 
   // Relations
-
   driver             Driver?
   // Audit Fields
   isDeleted          Boolean         @default(false)

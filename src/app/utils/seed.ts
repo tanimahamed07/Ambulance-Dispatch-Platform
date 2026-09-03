@@ -35,6 +35,37 @@ export const seedAdmin = async () => {
   }
 };
 
+export const seedDispatcher = async () => {
+  try {
+    const email = "dispatcher@test.com";
+
+    const isDispatcherExist = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (isDispatcherExist) {
+      console.log("Tester Dispatcher Already Exists!");
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, SALT_ROUNDS);
+
+    const dispatcher = await prisma.user.create({
+      data: {
+        name: "Test Dispatcher",
+        email,
+        password: hashedPassword,
+        role: Role.DISPATCHER,
+        emailVerified: true,
+      },
+    });
+
+    console.log("Tester Dispatcher Created Successfully:", dispatcher.id);
+  } catch (error) {
+    console.error("Error Seeding Dispatcher:", error);
+  }
+};
+
 // 2. Seed Tester Driver
 export const seedTesterDriver = async () => {
   try {

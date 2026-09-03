@@ -2,7 +2,13 @@ import { ICreateAmbulancePayload } from "./ambulance.interface";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
-import { AmbulanceStatus } from "../../../generated/prisma/enums";
+import {
+  AmbulanceStatus,
+  DriverApprovalStatus,
+  DriverDutyStatus,
+} from "../../../generated/prisma/enums";
+import { IQuery } from "../../interface";
+import { AmbulanceWhereInput } from "../../../generated/prisma/models";
 
 const createAmbulance = async (payload: ICreateAmbulancePayload) => {
   const {
@@ -54,11 +60,261 @@ const createAmbulance = async (payload: ICreateAmbulancePayload) => {
   return ambulance;
 };
 
-const getAllAmbulances = async () => {};
+const getAllAmbulances = async (query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
 
-const getAvailableAmbulances = async () => {};
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
 
-const getAmbulanceById = async () => {};
+  const andConditions: AmbulanceWhereInput[] = [];
+
+  // Search
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          ambulanceNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          registrationNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          model: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  // Vehicle type filter
+  if (query.vehicleType) {
+    andConditions.push({
+      vehicleType: query.vehicleType,
+    });
+  }
+
+  // Status filter
+  if (query.status) {
+    andConditions.push({
+      status: query.status,
+    });
+  }
+
+  // Soft deleted ambulance বাদ
+  andConditions.push({
+    isDeleted: false,
+  });
+
+  // AVAILABLE ambulance হলে অবশ্যই
+  // approved + available driver assigned থাকতে হবে
+  if (query.status === AmbulanceStatus.AVAILABLE) {
+    andConditions.push({
+      driver: {
+        is: {
+          approvalStatus: DriverApprovalStatus.APPROVED,
+          dutyStatus: DriverDutyStatus.AVAILABLE,
+          isDeleted: false,
+        },
+      },
+    });
+  }
+
+  const ambulances = await prisma.ambulance.findMany({
+    where: {
+      AND: andConditions,
+    },
+
+    take: limit,
+    skip,
+
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+
+    include: {
+      driver: {
+        select: {
+          id: true,
+          contactNumber: true,
+          approvalStatus: true,
+          dutyStatus: true,
+          currentLatitude: true,
+          currentLongitude: true,
+
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const totalAmbulancesCount = await prisma.ambulance.count({
+    where: {
+      AND: andConditions,
+    },
+  });
+
+  return {
+    data: ambulances,
+
+    meta: {
+      page,
+      limit,
+      total: totalAmbulancesCount,
+      totalPages: Math.ceil(totalAmbulancesCount / limit),
+    },
+  };
+};
+
+const getAvailableAmbulances = async (query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: AmbulanceWhereInput[] = [];
+
+  // Search
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          ambulanceNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          registrationNumber: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          model: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  // Vehicle type filter
+  if (query.vehicleType) {
+    andConditions.push({
+      vehicleType: query.vehicleType,
+    });
+  }
+
+  // Only available ambulances
+  andConditions.push({
+    status: AmbulanceStatus.AVAILABLE,
+    isDeleted: false,
+    // Must have an approved + available driver
+    driver: {
+      is: {
+        approvalStatus: DriverApprovalStatus.APPROVED,
+        dutyStatus: DriverDutyStatus.AVAILABLE,
+        isDeleted: false,
+      },
+    },
+  });
+
+  const ambulances = await prisma.ambulance.findMany({
+    where: {
+      AND: andConditions,
+    },
+
+    take: limit,
+    skip: skip,
+
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+
+    include: {
+      driver: {
+        select: {
+          id: true,
+          contactNumber: true,
+          approvalStatus: true,
+          dutyStatus: true,
+          currentLatitude: true,
+          currentLongitude: true,
+
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const totalAmbulancesCount = await prisma.ambulance.count({
+    where: {
+      AND: andConditions,
+    },
+  });
+
+  return {
+    data: ambulances,
+
+    meta: {
+      page,
+      limit,
+      total: totalAmbulancesCount,
+      totalPages: Math.ceil(totalAmbulancesCount / limit),
+    },
+  };
+};
+
+const getAmbulanceById = async (id: string) => {
+  const ambulance = await prisma.ambulance.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+    include: {
+      driver: {
+        include: {
+          user: {
+            omit: {
+              password: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!ambulance) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  return ambulance;
+};
 
 const updateAmbulance = async () => {};
 

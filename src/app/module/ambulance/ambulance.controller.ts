@@ -16,13 +16,41 @@ const createAmbulance = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getAllAmbulances = catchAsync(async (req: Request, res: Response) => {});
+const getAllAmbulances = catchAsync(async (req: Request, res: Response) => {
+  const result = await AmbulanceService.getAllAmbulances(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "All ambulances retrieved successfully.",
+    data: result,
+  });
+});
 
 const getAvailableAmbulances = catchAsync(
-  async (req: Request, res: Response) => {},
+  async (req: Request, res: Response) => {
+    const result = await AmbulanceService.getAvailableAmbulances(req.query);
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "All Available Ambulances retrieved successfully.",
+      data: result,
+    });
+  },
 );
 
-const getAmbulanceById = catchAsync(async (req: Request, res: Response) => {});
+const getAmbulanceById = catchAsync(async (req: Request, res: Response) => {
+  const ambulanceId = req.params.id as string;
+  const result = await AmbulanceService.getAmbulanceById(ambulanceId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Ambulance retrieved successfully.",
+    data: result,
+  });
+});
 
 const updateAmbulance = catchAsync(async (req: Request, res: Response) => {});
 

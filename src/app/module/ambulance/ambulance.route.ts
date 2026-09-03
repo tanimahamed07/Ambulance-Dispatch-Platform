@@ -9,25 +9,25 @@ const router = Router();
 
 // Admin — fleet management
 router.post(
-  "/",
+  "/create-ambulance",
   auth(Role.ADMIN),
   validateRequest(AmbulanceValidation.CreateAmbulanceZodSchema),
   AmbulanceController.createAmbulance,
 );
 
 router.get(
-  "/",
-  auth(Role.ADMIN, Role.DRIVER),
+  "/all-ambulance",
+  auth(Role.ADMIN, Role.DISPATCHER),
   AmbulanceController.getAllAmbulances,
 );
 
 router.get(
   "/available",
-  auth(Role.ADMIN),
+  auth(Role.DISPATCHER),
   AmbulanceController.getAvailableAmbulances,
 );
 
-router.get("/:id", auth(Role.ADMIN), AmbulanceController.getAmbulanceById);
+router.get("/:id", auth(Role.ADMIN, Role.DISPATCHER), AmbulanceController.getAmbulanceById);
 
 router.patch("/:id", auth(Role.ADMIN), AmbulanceController.updateAmbulance);
 

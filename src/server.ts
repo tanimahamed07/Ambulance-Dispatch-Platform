@@ -5,6 +5,7 @@ import { prisma } from "./app/lib/prisma";
 import { redisClient } from "./app/lib/redis";
 import {
   seedAdmin,
+  seedDispatcher,
   seedTesterCaller,
   seedTesterDriver,
 } from "./app/utils/seed";
@@ -23,6 +24,7 @@ const main = async () => {
     console.log("Nodemailer Connected Successfully.");
 
     await seedAdmin();
+    await seedDispatcher();
     await seedTesterDriver();
     await seedTesterCaller();
 
