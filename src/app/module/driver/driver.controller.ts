@@ -4,7 +4,10 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { DriverService } from "./driver.service";
 import { IRequestUser } from "../auth/auth.interface";
-import { DriverApprovalStatus, DriverDutyStatus } from "../../../generated/prisma/enums";
+import {
+  DriverApprovalStatus,
+  DriverDutyStatus,
+} from "../../../generated/prisma/enums";
 
 const applyAsDriver = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as IRequestUser;
@@ -99,9 +102,9 @@ const getApprovedDriverById = catchAsync(
 
 const updateDutyStatus = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user!;
-  const payload  = req.body; 
+  const { dutyStatus } = req.body;
 
-  const result = await DriverService.updateDutyStatus(userId, payload);
+  const result = await DriverService.updateDutyStatus(userId, dutyStatus);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -118,4 +121,5 @@ export const DriverController = {
   getApplicationById,
   getAllApprovedDriver,
   getApprovedDriverById,
+  updateDutyStatus,
 };

@@ -471,7 +471,10 @@ const getApprovedDriverById = async (id: string) => {
   return driver;
 };
 
-const updateDutyStatus = async (userId: string, payload: DriverDutyStatus) => {
+const updateDutyStatus = async (
+  userId: string,
+  dutyStatus: DriverDutyStatus,
+) => {
   const driver = await prisma.driver.findUnique({
     where: {
       userId,
@@ -503,7 +506,7 @@ const updateDutyStatus = async (userId: string, payload: DriverDutyStatus) => {
       userId,
     },
     data: {
-      dutyStatus: payload,
+      dutyStatus,
     },
   });
   return updatedDriver;

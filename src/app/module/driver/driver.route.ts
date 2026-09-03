@@ -49,7 +49,7 @@ router.get(
 router.patch(
   "/me/availability",
   auth(Role.DRIVER),
-  DriverController.getApprovedDriverById,
+  DriverController.updateDutyStatus,
 );
 
 export const DriverRoutes = router;
