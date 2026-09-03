@@ -24,4 +24,16 @@ router.get(
   DriverController.applicationStatus,
 );
 
+router.get(
+  "/applications",
+  auth(Role.ADMIN),
+  DriverController.getAllApplications,
+);
+
+router.get(
+  "/applications/:id",
+  auth(Role.ADMIN),
+  DriverController.getApplicationById,
+);
+
 export const DriverRoutes = router;

@@ -44,7 +44,30 @@ const applicationStatus = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Application status retrieved successfully.", // ✅ সঠিক message
+    message: "Application status retrieved successfully.",
+    data: result,
+  });
+});
+
+const getAllApplications = catchAsync(async (req: Request, res: Response) => {
+  const result = await DriverService.getAllApplications(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Driver applications retrieved successfully.",
+    data: result,
+  });
+});
+
+const getApplicationById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await DriverService.getApplicationById(id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Driver application retrieved successfully.",
     data: result,
   });
 });
@@ -53,4 +76,6 @@ export const DriverController = {
   applyAsDriver,
   approveDriver,
   applicationStatus,
+  getAllApplications,
+  getApplicationById,
 };
