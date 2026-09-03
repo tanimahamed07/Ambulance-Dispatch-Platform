@@ -6,7 +6,11 @@ import {
   IApproveDriverPayload,
 } from "./driver.interface";
 import { IRequestUser } from "../auth/auth.interface";
-import { DriverApprovalStatus, Role } from "../../../generated/prisma/enums";
+import {
+  DriverApprovalStatus,
+  DriverDutyStatus,
+  Role,
+} from "../../../generated/prisma/enums";
 import { differenceInDays } from "date-fns";
 import { IQuery } from "../../interface";
 import { DriverWhereInput } from "../../../generated/prisma/models";
@@ -467,6 +471,43 @@ const getApprovedDriverById = async (id: string) => {
   return driver;
 };
 
+const updateDutyStatus = async (userId: string, payload: DriverDutyStatus) => {
+  const driver = await prisma.driver.findUnique({
+    where: {
+      userId,
+      isDeleted: false,
+      approvalStatus: DriverApprovalStatus.APPROVED,
+    },
+  });
+
+  if (!driver) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Approved driver profile not found.",
+    );
+  }
+
+  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+    const isPending = driver.approvalStatus === DriverApprovalStatus.PENDING;
+
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      isPending
+        ? "Your driver profile application is still under review (PENDING)."
+        : `Your application was rejected. Reason: ${driver.rejectionReason || "N/A"}. Note: ${driver.rejectionNote || "N/A"}`,
+    );
+  }
+
+  const updatedDriver = await prisma.driver.update({
+    where: {
+      userId,
+    },
+    data: {
+      dutyStatus: payload,
+    },
+  });
+  return updatedDriver;
+};
 export const DriverService = {
   applyAsDriver,
   approveDriver,
@@ -475,4 +516,5 @@ export const DriverService = {
   getApplicationById,
   getAllApprovedDriver,
   getApprovedDriverById,
+  updateDutyStatus,
 };

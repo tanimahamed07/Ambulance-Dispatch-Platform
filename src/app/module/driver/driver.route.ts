@@ -46,5 +46,10 @@ router.get(
   auth(Role.ADMIN, Role.DISPATCHER),
   DriverController.getApprovedDriverById,
 );
+router.patch(
+  "/me/availability",
+  auth(Role.DRIVER),
+  DriverController.getApprovedDriverById,
+);
 
 export const DriverRoutes = router;
