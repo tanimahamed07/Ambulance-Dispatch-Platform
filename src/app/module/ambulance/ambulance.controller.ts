@@ -70,9 +70,32 @@ const softDeleteAmbulance = catchAsync(
   async (req: Request, res: Response) => {},
 );
 
-const assignDriver = catchAsync(async (req: Request, res: Response) => {});
+const assignDriver = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const payload = req.body;
 
-const unassignDriver = catchAsync(async (req: Request, res: Response) => {});
+  const result = await AmbulanceService.assignDriver(id, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Driver assigned to ambulance successfully.",
+    data: result,
+  });
+});
+
+const unassignDriver = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+
+  const result = await AmbulanceService.unassignDriver(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Driver unassigned from ambulance successfully.",
+    data: result,
+  });
+});
 
 const updateMyAmbulanceStatus = catchAsync(
   async (req: Request, res: Response) => {},

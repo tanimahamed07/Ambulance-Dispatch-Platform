@@ -60,6 +60,8 @@ const UpdateAmbulanceZodSchema = z.object({
   status: z.nativeEnum(AmbulanceStatus, "Invalid ambulance status").optional(),
 });
 
+
+
 export const AmbulanceValidation = {
   CreateAmbulanceZodSchema,
   UpdateAmbulanceZodSchema,

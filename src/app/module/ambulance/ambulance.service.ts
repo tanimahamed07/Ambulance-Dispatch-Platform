@@ -1,6 +1,7 @@
 import {
   ICreateAmbulancePayload,
   IUpdateAmbulancePayload,
+  IAssignDriverPayload,
 } from "./ambulance.interface";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
@@ -343,9 +344,129 @@ const updateAmbulance = async (
 
 const softDeleteAmbulance = async () => {};
 
-const assignDriver = async () => {};
+const assignDriver = async (
+  ambulanceId: string,
+  payload: IAssignDriverPayload,
+) => {
+  const { driverId } = payload;
 
-const unassignDriver = async () => {};
+  // Check if ambulance exists and is not deleted
+  const ambulance = await prisma.ambulance.findUnique({
+    where: { id: ambulanceId, isDeleted: false },
+    include: {
+      driver: {
+        include: {
+          user: {
+            omit: {
+              password: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!ambulance) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  // Check if ambulance already has a driver assigned
+  if (ambulance.driver) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      `Ambulance is already assigned to driver: ${ambulance.driver.user?.name || "Unknown"}`,
+    );
+  }
+
+  // Check if driver exists and is approved
+  const driver = await prisma.driver.findUnique({
+    where: { id: driverId, isDeleted: false },
+    include: {
+      user: {
+        omit: {
+          password: true,
+        },
+      },
+    },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+  }
+
+  // Check if driver is approved
+  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Driver is not approved. Current status: ${driver.approvalStatus}`,
+    );
+  }
+
+  // Check if driver already has an ambulance assigned
+  if (driver.ambulanceId) {
+    throw new AppError(
+      httpStatus.CONFLICT,
+      "Driver is already assigned to another ambulance",
+    );
+  }
+
+  // Assign driver to ambulance using transaction
+  const result = await prisma.$transaction(async (tx) => {
+    // Update driver with ambulanceId
+    await tx.driver.update({
+      where: { id: driverId },
+      data: {
+        ambulanceId: ambulanceId,
+      },
+    });
+
+    // Get updated ambulance with driver details
+    const updatedAmbulance = await tx.ambulance.findUnique({
+      where: { id: ambulanceId },
+    });
+
+    return updatedAmbulance;
+  });
+
+  return result;
+};
+
+const unassignDriver = async (ambulanceId: string) => {
+  const ambulance = await prisma.ambulance.findFirst({
+    where: { id: ambulanceId, isDeleted: false },
+    include: { driver: true },
+  });
+
+  if (!ambulance) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  if (!ambulance.driver) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "No driver is currently assigned to this ambulance",
+    );
+  }
+
+  const result = await prisma.$transaction(async (tx) => {
+    await tx.driver.update({
+      where: { id: ambulance.driver!.id },
+      data: { ambulanceId: null },
+    });
+
+    const updatedAmbulance = await tx.ambulance.update({
+      where: { id: ambulanceId },
+      data: { status: AmbulanceStatus.OFFLINE },
+      include: {
+        driver: true,
+      },
+    });
+
+    return updatedAmbulance;
+  });
+
+  return result;
+};
 
 const updateMyAmbulanceStatus = async () => {};
 

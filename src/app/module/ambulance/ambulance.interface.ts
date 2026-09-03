@@ -20,3 +20,7 @@ export interface IUpdateAmbulancePayload {
   model?: string;
   capacity?: number;
 }
+
+export interface IAssignDriverPayload {
+  driverId: string;
+}
