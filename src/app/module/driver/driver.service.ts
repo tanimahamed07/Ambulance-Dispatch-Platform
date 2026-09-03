@@ -443,6 +443,30 @@ const getAllApprovedDriver = async (query: IQuery) => {
   };
 };
 
+const getApprovedDriverById = async (id: string) => {
+  const driver = await prisma.driver.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+      approvalStatus: DriverApprovalStatus.APPROVED,
+    },
+    omit: {
+      rejectionReason: true,
+      rejectionNote: true,
+      rejectedAt: true,
+    },
+    include: {
+      user: {
+        omit: { password: true },
+      },
+    },
+  });
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver not found.");
+  }
+  return driver;
+};
+
 export const DriverService = {
   applyAsDriver,
   approveDriver,
@@ -450,4 +474,5 @@ export const DriverService = {
   getAllApplications,
   getApplicationById,
   getAllApprovedDriver,
+  getApprovedDriverById,
 };

@@ -41,7 +41,10 @@ router.get(
   auth(Role.ADMIN, Role.DISPATCHER),
   DriverController.getAllApprovedDriver,
 );
-
-
+router.get(
+  "/all-driver/:id",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  DriverController.getApprovedDriverById,
+);
 
 export const DriverRoutes = router;
