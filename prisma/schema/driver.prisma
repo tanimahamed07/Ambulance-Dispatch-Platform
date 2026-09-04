@@ -20,6 +20,8 @@ model Driver {
   rejectionNote   String?             
   rejectedAt      DateTime?           
 
+dispatches Dispatch[]
+
   // User & Ambulance Relations
   userId         String               @unique
   user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)

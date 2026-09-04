@@ -10,6 +10,7 @@
  */
 export type * from './models/Ambulance'
 export type * from './models/Caller'
+export type * from './models/Dispatch'
 export type * from './models/Driver'
 export type * from './models/EmergencyRequest'
 export type * from './models/User'

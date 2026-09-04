@@ -270,6 +270,23 @@ export type EnumGenderNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumGenderNullableFilter<$PrismaModel>
 }
 
+export type EnumDispatchStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DispatchStatus | Prisma.EnumDispatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel> | $Enums.DispatchStatus
+}
+
+export type EnumDispatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DispatchStatus | Prisma.EnumDispatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDispatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel>
+}
+
 export type EnumDriverApprovalStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.DriverApprovalStatus | Prisma.EnumDriverApprovalStatusFieldRefInput<$PrismaModel>
   in?: $Enums.DriverApprovalStatus[] | Prisma.ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel>
@@ -700,6 +717,23 @@ export type NestedEnumGenderNullableWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumGenderNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumGenderNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumDispatchStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.DispatchStatus | Prisma.EnumDispatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel> | $Enums.DispatchStatus
+}
+
+export type NestedEnumDispatchStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DispatchStatus | Prisma.EnumDispatchStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DispatchStatus[] | Prisma.ListEnumDispatchStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDispatchStatusWithAggregatesFilter<$PrismaModel> | $Enums.DispatchStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDispatchStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumDriverApprovalStatusFilter<$PrismaModel = never> = {

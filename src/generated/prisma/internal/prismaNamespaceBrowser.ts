@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Ambulance: 'Ambulance',
   Caller: 'Caller',
+  Dispatch: 'Dispatch',
   Driver: 'Driver',
   EmergencyRequest: 'EmergencyRequest',
   User: 'User'
@@ -109,6 +110,21 @@ export const CallerScalarFieldEnum = {
 export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof CallerScalarFieldEnum]
 
 
+export const DispatchScalarFieldEnum = {
+  id: 'id',
+  emergencyId: 'emergencyId',
+  ambulanceId: 'ambulanceId',
+  driverId: 'driverId',
+  status: 'status',
+  dispatchedAt: 'dispatchedAt',
+  acceptedAt: 'acceptedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DispatchScalarFieldEnum = (typeof DispatchScalarFieldEnum)[keyof typeof DispatchScalarFieldEnum]
+
+
 export const DriverScalarFieldEnum = {
   id: 'id',
   contactNumber: 'contactNumber',
@@ -147,6 +163,8 @@ export const EmergencyRequestScalarFieldEnum = {
   pickupLongitude: 'pickupLongitude',
   priority: 'priority',
   status: 'status',
+  cancellationReason: 'cancellationReason',
+  cancelledAt: 'cancelledAt',
   callerId: 'callerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

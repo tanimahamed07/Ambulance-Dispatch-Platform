@@ -12,8 +12,11 @@ model Ambulance {
   currentLatitude    Float?
   currentLongitude   Float?
 
+
   // Relations
   driver             Driver?
+dispatches Dispatch[]
+
   // Audit Fields
   isDeleted          Boolean         @default(false)
   deletedAt          DateTime?

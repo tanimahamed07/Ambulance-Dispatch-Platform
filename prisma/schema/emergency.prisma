@@ -15,6 +15,11 @@ model EmergencyRequest {
   callerId String
   caller   Caller @relation(fields: [callerId], references: [id], onDelete: Cascade)
 
+  dispatch Dispatch?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  @@map("emergency_request")
+
 }

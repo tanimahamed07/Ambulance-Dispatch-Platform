@@ -52,6 +52,11 @@ export type Ambulance = Prisma.AmbulanceModel
  */
 export type Caller = Prisma.CallerModel
 /**
+ * Model Dispatch
+ * 
+ */
+export type Dispatch = Prisma.DispatchModel
+/**
  * Model Driver
  * 
  */

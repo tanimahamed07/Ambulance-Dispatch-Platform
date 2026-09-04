@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Ambulance: 'Ambulance',
   Caller: 'Caller',
+  Dispatch: 'Dispatch',
   Driver: 'Driver',
   EmergencyRequest: 'EmergencyRequest',
   User: 'User'
@@ -417,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "ambulance" | "caller" | "driver" | "emergencyRequest" | "user"
+    modelProps: "ambulance" | "caller" | "dispatch" | "driver" | "emergencyRequest" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -566,6 +567,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CallerCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CallerCountAggregateOutputType> | number
+        }
+      }
+    }
+    Dispatch: {
+      payload: Prisma.$DispatchPayload<ExtArgs>
+      fields: Prisma.DispatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DispatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DispatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        findFirst: {
+          args: Prisma.DispatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DispatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        findMany: {
+          args: Prisma.DispatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+        }
+        create: {
+          args: Prisma.DispatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        createMany: {
+          args: Prisma.DispatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DispatchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+        }
+        delete: {
+          args: Prisma.DispatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        update: {
+          args: Prisma.DispatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.DispatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DispatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DispatchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>[]
+        }
+        upsert: {
+          args: Prisma.DispatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DispatchPayload>
+        }
+        aggregate: {
+          args: Prisma.DispatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDispatch>
+        }
+        groupBy: {
+          args: Prisma.DispatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DispatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DispatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DispatchCountAggregateOutputType> | number
         }
       }
     }
@@ -865,6 +940,21 @@ export const CallerScalarFieldEnum = {
 export type CallerScalarFieldEnum = (typeof CallerScalarFieldEnum)[keyof typeof CallerScalarFieldEnum]
 
 
+export const DispatchScalarFieldEnum = {
+  id: 'id',
+  emergencyId: 'emergencyId',
+  ambulanceId: 'ambulanceId',
+  driverId: 'driverId',
+  status: 'status',
+  dispatchedAt: 'dispatchedAt',
+  acceptedAt: 'acceptedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DispatchScalarFieldEnum = (typeof DispatchScalarFieldEnum)[keyof typeof DispatchScalarFieldEnum]
+
+
 export const DriverScalarFieldEnum = {
   id: 'id',
   contactNumber: 'contactNumber',
@@ -903,6 +993,8 @@ export const EmergencyRequestScalarFieldEnum = {
   pickupLongitude: 'pickupLongitude',
   priority: 'priority',
   status: 'status',
+  cancellationReason: 'cancellationReason',
+  cancelledAt: 'cancelledAt',
   callerId: 'callerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1078,6 +1170,20 @@ export type EnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
  * Reference to a field of type 'Gender[]'
  */
 export type ListEnumGenderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Gender[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DispatchStatus'
+ */
+export type EnumDispatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'DispatchStatus[]'
+ */
+export type ListEnumDispatchStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DispatchStatus[]'>
     
 
 
@@ -1345,6 +1451,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   ambulance?: Prisma.AmbulanceOmit
   caller?: Prisma.CallerOmit
+  dispatch?: Prisma.DispatchOmit
   driver?: Prisma.DriverOmit
   emergencyRequest?: Prisma.EmergencyRequestOmit
   user?: Prisma.UserOmit

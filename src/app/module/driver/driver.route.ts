@@ -14,7 +14,7 @@ router.post(
 );
 
 router.patch(
-  "/approve-doctor",
+  "/approve-driver",
   auth(Role.ADMIN),
   DriverController.approveDriver,
 );
