@@ -148,7 +148,7 @@ const getAllAmbulances = async (query: IQuery) => {
           id: true,
           contactNumber: true,
           approvalStatus: true,
-          dutyStatus: true,
+          isAvailable: true,
           currentLatitude: true,
           currentLongitude: true,
 
@@ -257,7 +257,7 @@ const getAvailableAmbulances = async (query: IQuery) => {
           id: true,
           contactNumber: true,
           approvalStatus: true,
-          dutyStatus: true,
+          isAvailable: true,
           currentLatitude: true,
           currentLongitude: true,
 
@@ -328,6 +328,40 @@ const updateAmbulance = async (
 
   if (!existingAmbulance) {
     throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  // Check if ambulanceNumber already exists (if being updated)
+  if (
+    payload.ambulanceNumber &&
+    payload.ambulanceNumber !== existingAmbulance.ambulanceNumber
+  ) {
+    const ambulanceWithSameNumber = await prisma.ambulance.findUnique({
+      where: { ambulanceNumber: payload.ambulanceNumber },
+    });
+
+    if (ambulanceWithSameNumber) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "Ambulance with this ambulance number already exists",
+      );
+    }
+  }
+
+  // Check if registrationNumber already exists (if being updated)
+  if (
+    payload.registrationNumber &&
+    payload.registrationNumber !== existingAmbulance.registrationNumber
+  ) {
+    const ambulanceWithSameReg = await prisma.ambulance.findUnique({
+      where: { registrationNumber: payload.registrationNumber },
+    });
+
+    if (ambulanceWithSameReg) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "Ambulance with this registration number already exists",
+      );
+    }
   }
 
   // Update ambulance
@@ -418,8 +452,10 @@ const assignDriver = async (
     });
 
     // Get updated ambulance with driver details
-    const updatedAmbulance = await tx.ambulance.findUnique({
+    const updatedAmbulance = await tx.ambulance.update({
       where: { id: ambulanceId },
+      data: { status: AmbulanceStatus.AVAILABLE },
+      include: { driver: true },
     });
 
     return updatedAmbulance;
