@@ -32,7 +32,15 @@ const UpdatePriorityZodSchema = z.object({
   priority: z.nativeEnum(Priority, "Invalid priority value"),
 });
 
+const CancelEmergencyZodSchema = z.object({
+  cancellationReason: z
+    .string()
+    .max(500, "Cancellation reason must not exceed 500 characters")
+    .optional(),
+});
+
 export const EmergencyValidation = {
   CreateEmergencyZodSchema,
   UpdatePriorityZodSchema,
+  CancelEmergencyZodSchema,
 };

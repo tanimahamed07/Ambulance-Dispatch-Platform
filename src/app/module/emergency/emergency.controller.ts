@@ -57,7 +57,10 @@ const updateEmergencyPriority = catchAsync(
   async (req: Request, res: Response) => {
     const id = req.params.id;
     const payload = req.body;
-    const result = await EmergencyService.updateEmergencyPriority(id as string, payload);
+    const result = await EmergencyService.updateEmergencyPriority(
+      id as string,
+      payload,
+    );
 
     sendResponse(res, {
       statusCode: httpStatus.OK,
@@ -68,9 +71,23 @@ const updateEmergencyPriority = catchAsync(
   },
 );
 
+const cancelEmergency = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const payload = req.body;
+  const result = await EmergencyService.cancelEmergency(id as string, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Emergency request cancelled successfully.",
+    data: result,
+  });
+});
+
 export const EmergencyController = {
   createEmergency,
   getAllEmergencies,
   getEmergencyById,
   updateEmergencyPriority,
+  cancelEmergency,
 };

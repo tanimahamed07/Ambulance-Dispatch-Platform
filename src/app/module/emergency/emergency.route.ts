@@ -14,20 +14,17 @@ router.post(
   EmergencyController.createEmergency,
 );
 
-
 router.get(
   "/",
   auth(Role.ADMIN, Role.DISPATCHER),
   EmergencyController.getAllEmergencies,
 );
 
-
 router.get(
   "/:id",
   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
   EmergencyController.getEmergencyById,
 );
-
 
 router.patch(
   "/:id/priority",
@@ -36,18 +33,11 @@ router.patch(
   EmergencyController.updateEmergencyPriority,
 );
 
-// // ইমার্জেন্সি ক্যানসেল করা
-// router.patch(
-//   "/:id/cancel",
-//   auth(Role.ADMIN, Role.DISPATCHER),
-//   EmergencyController.cancelEmergency,
-// );
-
-// // ইমার্জেন্সির অডিট বা ইনসিডেন্ট হিস্ট্রি দেখা
-// router.get(
-//   "/:id/history",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
-//   EmergencyController.getEmergencyHistory,
-// );
+router.patch(
+  "/:id/cancel",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  validateRequest(EmergencyValidation.CancelEmergencyZodSchema),
+  EmergencyController.cancelEmergency,
+);
 
 export const EmergencyRoutes = router;

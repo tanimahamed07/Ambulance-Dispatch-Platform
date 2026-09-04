@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import {
   ICreateEmergencyPayload,
   IUpdateEmergencyPriority,
+  ICancelEmergency,
 } from "./emergency.interface";
 import {
   EmergencyType,
@@ -174,6 +175,15 @@ const updateEmergencyPriority = async (
   if (!emergency) {
     throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
   }
+  if (
+    emergency.status === EmergencyStatus.HOSPITAL_COMPLETED ||
+    emergency.status === EmergencyStatus.CANCELLED ||
+    emergency.status === EmergencyStatus.PICKED
+  ) {
+    throw new Error(
+      `Cannot change priority because the request status is ${emergency.status}`,
+    );
+  }
 
   const updatedEmergency = await prisma.emergencyRequest.update({
     where: {
@@ -187,9 +197,61 @@ const updateEmergencyPriority = async (
   return updatedEmergency;
 };
 
+const cancelEmergency = async (id: string, payload: ICancelEmergency) => {
+  const emergency = await prisma.emergencyRequest.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!emergency) {
+    throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
+  }
+
+  // Check if emergency is already cancelled
+  if (emergency.status === EmergencyStatus.CANCELLED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Emergency request is already cancelled",
+    );
+  }
+
+  // Check if emergency is already completed
+  if (emergency.status === EmergencyStatus.HOSPITAL_COMPLETED) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Cannot cancel a completed emergency request",
+    );
+  }
+
+  if (
+    emergency.status === EmergencyStatus.EN_ROUTE ||
+    emergency.status === EmergencyStatus.PICKED ||
+    emergency.status === EmergencyStatus.UP_AT
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Cannot cancel this request because the ambulance is active and status is ${emergency.status}`,
+    );
+  }
+
+  // Update the emergency status to CANCELLED
+  const cancelledEmergency = await prisma.emergencyRequest.update({
+    where: { id },
+    data: {
+      status: EmergencyStatus.CANCELLED,
+      cancellationReason: payload.cancellationReason || "No reason provided",
+      cancelledAt: new Date(),
+    },
+  });
+
+  return cancelledEmergency;
+};
+
 export const EmergencyService = {
   createEmergency,
   getAllEmergencies,
   getEmergencyById,
   updateEmergencyPriority,
+  cancelEmergency,
 };

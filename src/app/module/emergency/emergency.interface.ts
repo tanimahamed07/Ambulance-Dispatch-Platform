@@ -13,3 +13,7 @@ export interface ICreateEmergencyPayload {
 export interface IUpdateEmergencyPriority {
   priority: Priority;
 }
+
+export interface ICancelEmergency {
+  cancellationReason?: string;
+}

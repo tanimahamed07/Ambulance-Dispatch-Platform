@@ -1,21 +1,20 @@
 model EmergencyRequest {
-id String @id @default(uuid())
-patientName String
-patientPhone String
-emergencyType EmergencyType
+  id                 String           @id @default(uuid())
+  patientName        String
+  patientPhone       String
+  emergencyType      EmergencyType
+  description        String?
+  pickupAddress      String
+  pickupLatitude     Float
+  pickupLongitude    Float
+  priority           Priority         @default(MEDIUM)
+  status             EmergencyStatus  @default(PENDING)
+  cancellationReason String?
+  cancelledAt        DateTime?        
 
-description String?
-pickupAddress String
-pickupLatitude Float
-pickupLongitude Float
+  callerId String
+  caller   Caller @relation(fields: [callerId], references: [id], onDelete: Cascade)
 
-priority Priority @default(MEDIUM)
-status EmergencyStatus @default(PENDING)
-
-callerId String  
-caller   Caller  @relation(fields: [callerId], references: [id], onDelete: Cascade)
-
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
