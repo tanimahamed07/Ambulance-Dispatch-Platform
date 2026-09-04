@@ -1,7 +1,10 @@
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
-import { ICreateEmergencyPayload } from "./emergency.interface";
+import {
+  ICreateEmergencyPayload,
+  IUpdateEmergencyPriority,
+} from "./emergency.interface";
 import {
   EmergencyType,
   Priority,
@@ -158,9 +161,35 @@ const getEmergencyById = async (id: string) => {
 
   return emergency;
 };
+const updateEmergencyPriority = async (
+  id: string,
+  payload: IUpdateEmergencyPriority,
+) => {
+  const emergency = await prisma.emergencyRequest.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!emergency) {
+    throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
+  }
+
+  const updatedEmergency = await prisma.emergencyRequest.update({
+    where: {
+      id,
+    },
+    data: {
+      priority: payload.priority,
+    },
+  });
+
+  return updatedEmergency;
+};
 
 export const EmergencyService = {
   createEmergency,
   getAllEmergencies,
   getEmergencyById,
+  updateEmergencyPriority,
 };

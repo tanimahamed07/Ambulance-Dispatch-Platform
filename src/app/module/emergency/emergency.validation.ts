@@ -1,5 +1,5 @@
 import z from "zod";
-import { EmergencyType } from "../../../generated/prisma/enums";
+import { EmergencyType, Priority } from "../../../generated/prisma/enums";
 
 const CreateEmergencyZodSchema = z.object({
   patientName: z
@@ -28,6 +28,11 @@ const CreateEmergencyZodSchema = z.object({
     .max(180, "Longitude must be between -180 and 180"),
 });
 
+const UpdatePriorityZodSchema = z.object({
+  priority: z.nativeEnum(Priority, "Invalid priority value"),
+});
+
 export const EmergencyValidation = {
   CreateEmergencyZodSchema,
+  UpdatePriorityZodSchema,
 };

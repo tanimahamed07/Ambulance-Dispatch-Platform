@@ -28,13 +28,13 @@ router.get(
   EmergencyController.getEmergencyById,
 );
 
-// // প্রায়োরিটি আপডেট করা (শুধুমাত্র ডিসপ্যাচার)
-// router.patch(
-//   "/:id/priority",
-//   auth(Role.DISPATCHER),
-//   validateRequest(EmergencyValidation.UpdatePriorityZodSchema),
-//   EmergencyController.updateEmergencyPriority,
-// );
+
+router.patch(
+  "/:id/priority",
+  auth(Role.DISPATCHER),
+  validateRequest(EmergencyValidation.UpdatePriorityZodSchema),
+  EmergencyController.updateEmergencyPriority,
+);
 
 // // ইমার্জেন্সি ক্যানসেল করা
 // router.patch(

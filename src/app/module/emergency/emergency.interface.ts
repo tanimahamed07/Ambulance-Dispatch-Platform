@@ -1,4 +1,4 @@
-import { EmergencyType } from "../../../generated/prisma/enums";
+import { EmergencyType, Priority } from "../../../generated/prisma/enums";
 
 export interface ICreateEmergencyPayload {
   patientName: string;
@@ -8,4 +8,8 @@ export interface ICreateEmergencyPayload {
   pickupAddress: string;
   pickupLatitude: number;
   pickupLongitude: number;
+}
+
+export interface IUpdateEmergencyPriority {
+  priority: Priority;
 }
