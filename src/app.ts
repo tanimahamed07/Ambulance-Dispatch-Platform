@@ -9,6 +9,7 @@ import { AuthRoutes } from "./app/module/auth/auth.route";
 import { UserRoutes } from "./app/module/user/user.route";
 import { DriverRoutes } from "./app/module/driver/driver.route";
 import { AmbulanceRoutes } from "./app/module/ambulance/ambulance.route";
+import { EmergencyRoutes } from "./app/module/emergency/emergency.route";
 
 const app: Application = express();
 
@@ -30,6 +31,7 @@ app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
 app.use("/api/v1/driver", DriverRoutes);
 app.use("/api/v1/ambulance", AmbulanceRoutes);
+app.use("/api/v1/emergency", EmergencyRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
