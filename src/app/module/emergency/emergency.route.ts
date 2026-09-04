@@ -14,21 +14,21 @@ router.post(
   EmergencyController.createEmergency,
 );
 
+// সকল ইমার্জেন্সি লিস্ট দেখা (শুধুমাত্র এডমিন ও ডিসপ্যাচার)
+router.get(
+  "/",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  EmergencyController.getAllEmergencies,
+);
 
-// router.get(
-//   "/",
-//   auth(Role.ADMIN, Role.DISPATCHER),
-//   EmergencyController.getAllEmergencies,
-// );
-
-
+// // নির্দিষ্ট ইমার্জেন্সির ডিটেইলস দেখা
 // router.get(
 //   "/:id",
 //   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
 //   EmergencyController.getEmergencyById,
 // );
 
-
+// // প্রায়োরিটি আপডেট করা (শুধুমাত্র ডিসপ্যাচার)
 // router.patch(
 //   "/:id/priority",
 //   auth(Role.DISPATCHER),
@@ -36,14 +36,14 @@ router.post(
 //   EmergencyController.updateEmergencyPriority,
 // );
 
-
+// // ইমার্জেন্সি ক্যানসেল করা
 // router.patch(
 //   "/:id/cancel",
 //   auth(Role.ADMIN, Role.DISPATCHER),
 //   EmergencyController.cancelEmergency,
 // );
 
-
+// // ইমার্জেন্সির অডিট বা ইনসিডেন্ট হিস্ট্রি দেখা
 // router.get(
 //   "/:id/history",
 //   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
