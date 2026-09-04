@@ -214,6 +214,7 @@ export type CallerWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   userId?: Prisma.StringFilter<"Caller"> | string
+  emergencyRequests?: Prisma.EmergencyRequestListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -227,6 +228,7 @@ export type CallerOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  emergencyRequests?: Prisma.EmergencyRequestOrderByRelationAggregateInput
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -243,6 +245,7 @@ export type CallerWhereUniqueInput = Prisma.AtLeast<{
   address?: Prisma.StringNullableFilter<"Caller"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Caller"> | Date | string
+  emergencyRequests?: Prisma.EmergencyRequestListRelationFilter
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "userId">
 
@@ -285,6 +288,7 @@ export type CallerCreateInput = {
   address?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  emergencyRequests?: Prisma.EmergencyRequestCreateNestedManyWithoutCallerInput
   user: Prisma.UserCreateNestedOneWithoutCallerInput
 }
 
@@ -298,6 +302,7 @@ export type CallerUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   userId: string
+  emergencyRequests?: Prisma.EmergencyRequestUncheckedCreateNestedManyWithoutCallerInput
 }
 
 export type CallerUpdateInput = {
@@ -309,6 +314,7 @@ export type CallerUpdateInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emergencyRequests?: Prisma.EmergencyRequestUpdateManyWithoutCallerNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutCallerNestedInput
 }
 
@@ -322,6 +328,7 @@ export type CallerUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyRequests?: Prisma.EmergencyRequestUncheckedUpdateManyWithoutCallerNestedInput
 }
 
 export type CallerCreateManyInput = {
@@ -395,6 +402,11 @@ export type CallerMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
 }
 
+export type CallerScalarRelationFilter = {
+  is?: Prisma.CallerWhereInput
+  isNot?: Prisma.CallerWhereInput
+}
+
 export type CallerNullableScalarRelationFilter = {
   is?: Prisma.CallerWhereInput | null
   isNot?: Prisma.CallerWhereInput | null
@@ -410,6 +422,20 @@ export type NullableEnumBloodGroupFieldUpdateOperationsInput = {
 
 export type NullableEnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender | null
+}
+
+export type CallerCreateNestedOneWithoutEmergencyRequestsInput = {
+  create?: Prisma.XOR<Prisma.CallerCreateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedCreateWithoutEmergencyRequestsInput>
+  connectOrCreate?: Prisma.CallerCreateOrConnectWithoutEmergencyRequestsInput
+  connect?: Prisma.CallerWhereUniqueInput
+}
+
+export type CallerUpdateOneRequiredWithoutEmergencyRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.CallerCreateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedCreateWithoutEmergencyRequestsInput>
+  connectOrCreate?: Prisma.CallerCreateOrConnectWithoutEmergencyRequestsInput
+  upsert?: Prisma.CallerUpsertWithoutEmergencyRequestsInput
+  connect?: Prisma.CallerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CallerUpdateToOneWithWhereWithoutEmergencyRequestsInput, Prisma.CallerUpdateWithoutEmergencyRequestsInput>, Prisma.CallerUncheckedUpdateWithoutEmergencyRequestsInput>
 }
 
 export type CallerCreateNestedOneWithoutUserInput = {
@@ -444,6 +470,70 @@ export type CallerUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CallerUpdateToOneWithWhereWithoutUserInput, Prisma.CallerUpdateWithoutUserInput>, Prisma.CallerUncheckedUpdateWithoutUserInput>
 }
 
+export type CallerCreateWithoutEmergencyRequestsInput = {
+  id?: string
+  contactNumber?: string | null
+  dateOfBirth?: Date | string | null
+  bloodGroup?: $Enums.BloodGroup | null
+  gender?: $Enums.Gender | null
+  address?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutCallerInput
+}
+
+export type CallerUncheckedCreateWithoutEmergencyRequestsInput = {
+  id?: string
+  contactNumber?: string | null
+  dateOfBirth?: Date | string | null
+  bloodGroup?: $Enums.BloodGroup | null
+  gender?: $Enums.Gender | null
+  address?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userId: string
+}
+
+export type CallerCreateOrConnectWithoutEmergencyRequestsInput = {
+  where: Prisma.CallerWhereUniqueInput
+  create: Prisma.XOR<Prisma.CallerCreateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedCreateWithoutEmergencyRequestsInput>
+}
+
+export type CallerUpsertWithoutEmergencyRequestsInput = {
+  update: Prisma.XOR<Prisma.CallerUpdateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedUpdateWithoutEmergencyRequestsInput>
+  create: Prisma.XOR<Prisma.CallerCreateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedCreateWithoutEmergencyRequestsInput>
+  where?: Prisma.CallerWhereInput
+}
+
+export type CallerUpdateToOneWithWhereWithoutEmergencyRequestsInput = {
+  where?: Prisma.CallerWhereInput
+  data: Prisma.XOR<Prisma.CallerUpdateWithoutEmergencyRequestsInput, Prisma.CallerUncheckedUpdateWithoutEmergencyRequestsInput>
+}
+
+export type CallerUpdateWithoutEmergencyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutCallerNestedInput
+}
+
+export type CallerUncheckedUpdateWithoutEmergencyRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  contactNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bloodGroup?: Prisma.NullableEnumBloodGroupFieldUpdateOperationsInput | $Enums.BloodGroup | null
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type CallerCreateWithoutUserInput = {
   id?: string
   contactNumber?: string | null
@@ -453,6 +543,7 @@ export type CallerCreateWithoutUserInput = {
   address?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  emergencyRequests?: Prisma.EmergencyRequestCreateNestedManyWithoutCallerInput
 }
 
 export type CallerUncheckedCreateWithoutUserInput = {
@@ -464,6 +555,7 @@ export type CallerUncheckedCreateWithoutUserInput = {
   address?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  emergencyRequests?: Prisma.EmergencyRequestUncheckedCreateNestedManyWithoutCallerInput
 }
 
 export type CallerCreateOrConnectWithoutUserInput = {
@@ -491,6 +583,7 @@ export type CallerUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emergencyRequests?: Prisma.EmergencyRequestUpdateManyWithoutCallerNestedInput
 }
 
 export type CallerUncheckedUpdateWithoutUserInput = {
@@ -502,8 +595,38 @@ export type CallerUncheckedUpdateWithoutUserInput = {
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emergencyRequests?: Prisma.EmergencyRequestUncheckedUpdateManyWithoutCallerNestedInput
 }
 
+
+/**
+ * Count Type CallerCountOutputType
+ */
+
+export type CallerCountOutputType = {
+  emergencyRequests: number
+}
+
+export type CallerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  emergencyRequests?: boolean | CallerCountOutputTypeCountEmergencyRequestsArgs
+}
+
+/**
+ * CallerCountOutputType without action
+ */
+export type CallerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CallerCountOutputType
+   */
+  select?: Prisma.CallerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * CallerCountOutputType without action
+ */
+export type CallerCountOutputTypeCountEmergencyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EmergencyRequestWhereInput
+}
 
 
 export type CallerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -516,7 +639,9 @@ export type CallerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   userId?: boolean
+  emergencyRequests?: boolean | Prisma.Caller$emergencyRequestsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.CallerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["caller"]>
 
 export type CallerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -559,7 +684,9 @@ export type CallerSelectScalar = {
 
 export type CallerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "contactNumber" | "dateOfBirth" | "bloodGroup" | "gender" | "address" | "createdAt" | "updatedAt" | "userId", ExtArgs["result"]["caller"]>
 export type CallerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  emergencyRequests?: boolean | Prisma.Caller$emergencyRequestsArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.CallerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CallerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -571,6 +698,7 @@ export type CallerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type $CallerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Caller"
   objects: {
+    emergencyRequests: Prisma.$EmergencyRequestPayload<ExtArgs>[]
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -977,6 +1105,7 @@ readonly fields: CallerFieldRefs;
  */
 export interface Prisma__CallerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  emergencyRequests<T extends Prisma.Caller$emergencyRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Caller$emergencyRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmergencyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1414,6 +1543,30 @@ export type CallerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Callers to delete.
    */
   limit?: number
+}
+
+/**
+ * Caller.emergencyRequests
+ */
+export type Caller$emergencyRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EmergencyRequest
+   */
+  select?: Prisma.EmergencyRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EmergencyRequest
+   */
+  omit?: Prisma.EmergencyRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmergencyRequestInclude<ExtArgs> | null
+  where?: Prisma.EmergencyRequestWhereInput
+  orderBy?: Prisma.EmergencyRequestOrderByWithRelationInput | Prisma.EmergencyRequestOrderByWithRelationInput[]
+  cursor?: Prisma.EmergencyRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EmergencyRequestScalarFieldEnum | Prisma.EmergencyRequestScalarFieldEnum[]
 }
 
 /**

@@ -10,7 +10,10 @@ import {
 import { IQuery } from "../../interface";
 import { EmergencyRequestWhereInput } from "../../../generated/prisma/models";
 
-const createEmergency = async (payload: ICreateEmergencyPayload) => {
+const createEmergency = async (
+  callerId: string,
+  payload: ICreateEmergencyPayload,
+) => {
   let priority: Priority;
 
   if (
@@ -32,14 +35,27 @@ const createEmergency = async (payload: ICreateEmergencyPayload) => {
     data: {
       ...payload,
       priority,
+      callerId,
       status: EmergencyStatus.PENDING,
+    },
+    include: {
+      caller: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
     },
   });
 
   return emergency;
 };
 
-const getAllEmergencies = async (query: any) => {
+const getAllEmergencies = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
@@ -47,7 +63,7 @@ const getAllEmergencies = async (query: any) => {
   const sortBy = query.sortBy || "createdAt";
   const sortOrder = query.sortOrder || "desc";
 
-  const andConditions: any[] = [];
+  const andConditions: EmergencyRequestWhereInput[] = [];
 
   // Search by patientName or patientPhone or pickupAddress
   if (query.searchTerm) {

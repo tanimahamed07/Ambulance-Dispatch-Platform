@@ -12,6 +12,9 @@ pickupLongitude Float
 priority Priority @default(MEDIUM)
 status EmergencyStatus @default(PENDING)
 
+callerId String  
+caller   Caller  @relation(fields: [callerId], references: [id], onDelete: Cascade)
+
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 

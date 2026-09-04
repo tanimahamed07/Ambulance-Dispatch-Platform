@@ -3,11 +3,26 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { EmergencyService } from "./emergency.service";
+import { prisma } from "../../lib/prisma";
 
 const createEmergency = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
+  const userId = req.user?.userId!;
 
-  const result = await EmergencyService.createEmergency(payload);
+  const caller = await prisma.caller.findUnique({
+    where: { userId: userId },
+  });
+
+  if (!caller) {
+    return sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
+      success: false,
+      message: "Caller profile not found. Please complete your profile first.",
+      data: null,
+    });
+  }
+
+  const result = await EmergencyService.createEmergency(caller.id, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -21,9 +36,9 @@ const getAllEmergencies = catchAsync(async (req: Request, res: Response) => {
   const result = await EmergencyService.getAllEmergencies(req.query);
 
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: "Emergency request created successfully.",
+    message: "Emergencies retrieved successfully.",
     data: result,
   });
 });

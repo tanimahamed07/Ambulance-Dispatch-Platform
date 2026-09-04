@@ -147,6 +147,7 @@ export const EmergencyRequestScalarFieldEnum = {
   pickupLongitude: 'pickupLongitude',
   priority: 'priority',
   status: 'status',
+  callerId: 'callerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

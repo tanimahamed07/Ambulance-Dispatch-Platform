@@ -11,6 +11,7 @@ model Caller {
   updatedAt DateTime @updatedAt
 
   //relations
+  emergencyRequests EmergencyRequest[]
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 

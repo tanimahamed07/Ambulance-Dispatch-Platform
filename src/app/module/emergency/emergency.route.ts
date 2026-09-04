@@ -14,14 +14,14 @@ router.post(
   EmergencyController.createEmergency,
 );
 
-// সকল ইমার্জেন্সি লিস্ট দেখা (শুধুমাত্র এডমিন ও ডিসপ্যাচার)
+
 router.get(
   "/",
   auth(Role.ADMIN, Role.DISPATCHER),
   EmergencyController.getAllEmergencies,
 );
 
-// // নির্দিষ্ট ইমার্জেন্সির ডিটেইলস দেখা
+
 // router.get(
 //   "/:id",
 //   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
