@@ -22,11 +22,11 @@ router.get(
 );
 
 
-// router.get(
-//   "/:id",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
-//   EmergencyController.getEmergencyById,
-// );
+router.get(
+  "/:id",
+  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
+  EmergencyController.getEmergencyById,
+);
 
 // // প্রায়োরিটি আপডেট করা (শুধুমাত্র ডিসপ্যাচার)
 // router.patch(

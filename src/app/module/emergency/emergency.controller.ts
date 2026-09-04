@@ -42,8 +42,20 @@ const getAllEmergencies = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getEmergencyById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await EmergencyService.getEmergencyById(id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Emergency retrieved successfully.",
+    data: result,
+  });
+});
 
 export const EmergencyController = {
   createEmergency,
   getAllEmergencies,
+  getEmergencyById,
 };

@@ -138,8 +138,29 @@ const getAllEmergencies = async (query: IQuery) => {
     data: emergencies,
   };
 };
+const getEmergencyById = async (id: string) => {
+  const emergency = await prisma.emergencyRequest.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      caller: {
+        include: {
+          user: true,
+        },
+      },
+    },
+  });
+
+  if (!emergency) {
+    throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
+  }
+
+  return emergency;
+};
 
 export const EmergencyService = {
   createEmergency,
   getAllEmergencies,
+  getEmergencyById,
 };
