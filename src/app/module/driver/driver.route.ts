@@ -3,6 +3,7 @@ import { Role } from "../../../generated/prisma/enums";
 import { auth } from "../../middleware/checkAuth";
 import { validateRequest } from "../../middleware/validateRequest";
 import { DriverController } from "./driver.controller";
+import { DriverValidation } from "./driverValidation";
 
 const router = Router();
 
@@ -47,8 +48,9 @@ router.get(
   DriverController.getApprovedDriverById,
 );
 router.patch(
-  "/me/availability",
+  "/me/status",
   auth(Role.DRIVER),
+  validateRequest(DriverValidation.UpdateDutyStatusZodSchema),
   DriverController.updateDutyStatus,
 );
 

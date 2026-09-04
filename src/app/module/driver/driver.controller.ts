@@ -102,14 +102,14 @@ const getApprovedDriverById = catchAsync(
 
 const updateDutyStatus = catchAsync(async (req: Request, res: Response) => {
   const { userId } = req.user!;
-  const { dutyStatus } = req.body;
+  const payload = req.body;
 
-  const result = await DriverService.updateDutyStatus(userId, dutyStatus);
+  const result = await DriverService.updateDutyStatus(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Driver duty status updated successfully.",
+    message: `Driver duty status updated to ${payload.isAvailable ? "AVAILABLE" : "OFF_DUTY"} successfully.`,
     data: result,
   });
 });

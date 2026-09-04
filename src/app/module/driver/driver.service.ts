@@ -395,10 +395,9 @@ const getAllApprovedDriver = async (query: IQuery) => {
       },
     });
   }
-
-  if (query.dutyStatus) {
+  if (query.isAvailable !== undefined) {
     andConditions.push({
-      dutyStatus: query.dutyStatus,
+      isAvailable: query.isAvailable === "true" || query.isAvailable === true,
     });
   }
 
@@ -471,10 +470,7 @@ const getApprovedDriverById = async (id: string) => {
   return driver;
 };
 
-const updateDutyStatus = async (
-  userId: string,
-  dutyStatus: DriverDutyStatus,
-) => {
+const updateDutyStatus = async (userId: string, isAvailable: boolean) => {
   const driver = await prisma.driver.findUnique({
     where: {
       userId,
@@ -506,11 +502,12 @@ const updateDutyStatus = async (
       userId,
     },
     data: {
-      dutyStatus,
+      isAvailable,
     },
   });
   return updatedDriver;
 };
+
 export const DriverService = {
   applyAsDriver,
   approveDriver,

@@ -19,3 +19,7 @@ export interface IApproveDriverPayload {
   rejectionReason?: RejectionReason;
   rejectionNote?: string;
 }
+
+export interface IUpdateDutyStatusPayload {
+  isAvailable: boolean;
+}

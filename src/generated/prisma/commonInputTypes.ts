@@ -277,13 +277,6 @@ export type EnumDriverApprovalStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel> | $Enums.DriverApprovalStatus
 }
 
-export type EnumDriverDutyStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.DriverDutyStatus | Prisma.EnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel> | $Enums.DriverDutyStatus
-}
-
 export type EnumRejectionReasonNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
   in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
@@ -299,16 +292,6 @@ export type EnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
-}
-
-export type EnumDriverDutyStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.DriverDutyStatus | Prisma.EnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDriverDutyStatusWithAggregatesFilter<$PrismaModel> | $Enums.DriverDutyStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel>
 }
 
 export type EnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -648,13 +631,6 @@ export type NestedEnumDriverApprovalStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel> | $Enums.DriverApprovalStatus
 }
 
-export type NestedEnumDriverDutyStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.DriverDutyStatus | Prisma.EnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel> | $Enums.DriverDutyStatus
-}
-
 export type NestedEnumRejectionReasonNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.RejectionReason | Prisma.EnumRejectionReasonFieldRefInput<$PrismaModel> | null
   in?: $Enums.RejectionReason[] | Prisma.ListEnumRejectionReasonFieldRefInput<$PrismaModel> | null
@@ -670,16 +646,6 @@ export type NestedEnumDriverApprovalStatusWithAggregatesFilter<$PrismaModel = ne
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDriverApprovalStatusFilter<$PrismaModel>
-}
-
-export type NestedEnumDriverDutyStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.DriverDutyStatus | Prisma.EnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.DriverDutyStatus[] | Prisma.ListEnumDriverDutyStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumDriverDutyStatusWithAggregatesFilter<$PrismaModel> | $Enums.DriverDutyStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumDriverDutyStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumRejectionReasonNullableWithAggregatesFilter<$PrismaModel = never> = {

@@ -800,7 +800,7 @@ export const DriverScalarFieldEnum = {
   licenseExpiry: 'licenseExpiry',
   nidNumber: 'nidNumber',
   approvalStatus: 'approvalStatus',
-  dutyStatus: 'dutyStatus',
+  isAvailable: 'isAvailable',
   currentLatitude: 'currentLatitude',
   currentLongitude: 'currentLongitude',
   rejectionReason: 'rejectionReason',
@@ -998,20 +998,6 @@ export type EnumDriverApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputT
  * Reference to a field of type 'DriverApprovalStatus[]'
  */
 export type ListEnumDriverApprovalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverApprovalStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'DriverDutyStatus'
- */
-export type EnumDriverDutyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverDutyStatus'>
-    
-
-
-/**
- * Reference to a field of type 'DriverDutyStatus[]'
- */
-export type ListEnumDriverDutyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DriverDutyStatus[]'>
     
 
 

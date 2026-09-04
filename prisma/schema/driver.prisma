@@ -10,7 +10,7 @@ model Driver {
 
   // Verification Status & Shift Logic
   approvalStatus   DriverApprovalStatus @default(PENDING)
-  dutyStatus       DriverDutyStatus     @default(OFF_DUTY)
+  isAvailable Boolean @default(false)
 
   currentLatitude  Float?
   currentLongitude Float?

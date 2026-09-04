@@ -118,7 +118,7 @@ export const DriverScalarFieldEnum = {
   licenseExpiry: 'licenseExpiry',
   nidNumber: 'nidNumber',
   approvalStatus: 'approvalStatus',
-  dutyStatus: 'dutyStatus',
+  isAvailable: 'isAvailable',
   currentLatitude: 'currentLatitude',
   currentLongitude: 'currentLongitude',
   rejectionReason: 'rejectionReason',

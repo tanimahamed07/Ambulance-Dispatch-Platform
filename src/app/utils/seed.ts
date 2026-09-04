@@ -98,7 +98,7 @@ export const seedTesterDriver = async () => {
             licenseExpiry: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
             nidNumber: "1990000000000",
             contactNumber: "+8801700000000",
-            dutyStatus: "AVAILABLE",
+            isAvailable : true
           },
         },
       },
