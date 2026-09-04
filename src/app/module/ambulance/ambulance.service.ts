@@ -9,7 +9,6 @@ import httpStatus from "http-status";
 import {
   AmbulanceStatus,
   DriverApprovalStatus,
-  DriverDutyStatus,
 } from "../../../generated/prisma/enums";
 import { IQuery } from "../../interface";
 import { AmbulanceWhereInput } from "../../../generated/prisma/models";
@@ -119,14 +118,12 @@ const getAllAmbulances = async (query: IQuery) => {
     isDeleted: false,
   });
 
-  // AVAILABLE ambulance হলে অবশ্যই
-  // approved + available driver assigned থাকতে হবে
   if (query.status === AmbulanceStatus.AVAILABLE) {
     andConditions.push({
       driver: {
         is: {
           approvalStatus: DriverApprovalStatus.APPROVED,
-          dutyStatus: DriverDutyStatus.AVAILABLE,
+          isAvailable: true,
           isDeleted: false,
         },
       },
@@ -236,7 +233,7 @@ const getAvailableAmbulances = async (query: IQuery) => {
     driver: {
       is: {
         approvalStatus: DriverApprovalStatus.APPROVED,
-        dutyStatus: DriverDutyStatus.AVAILABLE,
+        isAvailable: true,
         isDeleted: false,
       },
     },
