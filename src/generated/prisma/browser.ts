@@ -33,6 +33,11 @@ export type Caller = Prisma.CallerModel
  */
 export type Driver = Prisma.DriverModel
 /**
+ * Model EmergencyRequest
+ * 
+ */
+export type EmergencyRequest = Prisma.EmergencyRequestModel
+/**
  * Model User
  * 
  */

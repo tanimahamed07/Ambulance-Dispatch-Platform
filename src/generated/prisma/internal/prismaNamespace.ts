@@ -400,6 +400,7 @@ export const ModelName = {
   Ambulance: 'Ambulance',
   Caller: 'Caller',
   Driver: 'Driver',
+  EmergencyRequest: 'EmergencyRequest',
   User: 'User'
 } as const
 
@@ -416,7 +417,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "ambulance" | "caller" | "driver" | "user"
+    modelProps: "ambulance" | "caller" | "driver" | "emergencyRequest" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -642,6 +643,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EmergencyRequest: {
+      payload: Prisma.$EmergencyRequestPayload<ExtArgs>
+      fields: Prisma.EmergencyRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmergencyRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmergencyRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.EmergencyRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmergencyRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        findMany: {
+          args: Prisma.EmergencyRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>[]
+        }
+        create: {
+          args: Prisma.EmergencyRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        createMany: {
+          args: Prisma.EmergencyRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmergencyRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.EmergencyRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        update: {
+          args: Prisma.EmergencyRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmergencyRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmergencyRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmergencyRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmergencyRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmergencyRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.EmergencyRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmergencyRequest>
+        }
+        groupBy: {
+          args: Prisma.EmergencyRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmergencyRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmergencyRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmergencyRequestCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -815,6 +890,24 @@ export const DriverScalarFieldEnum = {
 } as const
 
 export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
+
+
+export const EmergencyRequestScalarFieldEnum = {
+  id: 'id',
+  patientName: 'patientName',
+  patientPhone: 'patientPhone',
+  emergencyType: 'emergencyType',
+  description: 'description',
+  pickupAddress: 'pickupAddress',
+  pickupLatitude: 'pickupLatitude',
+  pickupLongitude: 'pickupLongitude',
+  priority: 'priority',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmergencyRequestScalarFieldEnum = (typeof EmergencyRequestScalarFieldEnum)[keyof typeof EmergencyRequestScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -1016,6 +1109,48 @@ export type ListEnumRejectionReasonFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'EmergencyType'
+ */
+export type EnumEmergencyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmergencyType'>
+    
+
+
+/**
+ * Reference to a field of type 'EmergencyType[]'
+ */
+export type ListEnumEmergencyTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmergencyType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Priority'
+ */
+export type EnumPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Priority'>
+    
+
+
+/**
+ * Reference to a field of type 'Priority[]'
+ */
+export type ListEnumPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Priority[]'>
+    
+
+
+/**
+ * Reference to a field of type 'EmergencyStatus'
+ */
+export type EnumEmergencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmergencyStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'EmergencyStatus[]'
+ */
+export type ListEnumEmergencyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmergencyStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -1210,6 +1345,7 @@ export type GlobalOmitConfig = {
   ambulance?: Prisma.AmbulanceOmit
   caller?: Prisma.CallerOmit
   driver?: Prisma.DriverOmit
+  emergencyRequest?: Prisma.EmergencyRequestOmit
   user?: Prisma.UserOmit
 }
 

@@ -4,10 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { DriverService } from "./driver.service";
 import { IRequestUser } from "../auth/auth.interface";
-import {
-  DriverApprovalStatus,
-  DriverDutyStatus,
-} from "../../../generated/prisma/enums";
+import { DriverApprovalStatus } from "../../../generated/prisma/enums";
 
 const applyAsDriver = catchAsync(async (req: Request, res: Response) => {
   const user = req.user as IRequestUser;

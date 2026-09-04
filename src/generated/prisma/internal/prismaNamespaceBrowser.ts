@@ -54,6 +54,7 @@ export const ModelName = {
   Ambulance: 'Ambulance',
   Caller: 'Caller',
   Driver: 'Driver',
+  EmergencyRequest: 'EmergencyRequest',
   User: 'User'
 } as const
 
@@ -133,6 +134,24 @@ export const DriverScalarFieldEnum = {
 } as const
 
 export type DriverScalarFieldEnum = (typeof DriverScalarFieldEnum)[keyof typeof DriverScalarFieldEnum]
+
+
+export const EmergencyRequestScalarFieldEnum = {
+  id: 'id',
+  patientName: 'patientName',
+  patientPhone: 'patientPhone',
+  emergencyType: 'emergencyType',
+  description: 'description',
+  pickupAddress: 'pickupAddress',
+  pickupLatitude: 'pickupLatitude',
+  pickupLongitude: 'pickupLongitude',
+  priority: 'priority',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type EmergencyRequestScalarFieldEnum = (typeof EmergencyRequestScalarFieldEnum)[keyof typeof EmergencyRequestScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

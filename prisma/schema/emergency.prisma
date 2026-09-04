@@ -1,0 +1,18 @@
+model EmergencyRequest {
+id String @id @default(uuid())
+patientName String
+patientPhone String
+emergencyType EmergencyType
+
+description String?
+pickupAddress String
+pickupLatitude Float
+pickupLongitude Float
+
+priority Priority @default(MEDIUM)
+status EmergencyStatus @default(PENDING)
+
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+
+}

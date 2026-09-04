@@ -8,7 +8,6 @@ import {
 import { IRequestUser } from "../auth/auth.interface";
 import {
   DriverApprovalStatus,
-  DriverDutyStatus,
   Role,
 } from "../../../generated/prisma/enums";
 import { differenceInDays } from "date-fns";

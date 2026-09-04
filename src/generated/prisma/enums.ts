@@ -104,11 +104,39 @@ export const AmbulanceType = {
 export type AmbulanceType = (typeof AmbulanceType)[keyof typeof AmbulanceType]
 
 
-export const DriverDutyStatus = {
-  OFF_DUTY: 'OFF_DUTY',
-  AVAILABLE: 'AVAILABLE',
-  ON_DISPATCH: 'ON_DISPATCH',
-  ON_TRIP: 'ON_TRIP'
+export const EmergencyType = {
+  ACCIDENT: 'ACCIDENT',
+  CARDIAC: 'CARDIAC',
+  STROKE: 'STROKE',
+  PREGNANCY: 'PREGNANCY',
+  TRAUMA: 'TRAUMA',
+  BREATHING_PROBLEM: 'BREATHING_PROBLEM',
+  OTHER: 'OTHER'
 } as const
 
-export type DriverDutyStatus = (typeof DriverDutyStatus)[keyof typeof DriverDutyStatus]
+export type EmergencyType = (typeof EmergencyType)[keyof typeof EmergencyType]
+
+
+export const EmergencyStatus = {
+  PENDING: 'PENDING',
+  DISPATCHING: 'DISPATCHING',
+  ASSIGNED: 'ASSIGNED',
+  DISPATCHED: 'DISPATCHED',
+  EN_ROUTE: 'EN_ROUTE',
+  PICKED: 'PICKED',
+  UP_AT: 'UP_AT',
+  HOSPITAL_COMPLETED: 'HOSPITAL_COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type EmergencyStatus = (typeof EmergencyStatus)[keyof typeof EmergencyStatus]
+
+
+export const Priority = {
+  CRITICAL: 'CRITICAL',
+  HIGH: 'HIGH',
+  MEDIUM: 'MEDIUM',
+  LOW: 'LOW'
+} as const
+
+export type Priority = (typeof Priority)[keyof typeof Priority]
