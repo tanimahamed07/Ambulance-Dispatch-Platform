@@ -15,7 +15,7 @@ model Ambulance {
 
   // Relations
   driver             Driver?
-dispatches Dispatch[]
+  dispatches Dispatch[]
 
   // Audit Fields
   isDeleted          Boolean         @default(false)

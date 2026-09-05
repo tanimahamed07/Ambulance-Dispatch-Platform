@@ -12,8 +12,6 @@ model Driver {
   approvalStatus   DriverApprovalStatus @default(PENDING)
   isAvailable Boolean @default(false)
 
-  currentLatitude  Float?
-  currentLongitude Float?
   
   // Rejection Tracking Fields 👈
   rejectionReason RejectionReason?    

@@ -5,8 +5,10 @@ model EmergencyRequest {
   emergencyType      EmergencyType
   description        String?
   pickupAddress      String
+
   pickupLatitude     Float
   pickupLongitude    Float
+  
   priority           Priority         @default(MEDIUM)
   status             EmergencyStatus  @default(PENDING)
   cancellationReason String?

@@ -152,7 +152,6 @@ const createDispatch = async (payload: ICreateDispatch) => {
   return result;
 };
 
-
 //  Get All Dispatches - For Admin & Dispatcher
 
 const getAllDispatches = async (query: IQuery) => {
@@ -256,27 +255,27 @@ const getAllDispatches = async (query: IQuery) => {
     orderBy: {
       [sortBy]: sortOrder,
     },
-    include: {
+    select: {
+      id: true,
+      status: true,
+      dispatchedAt: true,
+      acceptedAt: true,
       emergency: {
-        include: {
-          caller: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
-          },
+        select: {
+          id: true,
+          patientName: true,
+          patientPhone: true,
+          emergencyType: true,
+          priority: true,
+          status: true,
+          pickupAddress: true,
         },
       },
       driver: {
-        include: {
+        select: {
+          id: true,
           user: {
             select: {
-              id: true,
               name: true,
               email: true,
             },
@@ -288,8 +287,6 @@ const getAllDispatches = async (query: IQuery) => {
           id: true,
           ambulanceNumber: true,
           vehicleType: true,
-          registrationNumber: true,
-          model: true,
           status: true,
         },
       },
@@ -311,49 +308,182 @@ const getAllDispatches = async (query: IQuery) => {
   };
 };
 
-/**
- * Get Dispatch by ID
- */
-// const getDispatchById = async (id: string) => {
-//   const dispatch = await prisma.dispatch.findUnique({
-//     where: { id },
-//     include: {
-//       emergency: {
-//         include: {
-//           caller: {
-//             include: {
-//               user: {
-//                 select: {
-//                   name: true,
-//                   email: true,
-//                   phone: true,
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//       driver: {
-//         include: {
-//           user: {
-//             select: {
-//               name: true,
-//               email: true,
-//               phone: true,
-//             },
-//           },
-//         },
-//       },
-//       ambulance: true,
-//     },
-//   });
+// Get Dispatch by ID
 
-//   if (!dispatch) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
-//   }
+const getDispatchById = async (id: string) => {
+  const dispatch = await prisma.dispatch.findUnique({
+    where: { id },
+    include: {
+      emergency: {
+        include: {
+          caller: {
+            include: {
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  profileUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      driver: {
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              profileUrl: true,
+            },
+          },
+        },
+      },
+      ambulance: true,
+    },
+  });
 
-//   return dispatch;
-// };
+  if (!dispatch) {
+    throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
+  }
+
+  return dispatch;
+};
+
+const getMyDispatches = async (driverId: string, query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "dispatchedAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: DispatchWhereInput[] = [
+    {
+      driverId: driverId,
+    },
+  ];
+
+  // Status filter (PENDING, ACCEPTED, REJECTED)
+  if (query.status) {
+    andConditions.push({
+      status: query.status,
+    });
+  }
+
+  // Emergency Type filter
+  if (query.emergencyType) {
+    andConditions.push({
+      emergency: {
+        emergencyType: query.emergencyType,
+      },
+    });
+  }
+
+  // Priority filter
+  if (query.priority) {
+    andConditions.push({
+      emergency: {
+        priority: query.priority,
+      },
+    });
+  }
+
+  // Search by patient name or phone
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          emergency: {
+            patientName: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          emergency: {
+            patientPhone: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          emergency: {
+            pickupAddress: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+      ],
+    });
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const dispatches = await prisma.dispatch.findMany({
+    where: whereConditions,
+    take: limit,
+    skip: skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    select: {
+      id: true,
+      status: true,
+      dispatchedAt: true,
+      acceptedAt: true,
+      emergency: {
+        select: {
+          id: true,
+          patientName: true,
+          patientPhone: true,
+          emergencyType: true,
+          priority: true,
+          status: true,
+          pickupAddress: true,
+        },
+      },
+      driver: {
+        select: {
+          id: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      ambulance: {
+        select: {
+          id: true,
+          ambulanceNumber: true,
+          vehicleType: true,
+          status: true,
+        },
+      },
+    },
+  });
+
+  const totalDispatchesCount = await prisma.dispatch.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: totalDispatchesCount,
+      totalPages: Math.ceil(totalDispatchesCount / limit),
+    },
+    data: dispatches,
+  };
+};
 
 // /**
 //  * Driver Accepts Dispatch
@@ -522,39 +652,9 @@ const getAllDispatches = async (query: IQuery) => {
 //   return result;
 // };
 
-// /**
-//  * Get My Dispatches - For Driver
-//  */
-// const getMyDispatches = async (driverId: string) => {
-//   const dispatches = await prisma.dispatch.findMany({
-//     where: {
-//       driverId,
-//     },
-//     include: {
-//       emergency: {
-//         include: {
-//           caller: {
-//             include: {
-//               user: {
-//                 select: {
-//                   name: true,
-//                   email: true,
-//                   phone: true,
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//       ambulance: true,
-//     },
-//     orderBy: {
-//       createdAt: "desc",
-//     },
-//   });
-
-//   return dispatches;
-// };
+/**
+ * Get My Dispatches - For Driver
+ */
 
 export const DispatchService = {
   createDispatch,
@@ -562,5 +662,5 @@ export const DispatchService = {
   getDispatchById,
   // acceptDispatch,
   // rejectDispatch,
-  // getMyDispatches,
+  getMyDispatches,
 };

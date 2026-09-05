@@ -3,6 +3,8 @@ import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { DispatchService } from "./dispatch.service";
+import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 
 const createDispatch = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -26,28 +28,39 @@ const getAllDispatches = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const getAllDispatches = catchAsync(async (req: Request, res: Response) => {
-//   const result = await DispatchService.getAllDispatches();
+const getMyDispatches = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.userId!;
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Dispatches retrieved successfully.",
-//     data: result,
-//   });
-// });
+  // First find driver by userId
+  const driver = await prisma.driver.findUnique({
+    where: { userId },
+  });
 
-// const getDispatchById = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await DispatchService.getDispatchById(id);
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_IMPLEMENTED, "Driver profile not found");
+  }
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Dispatch retrieved successfully.",
-//     data: result,
-//   });
-// });
+  const result = await DispatchService.getMyDispatches(driver.id, req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My dispatches retrieved successfully.",
+    data: result,
+  });
+});
+
+const getDispatchById = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await DispatchService.getDispatchById(id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Dispatch retrieved successfully.",
+    data: result,
+  });
+});
 
 // const acceptDispatch = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -106,38 +119,11 @@ const getAllDispatches = catchAsync(async (req: Request, res: Response) => {
 //   });
 // });
 
-// const getMyDispatches = catchAsync(async (req: Request, res: Response) => {
-//   const userId = req.user?.userId!;
-
-//   // First find driver by userId
-//   const driver = await require("../../lib/prisma").prisma.driver.findUnique({
-//     where: { userId },
-//   });
-
-//   if (!driver) {
-//     return sendResponse(res, {
-//       statusCode: httpStatus.NOT_FOUND,
-//       success: false,
-//       message: "Driver profile not found",
-//       data: null,
-//     });
-//   }
-
-//   const result = await DispatchService.getMyDispatches(driver.id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "My dispatches retrieved successfully.",
-//     data: result,
-//   });
-// });
-
 export const DispatchController = {
   createDispatch,
   getAllDispatches,
-  // getDispatchById,
+  getDispatchById,
+  getMyDispatches,
   // acceptDispatch,
   // rejectDispatch,
-  // getMyDispatches,
 };
