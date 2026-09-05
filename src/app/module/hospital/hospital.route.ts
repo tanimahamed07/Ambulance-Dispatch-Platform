@@ -1,0 +1,51 @@
+import { Router } from "express";
+
+import { Role } from "../../../generated/prisma/enums";
+import { auth } from "../../middleware/checkAuth";
+import { validateRequest } from "../../middleware/validateRequest";
+import { HospitalValidation } from "./hospital.validation";
+import { HospitalController } from "./hospital.controller";
+
+const router = Router();
+
+// Admin: Create Hospital
+router.post(
+  "/",
+  auth(Role.ADMIN),
+  validateRequest(HospitalValidation.createHospitalValidation),
+  HospitalController.createHospital,
+);
+
+// // Admin, Dispatcher, Driver: Get All Hospitals
+// router.get(
+//   "/",
+//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
+//   HospitalController.getAllHospitals,
+// );
+
+// // Get Nearby Hospitals - Based on coordinates
+// router.get(
+//   "/nearby",
+//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+//   HospitalController.getNearbyHospitals,
+// );
+
+// // Get Hospital by ID
+// router.get(
+//   "/:id",
+//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+//   HospitalController.getHospitalById,
+// );
+
+// // Admin: Update Hospital
+// router.patch(
+//   "/:id",
+//   auth(Role.ADMIN),
+//   validateRequest(HospitalValidation.updateHospitalValidation),
+//   HospitalController.updateHospital,
+// );
+
+// // Admin: Delete Hospital (Soft delete)
+// router.delete("/:id", auth(Role.ADMIN), HospitalController.deleteHospital);
+
+export const HospitalRoutes = router;

@@ -1,21 +1,19 @@
 model Dispatch {
-id String @id @default(uuid())
-emergencyId String @unique
-emergency EmergencyRequest @relation(fields: [emergencyId],references: [id])
-ambulanceId String
-ambulance Ambulance @relation(fields: [ambulanceId],references: [id])
-driverId String
-driver Driver @relation(fields: [driverId],references: [id])
-status DispatchStatus @default(PENDING)
-dispatchedAt DateTime?
-acceptedAt DateTime?
+  id           String           @id @default(uuid())
+  emergencyId  String           @unique
+  emergency    EmergencyRequest @relation(fields: [emergencyId], references: [id])
+  ambulanceId  String
+  ambulance    Ambulance        @relation(fields: [ambulanceId], references: [id])
+  driverId     String
+  driver       Driver           @relation(fields: [driverId], references: [id])
+  status       DispatchStatus   @default(PENDING)
+  dispatchedAt DateTime?
+  acceptedAt   DateTime?
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trips     Trip[]
 
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-
-@@index([ambulanceId])
-
-@@map("dispatches")
-trips Trip[]
+  @@index([ambulanceId])
+  @@map("dispatches")
 }

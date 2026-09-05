@@ -402,6 +402,8 @@ export const ModelName = {
   Dispatch: 'Dispatch',
   Driver: 'Driver',
   EmergencyRequest: 'EmergencyRequest',
+  Hospital: 'Hospital',
+  Trip: 'Trip',
   User: 'User'
 } as const
 
@@ -418,7 +420,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "ambulance" | "caller" | "dispatch" | "driver" | "emergencyRequest" | "user"
+    modelProps: "ambulance" | "caller" | "dispatch" | "driver" | "emergencyRequest" | "hospital" | "trip" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -792,6 +794,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Hospital: {
+      payload: Prisma.$HospitalPayload<ExtArgs>
+      fields: Prisma.HospitalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HospitalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HospitalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        findFirst: {
+          args: Prisma.HospitalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HospitalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        findMany: {
+          args: Prisma.HospitalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>[]
+        }
+        create: {
+          args: Prisma.HospitalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        createMany: {
+          args: Prisma.HospitalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HospitalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>[]
+        }
+        delete: {
+          args: Prisma.HospitalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        update: {
+          args: Prisma.HospitalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        deleteMany: {
+          args: Prisma.HospitalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HospitalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HospitalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>[]
+        }
+        upsert: {
+          args: Prisma.HospitalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HospitalPayload>
+        }
+        aggregate: {
+          args: Prisma.HospitalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHospital>
+        }
+        groupBy: {
+          args: Prisma.HospitalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HospitalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HospitalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HospitalCountAggregateOutputType> | number
+        }
+      }
+    }
+    Trip: {
+      payload: Prisma.$TripPayload<ExtArgs>
+      fields: Prisma.TripFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        findFirst: {
+          args: Prisma.TripFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        findMany: {
+          args: Prisma.TripFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>[]
+        }
+        create: {
+          args: Prisma.TripCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        createMany: {
+          args: Prisma.TripCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TripCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>[]
+        }
+        delete: {
+          args: Prisma.TripDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        update: {
+          args: Prisma.TripUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TripUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>[]
+        }
+        upsert: {
+          args: Prisma.TripUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripPayload>
+        }
+        aggregate: {
+          args: Prisma.TripAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTrip>
+        }
+        groupBy: {
+          args: Prisma.TripGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -999,6 +1149,43 @@ export const EmergencyRequestScalarFieldEnum = {
 } as const
 
 export type EmergencyRequestScalarFieldEnum = (typeof EmergencyRequestScalarFieldEnum)[keyof typeof EmergencyRequestScalarFieldEnum]
+
+
+export const HospitalScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  email: 'email',
+  address: 'address',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  emergencyAvailable: 'emergencyAvailable',
+  specialties: 'specialties',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HospitalScalarFieldEnum = (typeof HospitalScalarFieldEnum)[keyof typeof HospitalScalarFieldEnum]
+
+
+export const TripScalarFieldEnum = {
+  id: 'id',
+  emergencyId: 'emergencyId',
+  dispatchId: 'dispatchId',
+  hospitalId: 'hospitalId',
+  status: 'status',
+  startedAt: 'startedAt',
+  pickedUpAt: 'pickedUpAt',
+  hospitalArrivalAt: 'hospitalArrivalAt',
+  completedAt: 'completedAt',
+  distanceKm: 'distanceKm',
+  fare: 'fare',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -1256,6 +1443,48 @@ export type ListEnumEmergencyStatusFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'HospitalStatus'
+ */
+export type EnumHospitalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HospitalStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'HospitalStatus[]'
+ */
+export type ListEnumHospitalStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HospitalStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TripStatus'
+ */
+export type EnumTripStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TripStatus[]'
+ */
+export type ListEnumTripStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TripStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
  * Reference to a field of type 'Role'
  */
 export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
@@ -1452,6 +1681,8 @@ export type GlobalOmitConfig = {
   dispatch?: Prisma.DispatchOmit
   driver?: Prisma.DriverOmit
   emergencyRequest?: Prisma.EmergencyRequestOmit
+  hospital?: Prisma.HospitalOmit
+  trip?: Prisma.TripOmit
   user?: Prisma.UserOmit
 }
 

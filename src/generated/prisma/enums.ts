@@ -151,3 +151,23 @@ export const DispatchStatus = {
 } as const
 
 export type DispatchStatus = (typeof DispatchStatus)[keyof typeof DispatchStatus]
+
+
+export const TripStatus = {
+  DISPATCHED: 'DISPATCHED',
+  EN_ROUTE: 'EN_ROUTE',
+  PICKED_UP: 'PICKED_UP',
+  AT_HOSPITAL: 'AT_HOSPITAL',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TripStatus = (typeof TripStatus)[keyof typeof TripStatus]
+
+
+export const HospitalStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type HospitalStatus = (typeof HospitalStatus)[keyof typeof HospitalStatus]

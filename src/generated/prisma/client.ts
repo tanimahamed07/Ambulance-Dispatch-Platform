@@ -67,6 +67,16 @@ export type Driver = Prisma.DriverModel
  */
 export type EmergencyRequest = Prisma.EmergencyRequestModel
 /**
+ * Model Hospital
+ * 
+ */
+export type Hospital = Prisma.HospitalModel
+/**
+ * Model Trip
+ * 
+ */
+export type Trip = Prisma.TripModel
+/**
  * Model User
  * 
  */

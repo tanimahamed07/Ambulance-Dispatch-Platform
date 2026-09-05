@@ -11,6 +11,7 @@ import { DriverRoutes } from "./app/module/driver/driver.route";
 import { AmbulanceRoutes } from "./app/module/ambulance/ambulance.route";
 import { EmergencyRoutes } from "./app/module/emergency/emergency.route";
 import { DispatchRoutes } from "./app/module/dispatch/dispatch.route";
+import { HospitalRoutes } from "./app/module/hospital/hospital.route";
 
 const app: Application = express();
 
@@ -34,6 +35,7 @@ app.use("/api/v1/driver", DriverRoutes);
 app.use("/api/v1/ambulance", AmbulanceRoutes);
 app.use("/api/v1/emergency", EmergencyRoutes);
 app.use("/api/v1/dispatch", DispatchRoutes);
+app.use("/api/v1/hospital", HospitalRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {

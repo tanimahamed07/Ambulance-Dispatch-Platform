@@ -1,23 +1,23 @@
 model User {
-  id            String     @id @default(uuid())
+  id            String       @id @default(uuid())
   name          String
-  email         String     @unique
+  email         String       @unique
   password      String?
-  emailVerified Boolean    @default(false)
-  role          Role       @default(CALLER)
-  status        UserStatus @default(ACTIVE)
-  googleId      String? @unique
-  authProvider AuthProvider @default(CREDENTIAL)
+  emailVerified Boolean      @default(false)
+  role          Role         @default(CALLER)
+  status        UserStatus   @default(ACTIVE)
+  googleId      String?      @unique
+  authProvider  AuthProvider @default(CREDENTIAL)
 
-  profileUrl           String       @default("")
-  profilePublicId      String       @default("")
+  profileUrl      String @default("")
+  profilePublicId String @default("")
 
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  caller   Caller?
-  driver   Driver?
+  caller    Caller?
+  driver    Driver?
 
   @@map("users")
 }

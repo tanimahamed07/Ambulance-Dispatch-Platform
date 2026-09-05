@@ -1,38 +1,37 @@
 model Driver {
-  id             String               @id @default(uuid())
-  contactNumber  String
-  address        String
-  licenseNumber  String               @unique
-  licenseUrl     String
+  id              String   @id @default(uuid())
+  contactNumber   String
+  address         String
+  licenseNumber   String   @unique
+  licenseUrl      String
   licensePublicId String
-  licenseExpiry  DateTime
-  nidNumber      String              @unique
+  licenseExpiry   DateTime
+  nidNumber       String   @unique
 
   // Verification Status & Shift Logic
-  approvalStatus   DriverApprovalStatus @default(PENDING)
-  isAvailable Boolean @default(false)
+  approvalStatus DriverApprovalStatus @default(PENDING)
+  isAvailable    Boolean              @default(false)
 
-  
   // Rejection Tracking Fields 👈
-  rejectionReason RejectionReason?    
-  rejectionNote   String?             
-  rejectedAt      DateTime?           
+  rejectionReason RejectionReason?
+  rejectionNote   String?
+  rejectedAt      DateTime?
 
-dispatches Dispatch[]
+  dispatches Dispatch[]
 
   // User & Ambulance Relations
-  userId         String               @unique
-  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  ambulanceId    String?              @unique
-  ambulance      Ambulance?           @relation(fields: [ambulanceId], references: [id])
+  ambulanceId String?    @unique
+  ambulance   Ambulance? @relation(fields: [ambulanceId], references: [id])
 
   // Soft Delete Fields
-  isDeleted      Boolean              @default(false)
-  deletedAt      DateTime?
+  isDeleted Boolean   @default(false)
+  deletedAt DateTime?
 
-  createdAt      DateTime             @default(now())
-  updatedAt      DateTime             @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("drivers")
 }
