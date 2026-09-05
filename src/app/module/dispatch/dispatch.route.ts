@@ -35,18 +35,24 @@ router.get(
   DispatchController.getDispatchById,
 );
 
-// // Driver accepts dispatch
-// router.patch(
-//   "/:id/accept",
-//   auth(Role.DRIVER),
-//   DispatchController.acceptDispatch,
-// );
+router.patch(
+  "/:id/accept",
+  auth(Role.DRIVER),
+  DispatchController.acceptDispatch,
+);
 
-// // Driver rejects dispatch
 // router.patch(
 //   "/:id/reject",
 //   auth(Role.DRIVER),
 //   DispatchController.rejectDispatch,
+// );
+
+// // Dispatcher/Admin — dispatch cancel (ambulance/driver abar AVAILABLE hobe)
+// router.patch(
+//   "/:id/cancel",
+//   auth(Role.ADMIN, Role.DISPATCHER),
+//   validateRequest(DispatchValidation.CancelDispatchZodSchema),
+//   DispatchController.cancelDispatch,
 // );
 
 export const DispatchRoutes = router;

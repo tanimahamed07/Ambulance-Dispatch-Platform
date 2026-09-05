@@ -485,85 +485,93 @@ const getMyDispatches = async (driverId: string, query: IQuery) => {
   };
 };
 
-// /**
-//  * Driver Accepts Dispatch
-//  */
-// const acceptDispatch = async (dispatchId: string, driverId: string) => {
-//   const result = await prisma.$transaction(async (tx) => {
-//     // Find dispatch
-//     const dispatch = await tx.dispatch.findUnique({
-//       where: { id: dispatchId },
-//       include: {
-//         driver: true,
-//         ambulance: true,
-//         emergency: true,
-//       },
-//     });
+const acceptDispatch = async (dispatchId: string, driverId: string) => {
+  const result = await prisma.$transaction(async (tx) => {
+    // Find dispatch
+    const dispatch = await tx.dispatch.findUnique({
+      where: { id: dispatchId },
+      include: {
+        driver: true,
+        ambulance: true,
+        emergency: true,
+      },
+    });
 
-//     if (!dispatch) {
-//       throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
-//     }
+    if (!dispatch) {
+      throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
+    }
 
-//     // Verify it's the assigned driver
-//     if (dispatch.driverId !== driverId) {
-//       throw new AppError(
-//         httpStatus.FORBIDDEN,
-//         "You are not authorized to accept this dispatch",
-//       );
-//     }
+    // Verify it's the assigned driver
+    if (dispatch.driverId !== driverId) {
+      throw new AppError(
+        httpStatus.FORBIDDEN,
+        "You are not authorized to accept this dispatch",
+      );
+    }
 
-//     // Check if already accepted or rejected
-//     if (dispatch.status !== DispatchStatus.PENDING) {
-//       throw new AppError(
-//         httpStatus.BAD_REQUEST,
-//         `Dispatch is already ${dispatch.status.toLowerCase()}`,
-//       );
-//     }
+    // Check if already accepted or rejected
+    if (dispatch.status !== DispatchStatus.PENDING) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        `Dispatch is already ${dispatch.status.toLowerCase()}`,
+      );
+    }
 
-//     // Update dispatch status
-//     const updatedDispatch = await tx.dispatch.update({
-//       where: { id: dispatchId },
-//       data: {
-//         status: DispatchStatus.ACCEPTED,
-//         acceptedAt: new Date(),
-//       },
-//       include: {
-//         emergency: true,
-//         driver: {
-//           include: {
-//             user: {
-//               select: {
-//                 name: true,
-//                 email: true,
-//               },
-//             },
-//           },
-//         },
-//         ambulance: true,
-//       },
-//     });
+    // Update dispatch status
+    // Update dispatch status with clean select
+    const updatedDispatch = await tx.dispatch.update({
+      where: { id: dispatchId },
+      data: {
+        status: DispatchStatus.ACCEPTED,
+        acceptedAt: new Date(),
+      },
+      select: {
+        id: true,
+        status: true,
+        acceptedAt: true,
+        dispatchedAt: true,
+        emergency: {
+          select: {
+            id: true,
+            patientName: true,
+            patientPhone: true,
+            pickupAddress: true,
+            status: true,
+            priority: true,
+          },
+        },
+        ambulance: {
+          select: {
+            id: true,
+            ambulanceNumber: true,
+            vehicleType: true,
+            status: true,
+          },
+        },
+      },
+    });
 
-//     // Update emergency status to DISPATCHED
-//     await tx.emergencyRequest.update({
-//       where: { id: dispatch.emergencyId },
-//       data: {
-//         status: EmergencyStatus.DISPATCHED,
-//       },
-//     });
+    // Update emergency status to DISPATCHED
+    await tx.emergencyRequest.update({
+      where: { id: dispatch.emergencyId },
+      data: {
+        status: EmergencyStatus.DISPATCHED,
+      },
+    });
 
-//     // Update ambulance status to EN_ROUTE
-//     await tx.ambulance.update({
-//       where: { id: dispatch.ambulanceId },
-//       data: {
-//         status: AmbulanceStatus.EN_ROUTE,
-//       },
-//     });
+    // Update ambulance status to EN_ROUTE
+    await tx.ambulance.update({
+      where: { id: dispatch.ambulanceId },
+      data: {
+        status: AmbulanceStatus.EN_ROUTE,
+      },
+    });
 
-//     return updatedDispatch;
-//   });
+    return updatedDispatch;
+  });
 
-//   return result;
-// };
+  return result;
+};
 
 // /**
 //  * Driver Rejects Dispatch
@@ -660,7 +668,7 @@ export const DispatchService = {
   createDispatch,
   getAllDispatches,
   getDispatchById,
-  // acceptDispatch,
+  acceptDispatch,
   // rejectDispatch,
   getMyDispatches,
 };

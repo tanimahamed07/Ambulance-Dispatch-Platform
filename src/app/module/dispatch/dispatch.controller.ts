@@ -62,34 +62,18 @@ const getDispatchById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const acceptDispatch = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const driverId = req.user?.userId!;
+const acceptDispatch = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await DispatchService.getDispatchById(id as string);
 
-//   // First find driver by userId
-//   const driver = await require("../../lib/prisma").prisma.driver.findUnique({
-//     where: { userId: driverId },
-//   });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Dispatch accept successfully.",
+    data: result,
+  });
+});
 
-//   if (!driver) {
-//     return sendResponse(res, {
-//       statusCode: httpStatus.NOT_FOUND,
-//       success: false,
-//       message: "Driver profile not found",
-//       data: null,
-//     });
-//   }
-
-//   const result = await DispatchService.acceptDispatch(id, driver.id);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message:
-//       "Dispatch accepted successfully. Start heading to the emergency location.",
-//     data: result,
-//   });
-// });
 
 // const rejectDispatch = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -124,6 +108,6 @@ export const DispatchController = {
   getAllDispatches,
   getDispatchById,
   getMyDispatches,
-  // acceptDispatch,
+  acceptDispatch,
   // rejectDispatch,
 };
