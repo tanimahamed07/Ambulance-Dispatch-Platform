@@ -10,6 +10,7 @@ status DispatchStatus @default(PENDING)
 dispatchedAt DateTime?
 acceptedAt DateTime?
 
+
 createdAt DateTime @default(now())
 updatedAt DateTime @updatedAt
 

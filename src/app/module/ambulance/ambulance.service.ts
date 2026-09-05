@@ -143,9 +143,6 @@ const getAllAmbulances = async (query: IQuery) => {
           contactNumber: true,
           approvalStatus: true,
           isAvailable: true,
-          currentLatitude: true,
-          currentLongitude: true,
-
           user: {
             select: {
               id: true,
@@ -252,9 +249,6 @@ const getAvailableAmbulances = async (query: IQuery) => {
           contactNumber: true,
           approvalStatus: true,
           isAvailable: true,
-          currentLatitude: true,
-          currentLongitude: true,
-
           user: {
             select: {
               id: true,

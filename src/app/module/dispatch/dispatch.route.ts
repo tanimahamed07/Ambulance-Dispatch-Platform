@@ -48,11 +48,10 @@ router.patch(
 );
 
 // // Dispatcher/Admin — dispatch cancel (ambulance/driver abar AVAILABLE hobe)
-// router.patch(
-//   "/:id/cancel",
-//   auth(Role.ADMIN, Role.DISPATCHER),
-//   validateRequest(DispatchValidation.CancelDispatchZodSchema),
-//   DispatchController.cancelDispatch,
-// );
+router.patch(
+  "/:id/cancel",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  DispatchController.cancelDispatch,
+);
 
 export const DispatchRoutes = router;

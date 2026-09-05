@@ -13,3 +13,7 @@ export interface IRejectDispatch {
   dispatchId: string;
   reason?: string;
 }
+
+export interface ICancelDispatch {
+  cancellationReason: string;
+}

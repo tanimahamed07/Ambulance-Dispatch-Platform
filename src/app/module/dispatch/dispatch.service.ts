@@ -612,6 +612,83 @@ const rejectDispatch = async (dispatchId: string, driverId: string) => {
   return updatedDispatch;
 };
 
+/**
+ * Cancel Dispatch - For Admin & Dispatcher
+ */
+const cancelDispatch = async (dispatchId: string) => {
+  const result = await prisma.$transaction(async (tx) => {
+    // 1. Find dispatch first to verify state and get related IDs
+    const dispatch = await tx.dispatch.findUnique({
+      where: { id: dispatchId },
+      select: {
+        id: true,
+        driverId: true,
+        status: true,
+        emergencyId: true,
+        ambulanceId: true,
+      },
+    });
+
+    if (!dispatch) {
+      throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
+    }
+
+    // 2. Check if already cancelled
+    if (dispatch.status === DispatchStatus.CANCELLED) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Dispatch is already cancelled",
+      );
+    }
+
+    // 3. Check if already completed
+    if (
+      dispatch.status === DispatchStatus.COMPLETED ||
+      DispatchStatus.ACCEPTED
+    ) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Cannot cancel a completed dispatch",
+      );
+    }
+
+    // 4. Update dispatch status to CANCELLED
+    const updatedDispatch = await tx.dispatch.update({
+      where: { id: dispatchId },
+      data: {
+        status: DispatchStatus.CANCELLED,
+      },
+    });
+
+    // 5. Revert emergency status back to PENDING
+    await tx.emergencyRequest.update({
+      where: { id: dispatch.emergencyId },
+      data: {
+        status: EmergencyStatus.PENDING,
+      },
+    });
+
+    // 6. Revert ambulance status to AVAILABLE
+    await tx.ambulance.update({
+      where: { id: dispatch.ambulanceId },
+      data: {
+        status: AmbulanceStatus.AVAILABLE,
+      },
+    });
+
+    // 7. Mark driver as available again
+    await tx.driver.update({
+      where: { id: dispatch.driverId },
+      data: {
+        isAvailable: true,
+      },
+    });
+
+    return updatedDispatch;
+  });
+
+  return result;
+};
 
 export const DispatchService = {
   createDispatch,
@@ -620,4 +697,5 @@ export const DispatchService = {
   acceptDispatch,
   rejectDispatch,
   getMyDispatches,
+  cancelDispatch,
 };

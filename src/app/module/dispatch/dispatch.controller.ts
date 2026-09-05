@@ -102,6 +102,20 @@ const rejectDispatch = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const cancelDispatch = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const result = await DispatchService.cancelDispatch(id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message:
+      "Dispatch cancelled successfully. The emergency has been reverted to PENDING status.",
+    data: result,
+  });
+});
+
 export const DispatchController = {
   createDispatch,
   getAllDispatches,
@@ -109,4 +123,5 @@ export const DispatchController = {
   getMyDispatches,
   acceptDispatch,
   rejectDispatch,
+  cancelDispatch,
 };

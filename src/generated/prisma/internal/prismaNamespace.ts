@@ -966,8 +966,6 @@ export const DriverScalarFieldEnum = {
   nidNumber: 'nidNumber',
   approvalStatus: 'approvalStatus',
   isAvailable: 'isAvailable',
-  currentLatitude: 'currentLatitude',
-  currentLongitude: 'currentLongitude',
   rejectionReason: 'rejectionReason',
   rejectionNote: 'rejectionNote',
   rejectedAt: 'rejectedAt',
