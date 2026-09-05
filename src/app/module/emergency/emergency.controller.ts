@@ -4,6 +4,7 @@ import { sendResponse } from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import { EmergencyService } from "./emergency.service";
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
 
 const createEmergency = catchAsync(async (req: Request, res: Response) => {
   const payload = req.body;
@@ -42,6 +43,39 @@ const getAllEmergencies = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+const getMyEmergencies = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.userId!;
+
+  const caller = await prisma.caller.findUnique({
+    where: { userId },
+  });
+
+  if (!caller) {
+    throw new AppError(httpStatus.NOT_FOUND, "Caller profile not found.");
+  }
+
+  const result = await EmergencyService.getMyEmergencies(caller.id, req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My emergencies retrieved successfully.",
+    data: result,
+  });
+});
+const getMyEmergencyById = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await EmergencyService.getMyEmergencyById(id as string);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "My Emergency retrieved successfully.",
+    data: result,
+  });
+});
+
 const getEmergencyById = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await EmergencyService.getEmergencyById(id as string);
@@ -87,7 +121,9 @@ const cancelEmergency = catchAsync(async (req: Request, res: Response) => {
 export const EmergencyController = {
   createEmergency,
   getAllEmergencies,
+  getMyEmergencies,
   getEmergencyById,
   updateEmergencyPriority,
   cancelEmergency,
+  getMyEmergencyById,
 };

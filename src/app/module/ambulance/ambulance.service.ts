@@ -56,7 +56,7 @@ const createAmbulance = async (payload: ICreateAmbulancePayload) => {
       vehicleType,
       model,
       capacity,
-      status: AmbulanceStatus.AVAILABLE,
+      status: AmbulanceStatus.OFFLINE,
     },
   });
 
@@ -118,15 +118,9 @@ const getAllAmbulances = async (query: IQuery) => {
     isDeleted: false,
   });
 
-  if (query.status === AmbulanceStatus.AVAILABLE) {
+  if (query.status === AmbulanceStatus.OFFLINE) {
     andConditions.push({
-      driver: {
-        is: {
-          approvalStatus: DriverApprovalStatus.APPROVED,
-          isAvailable: true,
-          isDeleted: false,
-        },
-      },
+      driver: { is: null },
     });
   }
 

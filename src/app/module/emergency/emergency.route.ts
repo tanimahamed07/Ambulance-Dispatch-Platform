@@ -21,6 +21,17 @@ router.get(
 );
 
 router.get(
+  "/my-emergencies",
+  auth(Role.CALLER),
+  EmergencyController.getMyEmergencies,
+);
+router.get(
+  "/my-emergencies/:id",
+  auth(Role.CALLER),
+  EmergencyController.getMyEmergencyById,
+);
+
+router.get(
   "/:id",
   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
   EmergencyController.getEmergencyById,

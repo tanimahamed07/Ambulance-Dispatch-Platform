@@ -15,5 +15,5 @@ updatedAt DateTime @updatedAt
 
 @@index([ambulanceId])
 
-
+@@map("dispatches")
 }
