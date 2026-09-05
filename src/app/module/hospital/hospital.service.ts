@@ -35,110 +35,92 @@ const createHospital = async (payload: ICreateHospital) => {
 /**
  * Get All Hospitals - With filters and search
  */
-// const getAllHospitals = async (query: IQuery) => {
-//   const limit = query.limit ? Number(query.limit) : 10;
-//   const page = query.page ? Number(query.page) : 1;
-//   const skip = (page - 1) * limit;
+const getAllHospitals = async (query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
 
-//   const sortBy = query.sortBy || "createdAt";
-//   const sortOrder = query.sortOrder || "desc";
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
 
-//   const andConditions: HospitalWhereInput[] = [];
+  const andConditions: HospitalWhereInput[] = [];
 
-//   // Search by name, address, phone
-//   if (query.searchTerm) {
-//     andConditions.push({
-//       OR: [
-//         {
-//           name: {
-//             contains: query.searchTerm,
-//             mode: "insensitive",
-//           },
-//         },
-//         {
-//           address: {
-//             contains: query.searchTerm,
-//             mode: "insensitive",
-//           },
-//         },
-//         {
-//           phone: {
-//             contains: query.searchTerm,
-//             mode: "insensitive",
-//           },
-//         },
-//       ],
-//     });
-//   }
+  // Search by name, address, phone
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          name: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          address: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          phone: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
 
-//   // Status filter (ACTIVE, INACTIVE)
-//   if (query.status) {
-//     andConditions.push({
-//       status: query.status,
-//     });
-//   }
+  // Status filter (ACTIVE, INACTIVE)
+  if (query.status) {
+    andConditions.push({
+      status: query.status.toUpperCase() as HospitalStatus,
+    });
+  }
 
-//   // Emergency available filter
-//   if (query.emergencyAvailable !== undefined) {
-//     andConditions.push({
-//       emergencyAvailable: query.emergencyAvailable === "true",
-//     });
-//   }
+  // Emergency available filter
+  if (query.emergencyAvailable !== undefined) {
+    andConditions.push({
+      emergencyAvailable: query.emergencyAvailable === "true",
+    });
+  }
 
-//   // Specialty filter
-//   if (query.specialty) {
-//     andConditions.push({
-//       specialties: {
-//         has: query.specialty,
-//       },
-//     });
-//   }
+  // Specialty filter
+  if (query.specialty) {
+    const normalizedSpecialty = query.specialty.trim().toLowerCase();
+    andConditions.push({
+      specialties: {
+        has: normalizedSpecialty,
+      },
+    });
+  }
 
-//   const whereConditions =
-//     andConditions.length > 0 ? { AND: andConditions } : {};
+  const whereConditions =
+    andConditions.length > 0 ? { AND: andConditions } : {};
 
-//   const hospitals = await prisma.hospital.findMany({
-//     where: whereConditions,
-//     take: limit,
-//     skip: skip,
-//     orderBy: {
-//       [sortBy]: sortOrder,
-//     },
-//     select: {
-//       id: true,
-//       name: true,
-//       phone: true,
-//       email: true,
-//       address: true,
-//       latitude: true,
-//       longitude: true,
-//       emergencyAvailable: true,
-//       specialties: true,
-//       status: true,
-//       createdAt: true,
-//       updatedAt: true,
-//       _count: {
-//         select: {
-//           trips: true,
-//         },
-//       },
-//     },
-//   });
+  const hospitals = await prisma.hospital.findMany({
+    where: whereConditions,
+    take: limit,
+    skip: skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
 
-//   const totalHospitalsCount = await prisma.hospital.count({
-//     where: whereConditions,
-//   });
+  const totalHospitalsCount = await prisma.hospital.count({
+    where: whereConditions,
+  });
 
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total: totalHospitalsCount,
-//       totalPages: Math.ceil(totalHospitalsCount / limit),
-//     },
-//     data: hospitals,
-//   };
-// };
+  return {
+    meta: {
+      page,
+      limit,
+      total: totalHospitalsCount,
+      totalPages: Math.ceil(totalHospitalsCount / limit),
+    },
+    data: hospitals,
+  };
+};
 
 // /**
 //  * Get Hospital by ID
@@ -338,9 +320,9 @@ const createHospital = async (payload: ICreateHospital) => {
 
 export const HospitalService = {
   createHospital,
-//   getAllHospitals,
-//   getHospitalById,
-//   updateHospital,
-//   deleteHospital,
-//   getNearbyHospitals,
+  getAllHospitals,
+  //   getHospitalById,
+  //   updateHospital,
+  //   deleteHospital,
+  //   getNearbyHospitals,
 };

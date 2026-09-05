@@ -16,12 +16,12 @@ router.post(
   HospitalController.createHospital,
 );
 
-// // Admin, Dispatcher, Driver: Get All Hospitals
-// router.get(
-//   "/",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
-//   HospitalController.getAllHospitals,
-// );
+// Admin, Dispatcher, Driver: Get All Hospitals
+router.get(
+  "/",
+  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER),
+  HospitalController.getAllHospitals,
+);
 
 // // Get Nearby Hospitals - Based on coordinates
 // router.get(
