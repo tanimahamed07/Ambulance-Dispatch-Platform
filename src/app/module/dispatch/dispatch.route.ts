@@ -10,18 +10,18 @@ const router = Router();
 
 // Create Dispatch - Only DISPATCHER can create
 router.post(
-  "/",
+  "/create-dispatch",
   auth(Role.DISPATCHER),
   validateRequest(DispatchValidation.CreateDispatchZodSchema),
   DispatchController.createDispatch,
 ); 
 
-// // Get All Dispatches - Admin & Dispatcher
-// router.get(
-//   "/",
-//   auth(Role.ADMIN, Role.DISPATCHER),
-//   DispatchController.getAllDispatches,
-// );
+// Get All Dispatches - Admin & Dispatcher
+router.get(
+  "/",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  DispatchController.getAllDispatches,
+);
 
 // // Get My Dispatches - Driver sees their own dispatches
 // router.get(

@@ -8,6 +8,11 @@ import {
   DriverApprovalStatus,
   EmergencyStatus,
 } from "../../../generated/prisma/enums";
+import { IQuery } from "../../interface";
+import {
+  AmbulanceWhereInput,
+  DispatchWhereInput,
+} from "../../../generated/prisma/models";
 
 const createDispatch = async (payload: ICreateDispatch) => {
   const { emergencyId, driverId } = payload;
@@ -147,11 +152,110 @@ const createDispatch = async (payload: ICreateDispatch) => {
   return result;
 };
 
-/**
- * Get All Dispatches - For Admin & Dispatcher
- */
-const getAllDispatches = async () => {
+
+//  Get All Dispatches - For Admin & Dispatcher
+
+const getAllDispatches = async (query: IQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "dispatchedAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: DispatchWhereInput[] = [];
+
+  // Search by driver name, ambulance number, patient name, phone
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          driver: {
+            user: {
+              name: {
+                contains: query.searchTerm,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+        {
+          ambulance: {
+            ambulanceNumber: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          emergency: {
+            patientName: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+        {
+          emergency: {
+            patientPhone: {
+              contains: query.searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+      ],
+    });
+  }
+
+  // Dispatch Status filter (PENDING, ACCEPTED, REJECTED)
+  if (query.status) {
+    andConditions.push({
+      status: query.status,
+    });
+  }
+
+  // Emergency Type filter
+  if (query.emergencyType) {
+    andConditions.push({
+      emergency: {
+        emergencyType: query.emergencyType,
+      },
+    });
+  }
+
+  // Priority filter
+  if (query.priority) {
+    andConditions.push({
+      emergency: {
+        priority: query.priority,
+      },
+    });
+  }
+
+  // Driver filter
+  if (query.driverId) {
+    andConditions.push({
+      driverId: query.driverId,
+    });
+  }
+
+  // Ambulance filter
+  if (query.ambulanceId) {
+    andConditions.push({
+      ambulanceId: query.ambulanceId,
+    });
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
   const dispatches = await prisma.dispatch.findMany({
+    where: whereConditions,
+    take: limit,
+    skip: skip,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
     include: {
       emergency: {
         include: {
@@ -159,6 +263,7 @@ const getAllDispatches = async () => {
             include: {
               user: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                 },
@@ -171,20 +276,39 @@ const getAllDispatches = async () => {
         include: {
           user: {
             select: {
+              id: true,
               name: true,
               email: true,
             },
           },
         },
       },
-      ambulance: true,
-    },
-    orderBy: {
-      createdAt: "desc",
+      ambulance: {
+        select: {
+          id: true,
+          ambulanceNumber: true,
+          vehicleType: true,
+          registrationNumber: true,
+          model: true,
+          status: true,
+        },
+      },
     },
   });
 
-  return dispatches;
+  const totalDispatchesCount = await prisma.dispatch.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: totalDispatchesCount,
+      totalPages: Math.ceil(totalDispatchesCount / limit),
+    },
+    data: dispatches,
+  };
 };
 
 /**
@@ -435,7 +559,7 @@ const getAllDispatches = async () => {
 export const DispatchService = {
   createDispatch,
   getAllDispatches,
-  // getDispatchById,
+  getDispatchById,
   // acceptDispatch,
   // rejectDispatch,
   // getMyDispatches,

@@ -15,7 +15,16 @@ const createDispatch = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getAllDispatches = catchAsync(async (req: Request, res: Response) => {
+  const result = await DispatchService.getAllDispatches(req.query);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Dispatches retrieved successfully.",
+    data: result,
+  });
+});
 
 // const getAllDispatches = catchAsync(async (req: Request, res: Response) => {
 //   const result = await DispatchService.getAllDispatches();
@@ -27,7 +36,6 @@ const createDispatch = catchAsync(async (req: Request, res: Response) => {
 //     data: result,
 //   });
 // });
-
 
 // const getDispatchById = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -70,7 +78,6 @@ const createDispatch = catchAsync(async (req: Request, res: Response) => {
 //   });
 // });
 
-
 // const rejectDispatch = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
 //   const driverId = req.user?.userId!;
@@ -98,7 +105,6 @@ const createDispatch = catchAsync(async (req: Request, res: Response) => {
 //     data: result,
 //   });
 // });
-
 
 // const getMyDispatches = catchAsync(async (req: Request, res: Response) => {
 //   const userId = req.user?.userId!;
@@ -129,7 +135,7 @@ const createDispatch = catchAsync(async (req: Request, res: Response) => {
 
 export const DispatchController = {
   createDispatch,
-  // getAllDispatches,
+  getAllDispatches,
   // getDispatchById,
   // acceptDispatch,
   // rejectDispatch,
