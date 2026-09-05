@@ -486,189 +486,138 @@ const getMyDispatches = async (driverId: string, query: IQuery) => {
 };
 
 const acceptDispatch = async (dispatchId: string, driverId: string) => {
-  const result = await prisma.$transaction(async (tx) => {
-    // Find dispatch
-    const dispatch = await tx.dispatch.findUnique({
-      where: { id: dispatchId },
-      include: {
-        driver: true,
-        ambulance: true,
-        emergency: true,
-      },
-    });
-
-    if (!dispatch) {
-      throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
-    }
-
-    // Verify it's the assigned driver
-    if (dispatch.driverId !== driverId) {
-      throw new AppError(
-        httpStatus.FORBIDDEN,
-        "You are not authorized to accept this dispatch",
-      );
-    }
-
-    // Check if already accepted or rejected
-    if (dispatch.status !== DispatchStatus.PENDING) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        `Dispatch is already ${dispatch.status.toLowerCase()}`,
-      );
-    }
-
-    // Update dispatch status
-    // Update dispatch status with clean select
-    const updatedDispatch = await tx.dispatch.update({
-      where: { id: dispatchId },
-      data: {
-        status: DispatchStatus.ACCEPTED,
-        acceptedAt: new Date(),
-      },
-      select: {
-        id: true,
-        status: true,
-        acceptedAt: true,
-        dispatchedAt: true,
-        emergency: {
-          select: {
-            id: true,
-            patientName: true,
-            patientPhone: true,
-            pickupAddress: true,
-            status: true,
-            priority: true,
-          },
-        },
-        ambulance: {
-          select: {
-            id: true,
-            ambulanceNumber: true,
-            vehicleType: true,
-            status: true,
-          },
-        },
-      },
-    });
-
-    // Update emergency status to DISPATCHED
-    await tx.emergencyRequest.update({
-      where: { id: dispatch.emergencyId },
-      data: {
-        status: EmergencyStatus.DISPATCHED,
-      },
-    });
-
-    // Update ambulance status to EN_ROUTE
-    await tx.ambulance.update({
-      where: { id: dispatch.ambulanceId },
-      data: {
-        status: AmbulanceStatus.EN_ROUTE,
-      },
-    });
-
-    return updatedDispatch;
+  // 1. Find dispatch first to verify state and get related IDs
+  const dispatch = await prisma.dispatch.findUnique({
+    where: { id: dispatchId },
+    select: {
+      id: true,
+      driverId: true,
+      status: true,
+      emergencyId: true,
+      ambulanceId: true,
+    },
   });
 
-  return result;
+  if (!dispatch) {
+    throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
+  }
+
+  // 2. Verify it's the assigned driver
+  if (dispatch.driverId !== driverId) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to accept this dispatch",
+    );
+  }
+
+  // 3. Check if already accepted or rejected
+  if (dispatch.status !== DispatchStatus.PENDING) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Dispatch is already ${dispatch.status.toLowerCase()}`,
+    );
+  }
+
+  // 4. Update dispatch status with clean select
+  const updatedDispatch = await prisma.dispatch.update({
+    where: { id: dispatchId },
+    data: {
+      status: DispatchStatus.ACCEPTED,
+      acceptedAt: new Date(),
+    },
+  });
+
+  // 5. Update emergency status to DISPATCHED
+  await prisma.emergencyRequest.update({
+    where: { id: dispatch.emergencyId },
+    data: {
+      status: EmergencyStatus.DISPATCHED,
+    },
+  });
+
+  // 6. Update ambulance status to EN_ROUTE
+  await prisma.ambulance.update({
+    where: { id: dispatch.ambulanceId },
+    data: {
+      status: AmbulanceStatus.EN_ROUTE,
+    },
+  });
+
+  return updatedDispatch;
+};
+const rejectDispatch = async (dispatchId: string, driverId: string) => {
+  const dispatch = await prisma.dispatch.findUnique({
+    where: { id: dispatchId },
+    select: {
+      id: true,
+      driverId: true,
+      status: true,
+      emergencyId: true,
+      ambulanceId: true,
+    },
+  });
+
+  if (!dispatch) {
+    throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
+  }
+
+  // 2. Verify it's the assigned driver
+  if (dispatch.driverId !== driverId) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "You are not authorized to reject this dispatch",
+    );
+  }
+
+  // 3. Check if already accepted or rejected
+  if (dispatch.status !== DispatchStatus.PENDING) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Cannot reject dispatch with status: ${dispatch.status}`,
+    );
+  }
+
+  // 4. Update dispatch status
+  const updatedDispatch = await prisma.dispatch.update({
+    where: { id: dispatchId },
+    data: {
+      status: DispatchStatus.REJECTED,
+    },
+  });
+
+  // 5. Revert emergency status back to PENDING
+  await prisma.emergencyRequest.update({
+    where: { id: dispatch.emergencyId },
+    data: {
+      status: EmergencyStatus.PENDING,
+    },
+  });
+
+  // 6. Revert ambulance status to AVAILABLE
+  await prisma.ambulance.update({
+    where: { id: dispatch.ambulanceId },
+    data: {
+      status: AmbulanceStatus.AVAILABLE,
+    },
+  });
+
+  // 7. Mark driver as available again
+  await prisma.driver.update({
+    where: { id: driverId },
+    data: {
+      isAvailable: true,
+    },
+  });
+
+  return updatedDispatch;
 };
 
-// /**
-//  * Driver Rejects Dispatch
-//  */
-// const rejectDispatch = async (dispatchId: string, driverId: string) => {
-//   const result = await prisma.$transaction(async (tx) => {
-//     // Find dispatch
-//     const dispatch = await tx.dispatch.findUnique({
-//       where: { id: dispatchId },
-//       include: {
-//         driver: true,
-//         ambulance: true,
-//         emergency: true,
-//       },
-//     });
-
-//     if (!dispatch) {
-//       throw new AppError(httpStatus.NOT_FOUND, "Dispatch not found");
-//     }
-
-//     // Verify it's the assigned driver
-//     if (dispatch.driverId !== driverId) {
-//       throw new AppError(
-//         httpStatus.FORBIDDEN,
-//         "You are not authorized to reject this dispatch",
-//       );
-//     }
-
-//     // Check if already accepted or rejected
-//     if (dispatch.status !== DispatchStatus.PENDING) {
-//       throw new AppError(
-//         httpStatus.BAD_REQUEST,
-//         `Cannot reject dispatch with status: ${dispatch.status}`,
-//       );
-//     }
-
-//     // Update dispatch status
-//     const updatedDispatch = await tx.dispatch.update({
-//       where: { id: dispatchId },
-//       data: {
-//         status: DispatchStatus.REJECTED,
-//       },
-//       include: {
-//         emergency: true,
-//         driver: {
-//           include: {
-//             user: {
-//               select: {
-//                 name: true,
-//                 email: true,
-//               },
-//             },
-//           },
-//         },
-//         ambulance: true,
-//       },
-//     });
-
-//     // Revert emergency status back to PENDING
-//     await tx.emergencyRequest.update({
-//       where: { id: dispatch.emergencyId },
-//       data: {
-//         status: EmergencyStatus.PENDING,
-//       },
-//     });
-
-//     // Revert ambulance status to AVAILABLE
-//     await tx.ambulance.update({
-//       where: { id: dispatch.ambulanceId },
-//       data: {
-//         status: AmbulanceStatus.AVAILABLE,
-//       },
-//     });
-
-//     // Mark driver as available again
-//     await tx.driver.update({
-//       where: { id: driverId },
-//       data: {
-//         isAvailable: true,
-//       },
-//     });
-
-//     return updatedDispatch;
-//   });
-
-//   return result;
-// };
-
-/**
- * Get My Dispatches - For Driver
- */
 
 export const DispatchService = {
   createDispatch,
   getAllDispatches,
   getDispatchById,
   acceptDispatch,
-  // rejectDispatch,
+  rejectDispatch,
   getMyDispatches,
 };

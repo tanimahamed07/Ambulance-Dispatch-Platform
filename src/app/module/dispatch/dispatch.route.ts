@@ -41,11 +41,11 @@ router.patch(
   DispatchController.acceptDispatch,
 );
 
-// router.patch(
-//   "/:id/reject",
-//   auth(Role.DRIVER),
-//   DispatchController.rejectDispatch,
-// );
+router.patch(
+  "/:id/reject",
+  auth(Role.DRIVER),
+  DispatchController.rejectDispatch,
+);
 
 // // Dispatcher/Admin — dispatch cancel (ambulance/driver abar AVAILABLE hobe)
 // router.patch(
