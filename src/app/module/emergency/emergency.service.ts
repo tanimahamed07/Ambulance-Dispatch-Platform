@@ -258,18 +258,24 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
   };
 };
 
-const getMyEmergencyById = async (id: string) => {
+const getEmergencyById = async (id: string) => {
   const emergency = await prisma.emergencyRequest.findUnique({
     where: {
       id,
     },
     include: {
       caller: {
-        include: {
+        select: {
+          id: true,
+          contactNumber: true,
+          bloodGroup: true,
+          gender: true,
+          address: true,
           user: {
             select: {
               name: true,
               email: true,
+              profileUrl: true,
             },
           },
         },
@@ -280,19 +286,25 @@ const getMyEmergencyById = async (id: string) => {
             select: {
               id: true,
               ambulanceNumber: true,
-              model: true,
+              registrationNumber: true,
               vehicleType: true,
+              model: true,
+              status: true,
               currentLatitude: true,
               currentLongitude: true,
-              status: true,
             },
           },
           driver: {
             select: {
+              id: true,
               contactNumber: true,
+              address: true,
+              isAvailable: true,
               user: {
                 select: {
                   name: true,
+                  email: true,
+                  profileUrl: true,
                 },
               },
             },
@@ -308,47 +320,6 @@ const getMyEmergencyById = async (id: string) => {
 
   return emergency;
 };
-
-
-const getEmergencyById = async (id: string) => {
-  const emergency = await prisma.emergencyRequest.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      caller: {
-        include: {
-          user: {
-            omit: {
-              password: true, // user মডেল থেকে শুধুমাত্র password বাদ দেওয়া হলো
-            },
-          },
-        },
-      },
-      dispatch: {
-        include: {
-          ambulance: true,
-          driver: {
-            include: {
-              user: {
-                omit: {
-                  password: true, // ড্রাইভারের user থেকেও password বাদ দেওয়া হলো
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  });
-
-  if (!emergency) {
-    throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
-  }
-
-  return emergency;
-};
-
 
 const cancelEmergency = async (id: string, payload: ICancelEmergency) => {
   const emergency = await prisma.emergencyRequest.findUnique({
@@ -408,5 +379,4 @@ export const EmergencyService = {
   getEmergencyById,
   updateEmergencyPriority,
   cancelEmergency,
-  getMyEmergencyById,
 };
