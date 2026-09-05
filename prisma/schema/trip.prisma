@@ -1,0 +1,21 @@
+model Trip {
+id String @id @default(uuid())
+emergencyId String @unique
+emergency EmergencyRequest @relation(fields: [emergencyId],references: [id])
+dispatchId String @unique
+dispatch Dispatch @relation(fields: [dispatchId],references: [id])
+hospitalId String?
+// hospital Hospital? @relation(fields: [hospitalId], references: [id])
+status TripStatus @default(DISPATCHED)
+startedAt DateTime?
+pickedUpAt DateTime?
+hospitalArrivalAt DateTime?
+completedAt DateTime?
+distanceKm Float?
+fare Decimal?
+// payment Payment?
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+@@index([status])
+}
+

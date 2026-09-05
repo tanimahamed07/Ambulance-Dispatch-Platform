@@ -24,4 +24,5 @@ model EmergencyRequest {
   
   @@map("emergency_request")
 
+  trips Trip[]
 }
