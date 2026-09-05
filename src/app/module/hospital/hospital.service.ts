@@ -32,9 +32,9 @@ const createHospital = async (payload: ICreateHospital) => {
   return hospital;
 };
 
-/**
- * Get All Hospitals - With filters and search
- */
+
+//  Get All Hospitals - With filters and search
+
 const getAllHospitals = async (query: IQuery) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
@@ -122,39 +122,24 @@ const getAllHospitals = async (query: IQuery) => {
   };
 };
 
-// /**
-//  * Get Hospital by ID
-//  */
-// const getHospitalById = async (id: string) => {
-//   const hospital = await prisma.hospital.findUnique({
-//     where: { id },
-//     select: {
-//       id: true,
-//       name: true,
-//       phone: true,
-//       email: true,
-//       address: true,
-//       latitude: true,
-//       longitude: true,
-//       emergencyAvailable: true,
-//       specialties: true,
-//       status: true,
-//       createdAt: true,
-//       updatedAt: true,
-//       _count: {
-//         select: {
-//           trips: true,
-//         },
-//       },
-//     },
-//   });
+const getHospitalById = async (id: string) => {
+  const hospital = await prisma.hospital.findUnique({
+    where: { id },
+    include: {
+      _count: {
+        select: {
+          trips: true,
+        },
+      },
+    },
+  });
 
-//   if (!hospital) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
-//   }
+  if (!hospital) {
+    throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
+  }
 
-//   return hospital;
-// };
+  return hospital;
+};
 
 // /**
 //  * Update Hospital - Admin only
@@ -321,7 +306,7 @@ const getAllHospitals = async (query: IQuery) => {
 export const HospitalService = {
   createHospital,
   getAllHospitals,
-  //   getHospitalById,
+  getHospitalById,
   //   updateHospital,
   //   deleteHospital,
   //   getNearbyHospitals,
