@@ -1,623 +1,623 @@
-import {
-  ICreateAmbulancePayload,
-  IUpdateAmbulancePayload,
-  IAssignDriverPayload,
-} from "./ambulance.interface";
-import { prisma } from "../../lib/prisma";
-import { AppError } from "../../utils/AppError";
 import httpStatus from "http-status";
 import {
-  AmbulanceStatus,
-  DriverApprovalStatus,
+	AmbulanceStatus,
+	DriverApprovalStatus,
 } from "../../../generated/prisma/enums";
-import { IQuery } from "../../interface";
-import { AmbulanceWhereInput } from "../../../generated/prisma/models";
+import type { AmbulanceWhereInput } from "../../../generated/prisma/models";
+import type { IQuery } from "../../interface";
+import { prisma } from "../../lib/prisma";
+import { AppError } from "../../utils/AppError";
+import type {
+	IAssignDriverPayload,
+	ICreateAmbulancePayload,
+	IUpdateAmbulancePayload,
+} from "./ambulance.interface";
 
 const createAmbulance = async (payload: ICreateAmbulancePayload) => {
-  const {
-    ambulanceNumber,
-    registrationNumber,
-    registrationExpiry,
-    vehicleType,
-    model,
-    capacity,
-  } = payload;
+	const {
+		ambulanceNumber,
+		registrationNumber,
+		registrationExpiry,
+		vehicleType,
+		model,
+		capacity,
+	} = payload;
 
-  // Check if ambulance number already exists
-  const existingAmbulanceByNumber = await prisma.ambulance.findUnique({
-    where: { ambulanceNumber },
-  });
+	// Check if ambulance number already exists
+	const existingAmbulanceByNumber = await prisma.ambulance.findUnique({
+		where: { ambulanceNumber },
+	});
 
-  if (existingAmbulanceByNumber) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "Ambulance with this ambulance number already exists",
-    );
-  }
+	if (existingAmbulanceByNumber) {
+		throw new AppError(
+			httpStatus.CONFLICT,
+			"Ambulance with this ambulance number already exists",
+		);
+	}
 
-  // Check if registration number already exists
-  const existingAmbulanceByRegistration = await prisma.ambulance.findUnique({
-    where: { registrationNumber },
-  });
+	// Check if registration number already exists
+	const existingAmbulanceByRegistration = await prisma.ambulance.findUnique({
+		where: { registrationNumber },
+	});
 
-  if (existingAmbulanceByRegistration) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "Ambulance with this registration number already exists",
-    );
-  }
+	if (existingAmbulanceByRegistration) {
+		throw new AppError(
+			httpStatus.CONFLICT,
+			"Ambulance with this registration number already exists",
+		);
+	}
 
-  // Create new ambulance
-  const ambulance = await prisma.ambulance.create({
-    data: {
-      ambulanceNumber,
-      registrationNumber,
-      registrationExpiry,
-      vehicleType,
-      model,
-      capacity,
-      status: AmbulanceStatus.OFFLINE,
-    },
-  });
+	// Create new ambulance
+	const ambulance = await prisma.ambulance.create({
+		data: {
+			ambulanceNumber,
+			registrationNumber,
+			registrationExpiry,
+			vehicleType,
+			model,
+			capacity,
+			status: AmbulanceStatus.OFFLINE,
+		},
+	});
 
-  return ambulance;
+	return ambulance;
 };
 
 const getAllAmbulances = async (query: IQuery) => {
-  const limit = query.limit ? Number(query.limit) : 10;
-  const page = query.page ? Number(query.page) : 1;
-  const skip = (page - 1) * limit;
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
 
-  const sortBy = query.sortBy || "createdAt";
-  const sortOrder = query.sortOrder || "desc";
+	const sortBy = query.sortBy || "createdAt";
+	const sortOrder = query.sortOrder || "desc";
 
-  const andConditions: AmbulanceWhereInput[] = [];
+	const andConditions: AmbulanceWhereInput[] = [];
 
-  // Search
-  if (query.searchTerm) {
-    andConditions.push({
-      OR: [
-        {
-          ambulanceNumber: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-        {
-          registrationNumber: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-        {
-          model: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-      ],
-    });
-  }
+	// Search
+	if (query.searchTerm) {
+		andConditions.push({
+			OR: [
+				{
+					ambulanceNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					registrationNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					model: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+			],
+		});
+	}
 
-  // Vehicle type filter
-  if (query.vehicleType) {
-    andConditions.push({
-      vehicleType: query.vehicleType,
-    });
-  }
+	// Vehicle type filter
+	if (query.vehicleType) {
+		andConditions.push({
+			vehicleType: query.vehicleType,
+		});
+	}
 
-  // Status filter
-  if (query.status) {
-    andConditions.push({
-      status: query.status,
-    });
-  }
+	// Status filter
+	if (query.status) {
+		andConditions.push({
+			status: query.status,
+		});
+	}
 
-  // Soft deleted ambulance বাদ
-  andConditions.push({
-    isDeleted: false,
-  });
+	// Soft deleted ambulance বাদ
+	andConditions.push({
+		isDeleted: false,
+	});
 
-  if (query.status === AmbulanceStatus.OFFLINE) {
-    andConditions.push({
-      driver: { is: null },
-    });
-  }
+	if (query.status === AmbulanceStatus.OFFLINE) {
+		andConditions.push({
+			driver: { is: null },
+		});
+	}
 
-  const ambulances = await prisma.ambulance.findMany({
-    where: {
-      AND: andConditions,
-    },
+	const ambulances = await prisma.ambulance.findMany({
+		where: {
+			AND: andConditions,
+		},
 
-    take: limit,
-    skip,
+		take: limit,
+		skip,
 
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
+		orderBy: {
+			[sortBy]: sortOrder,
+		},
 
-    include: {
-      driver: {
-        select: {
-          id: true,
-          contactNumber: true,
-          approvalStatus: true,
-          isAvailable: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-      },
-    },
-  });
+		include: {
+			driver: {
+				select: {
+					id: true,
+					contactNumber: true,
+					approvalStatus: true,
+					isAvailable: true,
+					user: {
+						select: {
+							id: true,
+							name: true,
+							email: true,
+						},
+					},
+				},
+			},
+		},
+	});
 
-  const totalAmbulancesCount = await prisma.ambulance.count({
-    where: {
-      AND: andConditions,
-    },
-  });
+	const totalAmbulancesCount = await prisma.ambulance.count({
+		where: {
+			AND: andConditions,
+		},
+	});
 
-  return {
-    data: ambulances,
+	return {
+		data: ambulances,
 
-    meta: {
-      page,
-      limit,
-      total: totalAmbulancesCount,
-      totalPages: Math.ceil(totalAmbulancesCount / limit),
-    },
-  };
+		meta: {
+			page,
+			limit,
+			total: totalAmbulancesCount,
+			totalPages: Math.ceil(totalAmbulancesCount / limit),
+		},
+	};
 };
 
 const getAvailableAmbulances = async (query: IQuery) => {
-  const limit = query.limit ? Number(query.limit) : 10;
-  const page = query.page ? Number(query.page) : 1;
-  const skip = (page - 1) * limit;
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
 
-  const sortBy = query.sortBy || "createdAt";
-  const sortOrder = query.sortOrder || "desc";
+	const sortBy = query.sortBy || "createdAt";
+	const sortOrder = query.sortOrder || "desc";
 
-  const andConditions: AmbulanceWhereInput[] = [];
+	const andConditions: AmbulanceWhereInput[] = [];
 
-  // Search
-  if (query.searchTerm) {
-    andConditions.push({
-      OR: [
-        {
-          ambulanceNumber: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-        {
-          registrationNumber: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-        {
-          model: {
-            contains: query.searchTerm,
-            mode: "insensitive",
-          },
-        },
-      ],
-    });
-  }
+	// Search
+	if (query.searchTerm) {
+		andConditions.push({
+			OR: [
+				{
+					ambulanceNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					registrationNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					model: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+			],
+		});
+	}
 
-  // Vehicle type filter
-  if (query.vehicleType) {
-    andConditions.push({
-      vehicleType: query.vehicleType,
-    });
-  }
+	// Vehicle type filter
+	if (query.vehicleType) {
+		andConditions.push({
+			vehicleType: query.vehicleType,
+		});
+	}
 
-  // Only available ambulances
-  andConditions.push({
-    status: AmbulanceStatus.AVAILABLE,
-    isDeleted: false,
-    // Must have an approved + available driver
-    driver: {
-      is: {
-        approvalStatus: DriverApprovalStatus.APPROVED,
-        isAvailable: true,
-        isDeleted: false,
-      },
-    },
-  });
+	// Only available ambulances
+	andConditions.push({
+		status: AmbulanceStatus.AVAILABLE,
+		isDeleted: false,
+		// Must have an approved + available driver
+		driver: {
+			is: {
+				approvalStatus: DriverApprovalStatus.APPROVED,
+				isAvailable: true,
+				isDeleted: false,
+			},
+		},
+	});
 
-  const ambulances = await prisma.ambulance.findMany({
-    where: {
-      AND: andConditions,
-    },
+	const ambulances = await prisma.ambulance.findMany({
+		where: {
+			AND: andConditions,
+		},
 
-    take: limit,
-    skip: skip,
+		take: limit,
+		skip: skip,
 
-    orderBy: {
-      [sortBy]: sortOrder,
-    },
+		orderBy: {
+			[sortBy]: sortOrder,
+		},
 
-    include: {
-      driver: {
-        select: {
-          id: true,
-          contactNumber: true,
-          approvalStatus: true,
-          isAvailable: true,
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-            },
-          },
-        },
-      },
-    },
-  });
+		include: {
+			driver: {
+				select: {
+					id: true,
+					contactNumber: true,
+					approvalStatus: true,
+					isAvailable: true,
+					user: {
+						select: {
+							id: true,
+							name: true,
+							email: true,
+						},
+					},
+				},
+			},
+		},
+	});
 
-  const totalAmbulancesCount = await prisma.ambulance.count({
-    where: {
-      AND: andConditions,
-    },
-  });
+	const totalAmbulancesCount = await prisma.ambulance.count({
+		where: {
+			AND: andConditions,
+		},
+	});
 
-  return {
-    data: ambulances,
+	return {
+		data: ambulances,
 
-    meta: {
-      page,
-      limit,
-      total: totalAmbulancesCount,
-      totalPages: Math.ceil(totalAmbulancesCount / limit),
-    },
-  };
+		meta: {
+			page,
+			limit,
+			total: totalAmbulancesCount,
+			totalPages: Math.ceil(totalAmbulancesCount / limit),
+		},
+	};
 };
 
 const getAmbulanceById = async (id: string) => {
-  const ambulance = await prisma.ambulance.findUnique({
-    where: {
-      id,
-      isDeleted: false,
-    },
-    include: {
-      driver: {
-        include: {
-          user: {
-            omit: {
-              password: true,
-            },
-          },
-        },
-      },
-    },
-  });
+	const ambulance = await prisma.ambulance.findUnique({
+		where: {
+			id,
+			isDeleted: false,
+		},
+		include: {
+			driver: {
+				include: {
+					user: {
+						omit: {
+							password: true,
+						},
+					},
+				},
+			},
+		},
+	});
 
-  if (!ambulance) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
-  }
+	if (!ambulance) {
+		throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+	}
 
-  return ambulance;
+	return ambulance;
 };
 
 const updateAmbulance = async (
-  id: string,
-  payload: IUpdateAmbulancePayload,
+	id: string,
+	payload: IUpdateAmbulancePayload,
 ) => {
-  // Check if ambulance exists
-  const existingAmbulance = await prisma.ambulance.findFirst({
-    where: { id, isDeleted: false },
-  });
+	// Check if ambulance exists
+	const existingAmbulance = await prisma.ambulance.findFirst({
+		where: { id, isDeleted: false },
+	});
 
-  if (!existingAmbulance) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
-  }
+	if (!existingAmbulance) {
+		throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+	}
 
-  // Check if ambulanceNumber already exists (if being updated)
-  if (
-    payload.ambulanceNumber &&
-    payload.ambulanceNumber !== existingAmbulance.ambulanceNumber
-  ) {
-    const ambulanceWithSameNumber = await prisma.ambulance.findUnique({
-      where: { ambulanceNumber: payload.ambulanceNumber },
-    });
+	// Check if ambulanceNumber already exists (if being updated)
+	if (
+		payload.ambulanceNumber &&
+		payload.ambulanceNumber !== existingAmbulance.ambulanceNumber
+	) {
+		const ambulanceWithSameNumber = await prisma.ambulance.findUnique({
+			where: { ambulanceNumber: payload.ambulanceNumber },
+		});
 
-    if (ambulanceWithSameNumber) {
-      throw new AppError(
-        httpStatus.CONFLICT,
-        "Ambulance with this ambulance number already exists",
-      );
-    }
-  }
+		if (ambulanceWithSameNumber) {
+			throw new AppError(
+				httpStatus.CONFLICT,
+				"Ambulance with this ambulance number already exists",
+			);
+		}
+	}
 
-  // Check if registrationNumber already exists (if being updated)
-  if (
-    payload.registrationNumber &&
-    payload.registrationNumber !== existingAmbulance.registrationNumber
-  ) {
-    const ambulanceWithSameReg = await prisma.ambulance.findUnique({
-      where: { registrationNumber: payload.registrationNumber },
-    });
+	// Check if registrationNumber already exists (if being updated)
+	if (
+		payload.registrationNumber &&
+		payload.registrationNumber !== existingAmbulance.registrationNumber
+	) {
+		const ambulanceWithSameReg = await prisma.ambulance.findUnique({
+			where: { registrationNumber: payload.registrationNumber },
+		});
 
-    if (ambulanceWithSameReg) {
-      throw new AppError(
-        httpStatus.CONFLICT,
-        "Ambulance with this registration number already exists",
-      );
-    }
-  }
+		if (ambulanceWithSameReg) {
+			throw new AppError(
+				httpStatus.CONFLICT,
+				"Ambulance with this registration number already exists",
+			);
+		}
+	}
 
-  // Update ambulance
-  const updatedAmbulance = await prisma.ambulance.update({
-    where: { id },
-    data: payload,
-  });
+	// Update ambulance
+	const updatedAmbulance = await prisma.ambulance.update({
+		where: { id },
+		data: payload,
+	});
 
-  return updatedAmbulance;
+	return updatedAmbulance;
 };
 
 const softDeleteAmbulance = async () => {};
 
 const assignDriver = async (
-  ambulanceId: string,
-  payload: IAssignDriverPayload,
+	ambulanceId: string,
+	payload: IAssignDriverPayload,
 ) => {
-  const { driverId } = payload;
+	const { driverId } = payload;
 
-  // Check if ambulance exists and is not deleted
-  const ambulance = await prisma.ambulance.findUnique({
-    where: { id: ambulanceId, isDeleted: false },
-    include: {
-      driver: {
-        include: {
-          user: {
-            omit: {
-              password: true,
-            },
-          },
-        },
-      },
-    },
-  });
+	// Check if ambulance exists and is not deleted
+	const ambulance = await prisma.ambulance.findUnique({
+		where: { id: ambulanceId, isDeleted: false },
+		include: {
+			driver: {
+				include: {
+					user: {
+						omit: {
+							password: true,
+						},
+					},
+				},
+			},
+		},
+	});
 
-  if (!ambulance) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
-  }
+	if (!ambulance) {
+		throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+	}
 
-  // Check if ambulance already has a driver assigned
-  if (ambulance.driver) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      `Ambulance is already assigned to driver: ${ambulance.driver.user?.name || "Unknown"}`,
-    );
-  }
+	// Check if ambulance already has a driver assigned
+	if (ambulance.driver) {
+		throw new AppError(
+			httpStatus.CONFLICT,
+			`Ambulance is already assigned to driver: ${ambulance.driver.user?.name || "Unknown"}`,
+		);
+	}
 
-  // Check if driver exists and is approved
-  const driver = await prisma.driver.findUnique({
-    where: { id: driverId, isDeleted: false },
-    include: {
-      user: {
-        omit: {
-          password: true,
-        },
-      },
-    },
-  });
+	// Check if driver exists and is approved
+	const driver = await prisma.driver.findUnique({
+		where: { id: driverId, isDeleted: false },
+		include: {
+			user: {
+				omit: {
+					password: true,
+				},
+			},
+		},
+	});
 
-  if (!driver) {
-    throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
-  }
+	if (!driver) {
+		throw new AppError(httpStatus.NOT_FOUND, "Driver not found");
+	}
 
-  // Check if driver is approved
-  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      `Driver is not approved. Current status: ${driver.approvalStatus}`,
-    );
-  }
+	// Check if driver is approved
+	if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+		throw new AppError(
+			httpStatus.BAD_REQUEST,
+			`Driver is not approved. Current status: ${driver.approvalStatus}`,
+		);
+	}
 
-  // Check if driver already has an ambulance assigned
-  if (driver.ambulanceId) {
-    throw new AppError(
-      httpStatus.CONFLICT,
-      "Driver is already assigned to another ambulance",
-    );
-  }
+	// Check if driver already has an ambulance assigned
+	if (driver.ambulanceId) {
+		throw new AppError(
+			httpStatus.CONFLICT,
+			"Driver is already assigned to another ambulance",
+		);
+	}
 
-  // Assign driver to ambulance using transaction
-  const result = await prisma.$transaction(async (tx) => {
-    // Update driver with ambulanceId
-    await tx.driver.update({
-      where: { id: driverId },
-      data: {
-        ambulanceId: ambulanceId,
-      },
-    });
+	// Assign driver to ambulance using transaction
+	const result = await prisma.$transaction(async (tx) => {
+		// Update driver with ambulanceId
+		await tx.driver.update({
+			where: { id: driverId },
+			data: {
+				ambulanceId: ambulanceId,
+			},
+		});
 
-    // Get updated ambulance with driver details
-    const updatedAmbulance = await tx.ambulance.update({
-      where: { id: ambulanceId },
-      data: { status: AmbulanceStatus.AVAILABLE },
-      include: { driver: true },
-    });
+		// Get updated ambulance with driver details
+		const updatedAmbulance = await tx.ambulance.update({
+			where: { id: ambulanceId },
+			data: { status: AmbulanceStatus.AVAILABLE },
+			include: { driver: true },
+		});
 
-    return updatedAmbulance;
-  });
+		return updatedAmbulance;
+	});
 
-  return result;
+	return result;
 };
 
 const unassignDriver = async (ambulanceId: string) => {
-  const ambulance = await prisma.ambulance.findFirst({
-    where: { id: ambulanceId, isDeleted: false },
-    include: { driver: true },
-  });
+	const ambulance = await prisma.ambulance.findFirst({
+		where: { id: ambulanceId, isDeleted: false },
+		include: { driver: true },
+	});
 
-  if (!ambulance) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
-  }
+	if (!ambulance) {
+		throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+	}
 
-  if (!ambulance.driver) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "No driver is currently assigned to this ambulance",
-    );
-  }
+	if (!ambulance.driver) {
+		throw new AppError(
+			httpStatus.BAD_REQUEST,
+			"No driver is currently assigned to this ambulance",
+		);
+	}
 
-  const result = await prisma.$transaction(async (tx) => {
-    await tx.driver.update({
-      where: { id: ambulance.driver!.id },
-      data: { ambulanceId: null },
-    });
+	const result = await prisma.$transaction(async (tx) => {
+		await tx.driver.update({
+			where: { id: ambulance.driver!.id },
+			data: { ambulanceId: null },
+		});
 
-    const updatedAmbulance = await tx.ambulance.update({
-      where: { id: ambulanceId },
-      data: { status: AmbulanceStatus.OFFLINE },
-      include: {
-        driver: true,
-      },
-    });
+		const updatedAmbulance = await tx.ambulance.update({
+			where: { id: ambulanceId },
+			data: { status: AmbulanceStatus.OFFLINE },
+			include: {
+				driver: true,
+			},
+		});
 
-    return updatedAmbulance;
-  });
+		return updatedAmbulance;
+	});
 
-  return result;
+	return result;
 };
 
 const updateMyAmbulanceStatus = async (
-  userId: string,
-  status: AmbulanceStatus,
+	userId: string,
+	status: AmbulanceStatus,
 ) => {
-  // Find driver by userId
-  const driver = await prisma.driver.findUnique({
-    where: { userId },
-    select: {
-      id: true,
-      ambulanceId: true,
-      isAvailable: true,
-      approvalStatus: true,
-    },
-  });
+	// Find driver by userId
+	const driver = await prisma.driver.findUnique({
+		where: { userId },
+		select: {
+			id: true,
+			ambulanceId: true,
+			isAvailable: true,
+			approvalStatus: true,
+		},
+	});
 
-  if (!driver) {
-    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
-  }
+	if (!driver) {
+		throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+	}
 
-  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Only approved drivers can update ambulance status",
-    );
-  }
+	if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+		throw new AppError(
+			httpStatus.FORBIDDEN,
+			"Only approved drivers can update ambulance status",
+		);
+	}
 
-  if (!driver.ambulanceId) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "No ambulance assigned to this driver",
-    );
-  }
+	if (!driver.ambulanceId) {
+		throw new AppError(
+			httpStatus.BAD_REQUEST,
+			"No ambulance assigned to this driver",
+		);
+	}
 
-  // Validate status transition
-  const ambulance = await prisma.ambulance.findUnique({
-    where: { id: driver.ambulanceId },
-  });
+	// Validate status transition
+	const ambulance = await prisma.ambulance.findUnique({
+		where: { id: driver.ambulanceId },
+	});
 
-  if (!ambulance) {
-    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
-  }
+	if (!ambulance) {
+		throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+	}
 
-  // Don't allow status change if ambulance is on active trip
-  if (ambulance.status === AmbulanceStatus.ON_TRIP) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Cannot change status while ambulance is on trip",
-    );
-  }
+	// Don't allow status change if ambulance is on active trip
+	if (ambulance.status === AmbulanceStatus.ON_TRIP) {
+		throw new AppError(
+			httpStatus.BAD_REQUEST,
+			"Cannot change status while ambulance is on trip",
+		);
+	}
 
-  // Update ambulance status
-  const updatedAmbulance = await prisma.ambulance.update({
-    where: { id: driver.ambulanceId },
-    data: {
-      status,
-      updatedAt: new Date(),
-    },
-  });
+	// Update ambulance status
+	const updatedAmbulance = await prisma.ambulance.update({
+		where: { id: driver.ambulanceId },
+		data: {
+			status,
+			updatedAt: new Date(),
+		},
+	});
 
-  return updatedAmbulance;
+	return updatedAmbulance;
 };
 
 /**
  * Update My Ambulance Location - Driver updates their assigned ambulance location
  */
 const updateMyAmbulanceLocation = async (
-  userId: string,
-  latitude: number,
-  longitude: number,
+	userId: string,
+	latitude: number,
+	longitude: number,
 ) => {
-  // Find driver by userId with their ambulance
-  const driver = await prisma.driver.findUnique({
-    where: { userId },
-    select: {
-      id: true,
-      ambulanceId: true,
-      isAvailable: true,
-      approvalStatus: true,
-    },
-  });
+	// Find driver by userId with their ambulance
+	const driver = await prisma.driver.findUnique({
+		where: { userId },
+		select: {
+			id: true,
+			ambulanceId: true,
+			isAvailable: true,
+			approvalStatus: true,
+		},
+	});
 
-  if (!driver) {
-    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
-  }
+	if (!driver) {
+		throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+	}
 
-  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "Only approved drivers can update ambulance location",
-    );
-  }
+	if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+		throw new AppError(
+			httpStatus.FORBIDDEN,
+			"Only approved drivers can update ambulance location",
+		);
+	}
 
-  if (!driver.ambulanceId) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "No ambulance assigned to this driver",
-    );
-  }
+	if (!driver.ambulanceId) {
+		throw new AppError(
+			httpStatus.BAD_REQUEST,
+			"No ambulance assigned to this driver",
+		);
+	}
 
-  // Update ambulance location
-  const ambulance = await prisma.ambulance.update({
-    where: { id: driver.ambulanceId },
-    data: {
-      currentLatitude: latitude,
-      currentLongitude: longitude,
-      updatedAt: new Date(),
-    },
-    select: {
-      id: true,
-      ambulanceNumber: true,
-      currentLatitude: true,
-      currentLongitude: true,
-      status: true,
-      updatedAt: true,
-    },
-  });
+	// Update ambulance location
+	const ambulance = await prisma.ambulance.update({
+		where: { id: driver.ambulanceId },
+		data: {
+			currentLatitude: latitude,
+			currentLongitude: longitude,
+			updatedAt: new Date(),
+		},
+		select: {
+			id: true,
+			ambulanceNumber: true,
+			currentLatitude: true,
+			currentLongitude: true,
+			status: true,
+			updatedAt: true,
+		},
+	});
 
-  return ambulance;
+	return ambulance;
 };
 
 export const AmbulanceService = {
-  createAmbulance,
-  getAllAmbulances,
-  getAvailableAmbulances,
-  getAmbulanceById,
-  updateAmbulance,
-  softDeleteAmbulance,
-  assignDriver,
-  unassignDriver,
-  updateMyAmbulanceStatus,
-  updateMyAmbulanceLocation,
+	createAmbulance,
+	getAllAmbulances,
+	getAvailableAmbulances,
+	getAmbulanceById,
+	updateAmbulance,
+	softDeleteAmbulance,
+	assignDriver,
+	unassignDriver,
+	updateMyAmbulanceStatus,
+	updateMyAmbulanceLocation,
 };

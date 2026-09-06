@@ -13,10 +13,10 @@ const router = Router();
  * Caller initiates payment for their trip
  */
 router.post(
-  "/initiate",
-  auth(Role.CALLER),
-  validateRequest(PaymentValidation.InitiatePaymentZodSchema),
-  PaymentController.initiatePayment,
+	"/initiate",
+	auth(Role.CALLER),
+	validateRequest(PaymentValidation.InitiatePaymentZodSchema),
+	PaymentController.initiatePayment,
 );
 
 /**
@@ -25,10 +25,10 @@ router.post(
  * Caller retries payment for a trip
  */
 router.post(
-  "/retry",
-  auth(Role.CALLER),
-  validateRequest(PaymentValidation.RetryPaymentZodSchema),
-  PaymentController.retryPayment,
+	"/retry",
+	auth(Role.CALLER),
+	validateRequest(PaymentValidation.RetryPaymentZodSchema),
+	PaymentController.retryPayment,
 );
 
 /**
@@ -44,9 +44,9 @@ router.get("/callback", PaymentController.paymentCallback);
  * Caller gets their payment details for a specific trip
  */
 router.get(
-  "/my-payment/:tripId",
-  auth(Role.CALLER),
-  PaymentController.getMyPayment,
+	"/my-payment/:tripId",
+	auth(Role.CALLER),
+	PaymentController.getMyPayment,
 );
 
 /**
@@ -55,9 +55,9 @@ router.get(
  * Admin or Dispatcher can query payment status from bKash
  */
 router.post(
-  "/query-status",
-  auth(Role.ADMIN, Role.DISPATCHER),
-  PaymentController.queryPaymentStatus,
+	"/query-status",
+	auth(Role.ADMIN, Role.DISPATCHER),
+	PaymentController.queryPaymentStatus,
 );
 
 export const PaymentRoutes = router;

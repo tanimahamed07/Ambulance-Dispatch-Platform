@@ -1,1275 +1,1414 @@
 {
-  "info": {
-    "_postman_id": "7700601a-7efa-4581-8d66-05c66dce1048",
-    "name": "Ambulance Dispatch Platform",
-    "description": "Complete API collection for Ambulance Dispatch Platform with proper authentication",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "51089289"
-  },
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{accessToken}}",
-        "type": "string"
-      }
-    ]
-  },
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [""]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:5001/api/v1",
-      "type": "string"
-    },
-    {
-      "key": "accessToken",
-      "value": "",
-      "type": "string"
-    }
-  ],
-  "item": [
-    {
-      "name": "Auth",
-      "item": [
-        {
-          "name": "Register",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "// Optional: Save user email for later use",
-                  "const response = pm.response.json();",
-                  "if (response.data && response.data.email) {",
-                  "    pm.collectionVariables.set(\"userEmail\", response.data.email);",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Karim Ahmed\",\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"01712345678\",\n  \"address\": \"Dhanmondi, Dhaka\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Verify Email",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"karim@example.com\",\n  \"otp\": \"123456\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/verify-email",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "verify-email"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "const response = pm.response.json();",
-                  "if (response.data && response.data.accessToken) {",
-                  "    pm.collectionVariables.set(\"accessToken\", response.data.accessToken);",
-                  "    console.log(\"Access token saved!\");",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Google Login",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"idToken\": \"YOUR_GOOGLE_ID_TOKEN_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/google",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "google"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Profile",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/auth/me",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "me"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Refresh Token",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"refreshToken\": \"YOUR_REFRESH_TOKEN_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/refresh-token",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "refresh-token"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Forgot Password",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"karim@example.com\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/forgot-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "forgot-password"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Reset Password",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"karim@example.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/reset-password",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "reset-password"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "User",
-      "item": [
-        {
-          "name": "Upload Profile Image",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "profileImage",
-                  "type": "file",
-                  "src": []
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/user/profile-image",
-              "host": ["{{baseUrl}}"],
-              "path": ["user", "profile-image"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Driver",
-      "item": [
-        {
-          "name": "Apply as Driver",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"licenseNumber\": \"DHAKA-0123456789\",\n  \"licenseExpiry\": \"2028-12-31\",\n  \"experience\": 5,\n  \"nidNumber\": \"1234567890123\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/driver/apply-as-driver",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "apply-as-driver"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Application Status",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/driver/application-status",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "application-status"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Applications (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/driver/applications",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "applications"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Application By Id (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/driver/applications/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "applications", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "APPLICATION_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Approve Driver (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"userId\": \"USER_ID_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/driver/approve-driver",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "approve-driver"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Approved Drivers",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/driver/all-driver?searchTerm=&page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "all-driver"],
-              "query": [
-                {
-                  "key": "searchTerm",
-                  "value": "",
-                  "description": "Search by name, email, phone, license"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Approved Driver By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/driver/all-driver/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "all-driver", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "DRIVER_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Duty Status (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"ON_DUTY\"\n}",
-              "options": {
-                "raw": {
-                  "headerFamily": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/driver/me/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["driver", "me", "status"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Ambulance",
-      "item": [
-        {
-          "name": "Create Ambulance (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"ambulanceNumber\": \"AMB-101\",\n  \"registrationNumber\": \"DHAKA-METRO-CHA-11-2233\",\n  \"registrationExpiry\": \"2028-12-31\",\n  \"vehicleType\": \"AC\",\n  \"model\": \"Toyota HiAce 2022\",\n  \"capacity\": 1\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/create-ambulance",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", "create-ambulance"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Ambulances",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/all-ambulance",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", "all-ambulance"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Available Ambulances",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/available",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", "available"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Ambulance By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "AMBULANCE_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Ambulance (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"capacity\": 2,\n  \"vehicleType\": \"NON_AC\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "AMBULANCE_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Ambulance (Admin)",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "AMBULANCE_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Assign Driver to Ambulance (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/:id/assign-driver",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", ":id", "assign-driver"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "AMBULANCE_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Unassign Driver from Ambulance (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/:id/unassign-driver",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", ":id", "unassign-driver"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "AMBULANCE_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update My Ambulance Status (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"AVAILABLE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/me/status",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", "me", "status"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update My Ambulance Location (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"latitude\": 23.7259,\n  \"longitude\": 90.3970\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/ambulance/me/location",
-              "host": ["{{baseUrl}}"],
-              "path": ["ambulance", "me", "location"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Emergency",
-      "item": [
-        {
-          "name": "Create Emergency (Caller)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"patientName\": \"Rahim Ahmed\",\n  \"patientPhone\": \"01700000000\",\n  \"emergencyType\": \"CARDIAC\",\n  \"description\": \"Severe chest pain\",\n  \"pickupAddress\": \"House 13, Road 5, Dhanmondi, Dhaka\",\n  \"pickupLatitude\": 23.7461,\n  \"pickupLongitude\": 90.3742\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/emergency",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Emergencies (Admin/Dispatcher)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/emergency?status=PENDING&page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency"],
-              "query": [
-                {
-                  "key": "status",
-                  "value": "PENDING",
-                  "description": "Filter by status"
-                },
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Emergencies (Caller)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/emergency/my-emergencies",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency", "my-emergencies"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Emergency By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/emergency/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "EMERGENCY_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Emergency Priority (Dispatcher)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"priority\": \"HIGH\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/emergency/:id/priority",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency", ":id", "priority"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "EMERGENCY_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Cancel Emergency (Admin/Dispatcher)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"cancelReason\": \"Patient no longer needs ambulance\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/emergency/:id/cancel",
-              "host": ["{{baseUrl}}"],
-              "path": ["emergency", ":id", "cancel"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "EMERGENCY_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Dispatch",
-      "item": [
-        {
-          "name": "Create Dispatch (Dispatcher)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"emergencyId\": \"EMERGENCY_ID_HERE\",\n  \"ambulanceId\": \"AMBULANCE_ID_HERE\",\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/create-dispatch",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", "create-dispatch"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Dispatches (Admin/Dispatcher)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Dispatches (Driver)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/my-dispatches",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", "my-dispatches"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Dispatch By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "DISPATCH_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Accept Dispatch (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/:id/accept",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", ":id", "accept"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "DISPATCH_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Reject Dispatch (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/:id/reject",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", ":id", "reject"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "DISPATCH_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Cancel Dispatch (Admin/Dispatcher)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/dispatch/:id/cancel",
-              "host": ["{{baseUrl}}"],
-              "path": ["dispatch", ":id", "cancel"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "DISPATCH_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Trip",
-      "item": [
-        {
-          "name": "Get All Trips (Admin/Dispatcher)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip?page=1&limit=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get My Trips (Driver)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/my-trips",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", "my-trips"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Trip By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Calculate Fare (Driver)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/calculate-fare",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "calculate-fare"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Mark En Route (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/en-route",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "en-route"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Mark Picked Up (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/pickup",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "pickup"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Select Hospital (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"hospitalId\": \"HOSPITAL_ID_HERE\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/select-hospital",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "select-hospital"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Mark Hospital Arrival (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/hospital-arrival",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "hospital-arrival"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Complete Trip (Driver)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"totalDistanceKm\": 12.5,\n  \"notes\": \"Patient delivered safely\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/complete",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "complete"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Cancel Trip (Admin/Dispatcher)",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/trip/:id/cancel",
-              "host": ["{{baseUrl}}"],
-              "path": ["trip", ":id", "cancel"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "TRIP_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Hospital",
-      "item": [
-        {
-          "name": "Create Hospital (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Square Hospital Limited\",\n  \"phone\": \"+88028144400\",\n  \"email\": \"info@squarehospital.com\",\n  \"address\": \"18/F, Bir Uttam Qazi Nuruzzaman Sarak, West Panthapath, Dhaka 1205\",\n  \"latitude\": 23.7538,\n  \"longitude\": 90.3792,\n  \"emergencyAvailable\": true,\n  \"specialties\": [\"Cardiology\", \"Neurology\", \"Orthopedics\", \"ICU\", \"Emergency\"]\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/hospital",
-              "host": ["{{baseUrl}}"],
-              "path": ["hospital"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Hospitals",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/hospital",
-              "host": ["{{baseUrl}}"],
-              "path": ["hospital"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Hospital By Id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/hospital/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["hospital", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "HOSPITAL_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Nearby Hospitals",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/hospital/nearby?latitude=23.7461&longitude=90.3742&radiusKm=10",
-              "host": ["{{baseUrl}}"],
-              "path": ["hospital", "nearby"],
-              "query": [
-                {
-                  "key": "latitude",
-                  "value": "23.7461"
-                },
-                {
-                  "key": "longitude",
-                  "value": "90.3742"
-                },
-                {
-                  "key": "radiusKm",
-                  "value": "10"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Hospital (Admin)",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"emergencyAvailable\": false,\n  \"phone\": \"+88028144401\"\n}"
-            },
-            "url": {
-              "raw": "{{baseUrl}}/hospital/:id",
-              "host": ["{{baseUrl}}"],
-              "path": ["hospital", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "HOSPITAL_ID_HERE"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    }
-  ]
+	"info": {
+		"_postman_id": "7700601a-7efa-4581-8d66-05c66dce1048",
+		"name": "Ambulance Dispatch Platform",
+		"description": "Complete API collection for Ambulance Dispatch Platform with proper authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "51089289"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5001/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Optional: Save user email for later use",
+									"const response = pm.response.json();",
+									"if (response.data && response.data.email) {",
+									"    pm.collectionVariables.set(\"userEmail\", response.data.email);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Karim Ahmed\",\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"01712345678\",\n  \"address\": \"Dhanmondi, Dhaka\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karim@example.com\",\n  \"otp\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/verify-email",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "verify-email"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data && response.data.accessToken) {",
+									"    pm.collectionVariables.set(\"accessToken\", response.data.accessToken);",
+									"    console.log(\"Access token saved!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Google Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"idToken\": \"YOUR_GOOGLE_ID_TOKEN_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/google",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "google"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "me"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"YOUR_REFRESH_TOKEN_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh-token",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "refresh-token"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karim@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/forgot-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "forgot-password"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karim@example.com\",\n  \"otp\": \"123456\",\n  \"newPassword\": \"NewPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/reset-password",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "reset-password"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Upload Profile Image",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profileImage",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/profile-image",
+							"host": ["{{baseUrl}}"],
+							"path": ["user", "profile-image"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver",
+			"item": [
+				{
+					"name": "Apply as Driver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licenseNumber\": \"DHAKA-0123456789\",\n  \"licenseExpiry\": \"2028-12-31\",\n  \"experience\": 5,\n  \"nidNumber\": \"1234567890123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/driver/apply-as-driver",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "apply-as-driver"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Application Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/application-status",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "application-status"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Applications (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/applications",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "applications"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Application By Id (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/applications/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "applications", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "APPLICATION_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Approve Driver (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"USER_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/driver/approve-driver",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "approve-driver"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Approved Drivers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/all-driver?searchTerm=&page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "all-driver"],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "",
+									"description": "Search by name, email, phone, license"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Approved Driver By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/all-driver/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "all-driver", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DRIVER_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Duty Status (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"ON_DUTY\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/driver/me/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "me", "status"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ambulance",
+			"item": [
+				{
+					"name": "Create Ambulance (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ambulanceNumber\": \"AMB-101\",\n  \"registrationNumber\": \"DHAKA-METRO-CHA-11-2233\",\n  \"registrationExpiry\": \"2028-12-31\",\n  \"vehicleType\": \"AC\",\n  \"model\": \"Toyota HiAce 2022\",\n  \"capacity\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/create-ambulance",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", "create-ambulance"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Ambulances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/all-ambulance",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", "all-ambulance"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Available Ambulances",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/available",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", "available"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Ambulance By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "AMBULANCE_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Ambulance (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"capacity\": 2,\n  \"vehicleType\": \"NON_AC\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "AMBULANCE_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Ambulance (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "AMBULANCE_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Driver to Ambulance (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/:id/assign-driver",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", ":id", "assign-driver"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "AMBULANCE_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unassign Driver from Ambulance (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/:id/unassign-driver",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", ":id", "unassign-driver"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "AMBULANCE_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Ambulance Status (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"AVAILABLE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/me/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", "me", "status"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update My Ambulance Location (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"latitude\": 23.7259,\n  \"longitude\": 90.3970\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/ambulance/me/location",
+							"host": ["{{baseUrl}}"],
+							"path": ["ambulance", "me", "location"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Emergency",
+			"item": [
+				{
+					"name": "Create Emergency (Caller)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"patientName\": \"Rahim Ahmed\",\n  \"patientPhone\": \"01700000000\",\n  \"emergencyType\": \"CARDIAC\",\n  \"description\": \"Severe chest pain\",\n  \"pickupAddress\": \"House 13, Road 5, Dhanmondi, Dhaka\",\n  \"pickupLatitude\": 23.7461,\n  \"pickupLongitude\": 90.3742\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emergency",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Emergencies (Admin/Dispatcher)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/emergency?status=PENDING&page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency"],
+							"query": [
+								{
+									"key": "status",
+									"value": "PENDING",
+									"description": "Filter by status"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Emergencies (Caller)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/emergency/my-emergencies",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency", "my-emergencies"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Emergency By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/emergency/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "EMERGENCY_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Emergency Priority (Dispatcher)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"priority\": \"HIGH\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emergency/:id/priority",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency", ":id", "priority"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "EMERGENCY_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Emergency (Admin/Dispatcher)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cancelReason\": \"Patient no longer needs ambulance\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/emergency/:id/cancel",
+							"host": ["{{baseUrl}}"],
+							"path": ["emergency", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "EMERGENCY_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dispatch",
+			"item": [
+				{
+					"name": "Create Dispatch (Dispatcher)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emergencyId\": \"EMERGENCY_ID_HERE\",\n  \"ambulanceId\": \"AMBULANCE_ID_HERE\",\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/create-dispatch",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", "create-dispatch"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Dispatches (Admin/Dispatcher)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Dispatches (Driver)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/my-dispatches",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", "my-dispatches"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dispatch By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DISPATCH_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept Dispatch (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/:id/accept",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", ":id", "accept"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DISPATCH_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reject Dispatch (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/:id/reject",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", ":id", "reject"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DISPATCH_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Dispatch (Admin/Dispatcher)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/dispatch/:id/cancel",
+							"host": ["{{baseUrl}}"],
+							"path": ["dispatch", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "DISPATCH_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trip",
+			"item": [
+				{
+					"name": "Get All Trips (Admin/Dispatcher)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip?page=1&limit=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Trips (Driver)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/my-trips",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", "my-trips"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trip By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Fare (Driver)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/calculate-fare",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "calculate-fare"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark En Route (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/en-route",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "en-route"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Picked Up (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/pickup",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "pickup"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Select Hospital (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hospitalId\": \"HOSPITAL_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/select-hospital",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "select-hospital"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark Hospital Arrival (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/hospital-arrival",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "hospital-arrival"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Trip (Driver)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"totalDistanceKm\": 12.5,\n  \"notes\": \"Patient delivered safely\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "complete"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Trip (Admin/Dispatcher)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/trip/:id/cancel",
+							"host": ["{{baseUrl}}"],
+							"path": ["trip", ":id", "cancel"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "TRIP_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Hospital",
+			"item": [
+				{
+					"name": "Create Hospital (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Square Hospital Limited\",\n  \"phone\": \"+88028144400\",\n  \"email\": \"info@squarehospital.com\",\n  \"address\": \"18/F, Bir Uttam Qazi Nuruzzaman Sarak, West Panthapath, Dhaka 1205\",\n  \"latitude\": 23.7538,\n  \"longitude\": 90.3792,\n  \"emergencyAvailable\": true,\n  \"specialties\": [\"Cardiology\", \"Neurology\", \"Orthopedics\", \"ICU\", \"Emergency\"]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/hospital",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Hospitals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/hospital",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hospital By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/hospital/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "HOSPITAL_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Nearby Hospitals",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/hospital/nearby?latitude=23.7461&longitude=90.3742&radiusKm=10",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital", "nearby"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "23.7461"
+								},
+								{
+									"key": "longitude",
+									"value": "90.3742"
+								},
+								{
+									"key": "radiusKm",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Hospital (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emergencyAvailable\": false,\n  \"phone\": \"+88028144401\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/hospital/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "HOSPITAL_ID_HERE"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "Initiate Payment (Caller)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data && response.data.bkashURL) {",
+									"    console.log(\"Payment URL:\", response.data.bkashURL);",
+									"    console.log(\"Payment ID:\", response.data.paymentID);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tripId\": \"TRIP_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payment/initiate",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "initiate"]
+						},
+						"description": "Caller initiates payment for their completed trip. Returns bKash payment URL and payment ID."
+					},
+					"response": []
+				},
+				{
+					"name": "Retry Payment (Caller)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tripId\": \"TRIP_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payment/retry",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "retry"]
+						},
+						"description": "Caller retries payment for a failed or cancelled payment. Creates a new payment record."
+					},
+					"response": []
+				},
+				{
+					"name": "Payment Callback (Public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment/callback?paymentID=PAYMENT_ID&status=success",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "callback"],
+							"query": [
+								{
+									"key": "paymentID",
+									"value": "PAYMENT_ID",
+									"description": "Payment ID from bKash"
+								},
+								{
+									"key": "status",
+									"value": "success",
+									"description": "Payment status: success, failure, cancel"
+								}
+							]
+						},
+						"description": "bKash callback endpoint after payment. This is called by bKash automatically. No authentication required."
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Payment Details (Caller)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment/my-payment/:tripId",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "my-payment", ":tripId"],
+							"variable": [
+								{
+									"key": "tripId",
+									"value": "TRIP_ID_HERE",
+									"description": "UUID of the trip"
+								}
+							]
+						},
+						"description": "Caller retrieves payment details for a specific trip they own."
+					},
+					"response": []
+				},
+				{
+					"name": "Query Payment Status (Admin/Dispatcher)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentId\": \"PAYMENT_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/payment/query-status",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "query-status"]
+						},
+						"description": "Admin or Dispatcher queries payment status directly from bKash gateway. Useful for verification and troubleshooting."
+					},
+					"response": []
+				}
+			]
+		}
+	]
 }

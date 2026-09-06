@@ -8,42 +8,42 @@ import { EmergencyValidation } from "./emergency.validation";
 const router = Router();
 
 router.post(
-  "/",
-  auth(Role.CALLER),
-  validateRequest(EmergencyValidation.CreateEmergencyZodSchema),
-  EmergencyController.createEmergency,
+	"/",
+	auth(Role.CALLER),
+	validateRequest(EmergencyValidation.CreateEmergencyZodSchema),
+	EmergencyController.createEmergency,
 );
 
 router.get(
-  "/",
-  auth(Role.ADMIN, Role.DISPATCHER),
-  EmergencyController.getAllEmergencies,
+	"/",
+	auth(Role.ADMIN, Role.DISPATCHER),
+	EmergencyController.getAllEmergencies,
 );
 
 router.get(
-  "/my-emergencies",
-  auth(Role.CALLER),
-  EmergencyController.getMyEmergencies,
+	"/my-emergencies",
+	auth(Role.CALLER),
+	EmergencyController.getMyEmergencies,
 );
 
 router.get(
-  "/:id",
-  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
-  EmergencyController.getEmergencyById,
+	"/:id",
+	auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+	EmergencyController.getEmergencyById,
 );
 
 router.patch(
-  "/:id/priority",
-  auth(Role.DISPATCHER),
-  validateRequest(EmergencyValidation.UpdatePriorityZodSchema),
-  EmergencyController.updateEmergencyPriority,
+	"/:id/priority",
+	auth(Role.DISPATCHER),
+	validateRequest(EmergencyValidation.UpdatePriorityZodSchema),
+	EmergencyController.updateEmergencyPriority,
 );
 
 router.patch(
-  "/:id/cancel",
-  auth(Role.ADMIN, Role.DISPATCHER),
-  validateRequest(EmergencyValidation.CancelEmergencyZodSchema),
-  EmergencyController.cancelEmergency,
+	"/:id/cancel",
+	auth(Role.ADMIN, Role.DISPATCHER),
+	validateRequest(EmergencyValidation.CancelEmergencyZodSchema),
+	EmergencyController.cancelEmergency,
 );
 
 export const EmergencyRoutes = router;

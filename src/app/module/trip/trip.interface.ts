@@ -1,7 +1,7 @@
 export interface ISelectHospital {
-  hospitalId: string;
+	hospitalId: string;
 }
 
 export interface ICompleteTrip {
-  distanceKm: number;
+	distanceKm: number;
 }

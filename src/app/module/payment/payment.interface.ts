@@ -1,7 +1,7 @@
 export interface ICreatePaymentPayload {
-  tripId: string;
+	tripId: string;
 }
 
 export interface IRetryPaymentPayload {
-  tripId: string;
+	tripId: string;
 }
