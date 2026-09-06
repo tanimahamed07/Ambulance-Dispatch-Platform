@@ -64,28 +64,28 @@ const getHospitalById = catchAsync(async (req: Request, res: Response) => {
 //   });
 // });
 
-// const getNearbyHospitals = catchAsync(async (req: Request, res: Response) => {
-//   const { latitude, longitude, radius } = req.query;
+const getNearbyHospitals = catchAsync(async (req: Request, res: Response) => {
+  const { latitude, longitude, radius } = req.query;
 
-//   const result = await HospitalService.getNearbyHospitals(
-//     Number(latitude),
-//     Number(longitude),
-//     radius ? Number(radius) : undefined,
-//   );
+  const result = await HospitalService.getNearbyHospitals(
+    Number(latitude),
+    Number(longitude),
+    radius ? Number(radius) : undefined,
+  );
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Nearby hospitals retrieved successfully.",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Nearby hospitals retrieved successfully.",
+    data: result,
+  });
+});
 
 export const HospitalController = {
   createHospital,
   getAllHospitals,
   getHospitalById,
-    // updateHospital,
-  //   deleteHospital,
-  //   getNearbyHospitals,
+  // updateHospital,
+  // deleteHospital,
+  getNearbyHospitals,
 };

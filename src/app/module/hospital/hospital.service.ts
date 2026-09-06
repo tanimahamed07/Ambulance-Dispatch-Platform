@@ -32,7 +32,6 @@ const createHospital = async (payload: ICreateHospital) => {
   return hospital;
 };
 
-
 //  Get All Hospitals - With filters and search
 
 const getAllHospitals = async (query: IQuery) => {
@@ -224,84 +223,84 @@ const getHospitalById = async (id: string) => {
 // /**
 //  * Get Nearby Hospitals - Based on coordinates
 //  */
-// const getNearbyHospitals = async (
-//   latitude: number,
-//   longitude: number,
-//   radius: number = 10,
-// ) => {
-//   // Simple radius-based search using Haversine formula approximation
-//   // For production, consider using PostGIS or similar spatial database extension
+const getNearbyHospitals = async (
+  latitude: number,
+  longitude: number,
+  radius: number = 10,
+) => {
+  // Simple radius-based search using Haversine formula approximation
+  // For production, consider using PostGIS or similar spatial database extension
 
-//   const hospitals = await prisma.hospital.findMany({
-//     where: {
-//       status: HospitalStatus.ACTIVE,
-//       emergencyAvailable: true,
-//     },
-//     select: {
-//       id: true,
-//       name: true,
-//       phone: true,
-//       address: true,
-//       latitude: true,
-//       longitude: true,
-//       specialties: true,
-//       emergencyAvailable: true,
-//     },
-//   });
+  const hospitals = await prisma.hospital.findMany({
+    where: {
+      status: HospitalStatus.ACTIVE,
+      emergencyAvailable: true,
+    },
+    select: {
+      id: true,
+      name: true,
+      phone: true,
+      address: true,
+      latitude: true,
+      longitude: true,
+      specialties: true,
+      emergencyAvailable: true,
+    },
+  });
 
-//   // Calculate distance and filter by radius
-//   const hospitalsWithDistance = hospitals.map((hospital) => {
-//     const distance = calculateDistance(
-//       latitude,
-//       longitude,
-//       hospital.latitude,
-//       hospital.longitude,
-//     );
+  // Calculate distance and filter by radius
+  const hospitalsWithDistance = hospitals.map((hospital) => {
+    const distance = calculateDistance(
+      latitude,
+      longitude,
+      hospital.latitude,
+      hospital.longitude,
+    );
 
-//     return {
-//       ...hospital,
-//       distance: Math.round(distance * 100) / 100, // Round to 2 decimal places
-//     };
-//   });
+    return {
+      ...hospital,
+      distance: Math.round(distance * 100) / 100, // Round to 2 decimal places
+    };
+  });
 
-//   // Filter by radius and sort by distance
-//   const nearbyHospitals = hospitalsWithDistance
-//     .filter((hospital) => hospital.distance <= radius)
-//     .sort((a, b) => a.distance - b.distance);
+  // Filter by radius and sort by distance
+  const nearbyHospitals = hospitalsWithDistance
+    .filter((hospital) => hospital.distance <= radius)
+    .sort((a, b) => a.distance - b.distance);
 
-//   return nearbyHospitals;
-// };
+  return nearbyHospitals;
+};
 
 // /**
 //  * Calculate distance between two coordinates using Haversine formula
 //  * Returns distance in kilometers
 //  */
-// function calculateDistance(
-//   lat1: number,
-//   lon1: number,
-//   lat2: number,
-//   lon2: number,
-// ): number {
-//   const R = 6371; // Earth's radius in kilometers
-//   const dLat = toRadians(lat2 - lat1);
-//   const dLon = toRadians(lon2 - lon1);
+function calculateDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+): number {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = toRadians(lat2 - lat1);
+  const dLon = toRadians(lon2 - lon1);
 
-//   const a =
-//     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-//     Math.cos(toRadians(lat1)) *
-//       Math.cos(toRadians(lat2)) *
-//       Math.sin(dLon / 2) *
-//       Math.sin(dLon / 2);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) *
+      Math.cos(toRadians(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
-//   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-//   const distance = R * c;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
 
-//   return distance;
-// }
+  return distance;
+}
 
-// function toRadians(degrees: number): number {
-//   return degrees * (Math.PI / 180);
-// }
+function toRadians(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
 
 export const HospitalService = {
   createHospital,
@@ -309,5 +308,5 @@ export const HospitalService = {
   getHospitalById,
   //   updateHospital,
   //   deleteHospital,
-  //   getNearbyHospitals,
+  getNearbyHospitals,
 };

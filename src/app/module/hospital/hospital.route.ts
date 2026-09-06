@@ -23,19 +23,19 @@ router.get(
   HospitalController.getAllHospitals,
 );
 
-// // Get Nearby Hospitals - Based on coordinates
-// router.get(
-//   "/nearby",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
-//   HospitalController.getNearbyHospitals,
-// );
+// Get Hospital by ID
+router.get(
+  "/:id",
+  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+  HospitalController.getHospitalById,
+);
 
-// // Get Hospital by ID
-// router.get(
-//   "/:id",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
-//   HospitalController.getHospitalById,
-// );
+// Get Nearby Hospitals - Based on coordinates
+router.get(
+  "/nearby",
+  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+  HospitalController.getNearbyHospitals,
+);
 
 // // Admin: Update Hospital
 // router.patch(
