@@ -6,10 +6,7 @@ import {
   IApproveDriverPayload,
 } from "./driver.interface";
 import { IRequestUser } from "../auth/auth.interface";
-import {
-  DriverApprovalStatus,
-  Role,
-} from "../../../generated/prisma/enums";
+import { DriverApprovalStatus, Role } from "../../../generated/prisma/enums";
 import { differenceInDays } from "date-fns";
 import { IQuery } from "../../interface";
 import { DriverWhereInput } from "../../../generated/prisma/models";

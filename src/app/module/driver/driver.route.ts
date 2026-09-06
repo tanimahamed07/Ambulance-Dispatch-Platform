@@ -21,7 +21,7 @@ router.patch(
 
 router.get(
   "/application-status",
-  auth(Role.CALLER),
+  auth(Role.CALLER, Role.DRIVER),
   DriverController.applicationStatus,
 );
 // all pending application

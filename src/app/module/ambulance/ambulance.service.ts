@@ -489,7 +489,67 @@ const unassignDriver = async (ambulanceId: string) => {
   return result;
 };
 
-const updateMyAmbulanceStatus = async () => {};
+const updateMyAmbulanceStatus = async (
+  userId: string,
+  status: AmbulanceStatus,
+) => {
+  // Find driver by userId
+  const driver = await prisma.driver.findUnique({
+    where: { userId },
+    select: {
+      id: true,
+      ambulanceId: true,
+      isAvailable: true,
+      approvalStatus: true,
+    },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Only approved drivers can update ambulance status",
+    );
+  }
+
+  if (!driver.ambulanceId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "No ambulance assigned to this driver",
+    );
+  }
+
+  // Validate status transition
+  const ambulance = await prisma.ambulance.findUnique({
+    where: { id: driver.ambulanceId },
+  });
+
+  if (!ambulance) {
+    throw new AppError(httpStatus.NOT_FOUND, "Ambulance not found");
+  }
+
+  // Don't allow status change if ambulance is on active trip
+  if (ambulance.status === AmbulanceStatus.ON_TRIP) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Cannot change status while ambulance is on trip",
+    );
+  }
+
+  // Update ambulance status
+  const updatedAmbulance = await prisma.ambulance.update({
+    where: { id: driver.ambulanceId },
+    data: {
+      status,
+      updatedAt: new Date(),
+    },
+  });
+
+  return updatedAmbulance;
+};
 
 /**
  * Update My Ambulance Location - Driver updates their assigned ambulance location

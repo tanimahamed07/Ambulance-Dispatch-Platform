@@ -704,29 +704,18 @@ const completeTrip = async (
       trip.emergency.priority,
     );
 
-    // 6. Validate provided fare matches calculated fare (within 5% tolerance)
-    const fareVariance = Math.abs(payload.fare - calculatedFare);
-    const tolerance = calculatedFare * 0.05; // 5% tolerance
-
-    if (fareVariance > tolerance) {
-      throw new AppError(
-        httpStatus.BAD_REQUEST,
-        `Fare mismatch. Expected: ${calculatedFare} Tk (±5%), Provided: ${payload.fare} Tk`,
-      );
-    }
-
-    // 7. Update trip status
+    // 6. Update trip status using backend-calculated fare
     const updatedTrip = await tx.trip.update({
       where: { id: tripId },
       data: {
         status: TripStatus.COMPLETED,
         distanceKm: payload.distanceKm,
-        fare: calculatedFare, // Use calculated fare
+        fare: calculatedFare,
         completedAt: new Date(),
       },
     });
 
-    // 8. Update emergency status to COMPLETED
+    // 7. Update emergency status to COMPLETED
     await tx.emergencyRequest.update({
       where: { id: trip.emergencyId },
       data: {
@@ -734,7 +723,7 @@ const completeTrip = async (
       },
     });
 
-    // 9. Update ambulance status to AVAILABLE
+    // 8. Update ambulance status to AVAILABLE
     await tx.ambulance.update({
       where: { id: trip.dispatch.ambulanceId },
       data: {
@@ -742,7 +731,7 @@ const completeTrip = async (
       },
     });
 
-    // 10. Update dispatch status to COMPLETED
+    // 9. Update dispatch status to COMPLETED
     await tx.dispatch.update({
       where: { id: trip.dispatchId },
       data: {
@@ -750,7 +739,7 @@ const completeTrip = async (
       },
     });
 
-    // 11. Mark driver as available again
+    // 10. Mark driver as available again
     await tx.driver.update({
       where: { id: trip.dispatch.driverId },
       data: {

@@ -72,6 +72,11 @@ export type EmergencyRequest = Prisma.EmergencyRequestModel
  */
 export type Hospital = Prisma.HospitalModel
 /**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
+/**
  * Model Trip
  * 
  */

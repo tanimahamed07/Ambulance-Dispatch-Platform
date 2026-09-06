@@ -57,6 +57,7 @@ export const ModelName = {
   Driver: 'Driver',
   EmergencyRequest: 'EmergencyRequest',
   Hospital: 'Hospital',
+  Payment: 'Payment',
   Trip: 'Trip',
   User: 'User'
 } as const
@@ -189,6 +190,27 @@ export const HospitalScalarFieldEnum = {
 } as const
 
 export type HospitalScalarFieldEnum = (typeof HospitalScalarFieldEnum)[keyof typeof HospitalScalarFieldEnum]
+
+
+export const PaymentScalarFieldEnum = {
+  id: 'id',
+  status: 'status',
+  amount: 'amount',
+  currency: 'currency',
+  paymentGateway: 'paymentGateway',
+  merchantInvoiceNumber: 'merchantInvoiceNumber',
+  bkashPaymentID: 'bkashPaymentID',
+  trxID: 'trxID',
+  payerReference: 'payerReference',
+  paymentCreateTime: 'paymentCreateTime',
+  paymentExecuteTime: 'paymentExecuteTime',
+  failureReason: 'failureReason',
+  tripId: 'tripId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
 
 
 export const TripScalarFieldEnum = {

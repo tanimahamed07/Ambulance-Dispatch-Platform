@@ -60,11 +60,7 @@ router.patch(
 );
 
 // Driver — status + location (syncs to assigned ambulance)
-router.patch(
-  "/me/status",
-  auth(Role.DRIVER),
-  AmbulanceController.updateMyAmbulanceStatus,
-);
+
 
 router.patch(
   "/me/location",

@@ -10,9 +10,7 @@ import {
   TripStatus,
 } from "../../../generated/prisma/enums";
 import { IQuery } from "../../interface";
-import {
-  DispatchWhereInput,
-} from "../../../generated/prisma/models";
+import { DispatchWhereInput } from "../../../generated/prisma/models";
 
 const createDispatch = async (payload: ICreateDispatch) => {
   const { emergencyId, driverId } = payload;
@@ -486,11 +484,8 @@ const getMyDispatches = async (driverId: string, query: IQuery) => {
 };
 
 const acceptDispatch = async (dispatchId: string, driverId: string) => {
-
   // Use transaction to ensure atomicity
   const result = await prisma.$transaction(async (tx) => {
-
-
     // 1. Find dispatch first to verify state and get related IDs
     const dispatch = await tx.dispatch.findUnique({
       where: { id: dispatchId },
@@ -574,6 +569,7 @@ const acceptDispatch = async (dispatchId: string, driverId: string) => {
 
   return result;
 };
+
 const rejectDispatch = async (dispatchId: string, driverId: string) => {
   const dispatch = await prisma.dispatch.findUnique({
     where: { id: dispatchId },
@@ -606,36 +602,41 @@ const rejectDispatch = async (dispatchId: string, driverId: string) => {
     );
   }
 
-  // 4. Update dispatch status
-  const updatedDispatch = await prisma.dispatch.update({
-    where: { id: dispatchId },
-    data: {
-      status: DispatchStatus.REJECTED,
-    },
-  });
+  // 4. Wrap all mutation operations inside prisma.$transaction
+  const updatedDispatch = await prisma.$transaction(async (tx) => {
+    // Update dispatch status
+    const updated = await tx.dispatch.update({
+      where: { id: dispatchId },
+      data: {
+        status: DispatchStatus.REJECTED,
+      },
+    });
 
-  // 5. Revert emergency status back to PENDING
-  await prisma.emergencyRequest.update({
-    where: { id: dispatch.emergencyId },
-    data: {
-      status: EmergencyStatus.PENDING,
-    },
-  });
+    // Revert emergency status back to PENDING
+    await tx.emergencyRequest.update({
+      where: { id: dispatch.emergencyId },
+      data: {
+        status: EmergencyStatus.PENDING,
+      },
+    });
 
-  // 6. Revert ambulance status to AVAILABLE
-  await prisma.ambulance.update({
-    where: { id: dispatch.ambulanceId },
-    data: {
-      status: AmbulanceStatus.AVAILABLE,
-    },
-  });
+    // Revert ambulance status to AVAILABLE
+    await tx.ambulance.update({
+      where: { id: dispatch.ambulanceId },
+      data: {
+        status: AmbulanceStatus.AVAILABLE,
+      },
+    });
 
-  // 7. Mark driver as available again
-  await prisma.driver.update({
-    where: { id: driverId },
-    data: {
-      isAvailable: true,
-    },
+    // Mark driver as available again
+    await tx.driver.update({
+      where: { id: driverId },
+      data: {
+        isAvailable: true,
+      },
+    });
+
+    return updated;
   });
 
   return updatedDispatch;
@@ -673,7 +674,7 @@ const cancelDispatch = async (dispatchId: string) => {
     // 3. Check if already completed
     if (
       dispatch.status === DispatchStatus.COMPLETED ||
-      DispatchStatus.ACCEPTED
+      dispatch.status === DispatchStatus.ACCEPTED
     ) {
       throw new AppError(
         httpStatus.BAD_REQUEST,

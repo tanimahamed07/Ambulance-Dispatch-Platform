@@ -4,5 +4,4 @@ export interface ISelectHospital {
 
 export interface ICompleteTrip {
   distanceKm: number;
-  fare: number;
 }

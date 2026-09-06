@@ -97,10 +97,6 @@ const unassignDriver = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const updateMyAmbulanceStatus = catchAsync(
-  async (req: Request, res: Response) => {},
-);
-
 const updateMyAmbulanceLocation = catchAsync(
   async (req: Request, res: Response) => {
     const userId = req.user?.userId!;
@@ -130,6 +126,5 @@ export const AmbulanceController = {
   softDeleteAmbulance,
   assignDriver,
   unassignDriver,
-  updateMyAmbulanceStatus,
   updateMyAmbulanceLocation,
 };

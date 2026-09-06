@@ -17,6 +17,8 @@ model Trip {
   distanceKm        Float?
   fare              Decimal?
 
+  payment Payment?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -127,7 +127,7 @@ const getHospitalById = async (id: string) => {
     include: {
       _count: {
         select: {
-          trips: true,
+          trip: true,
         },
       },
     },

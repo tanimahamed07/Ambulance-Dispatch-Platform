@@ -116,3 +116,12 @@ enum HospitalStatus {
   ACTIVE
   INACTIVE
 }
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+

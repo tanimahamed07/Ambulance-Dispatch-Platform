@@ -145,9 +145,8 @@ const updateEmergencyPriority = async (
     throw new AppError(httpStatus.NOT_FOUND, "Emergency request not found");
   }
   if (
-    emergency.status === EmergencyStatus.HOSPITAL_COMPLETED ||
-    emergency.status === EmergencyStatus.CANCELLED ||
-    emergency.status === EmergencyStatus.PICKED
+    emergency.status === EmergencyStatus.COMPLETED ||
+    emergency.status === EmergencyStatus.CANCELLED
   ) {
     throw new Error(
       `Cannot change priority because the request status is ${emergency.status}`,
@@ -392,7 +391,7 @@ const cancelEmergency = async (id: string, payload: ICancelEmergency) => {
   }
 
   // Check if emergency is already completed
-  if (emergency.status === EmergencyStatus.HOSPITAL_COMPLETED) {
+  if (emergency.status === EmergencyStatus.COMPLETED) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       "Cannot cancel a completed emergency request",
@@ -401,8 +400,9 @@ const cancelEmergency = async (id: string, payload: ICancelEmergency) => {
 
   if (
     emergency.status === EmergencyStatus.EN_ROUTE ||
-    emergency.status === EmergencyStatus.PICKED ||
-    emergency.status === EmergencyStatus.UP_AT
+    emergency.status === EmergencyStatus.PICKED_UP ||
+    emergency.status === EmergencyStatus.DISPATCHED
+
   ) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
