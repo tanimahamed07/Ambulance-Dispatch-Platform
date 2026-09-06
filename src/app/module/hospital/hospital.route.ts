@@ -38,12 +38,12 @@ router.get(
 );
 
 // // Admin: Update Hospital
-// router.patch(
-//   "/:id",
-//   auth(Role.ADMIN),
-//   validateRequest(HospitalValidation.updateHospitalValidation),
-//   HospitalController.updateHospital,
-// );
+router.patch(
+  "/:id",
+  auth(Role.ADMIN),
+  validateRequest(HospitalValidation.updateHospitalValidation),
+  HospitalController.updateHospital,
+);
 
 // // Admin: Delete Hospital (Soft delete)
 // router.delete("/:id", auth(Role.ADMIN), HospitalController.deleteHospital);

@@ -140,44 +140,41 @@ const getHospitalById = async (id: string) => {
   return hospital;
 };
 
-// /**
-//  * Update Hospital - Admin only
-//  */
-// const updateHospital = async (id: string, payload: IUpdateHospital) => {
-//   // Check if hospital exists
-//   const hospital = await prisma.hospital.findUnique({
-//     where: { id },
-//   });
+const updateHospital = async (id: string, payload: IUpdateHospital) => {
+  // Check if hospital exists
+  const hospital = await prisma.hospital.findUnique({
+    where: { id },
+  });
 
-//   if (!hospital) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
-//   }
+  if (!hospital) {
+    throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
+  }
 
-//   // If updating name and address, check for duplicates
-//   if (payload.name || payload.address) {
-//     const existingHospital = await prisma.hospital.findFirst({
-//       where: {
-//         name: payload.name || hospital.name,
-//         address: payload.address || hospital.address,
-//         id: { not: id },
-//       },
-//     });
+  // If updating name and address, check for duplicates
+  if (payload.name || payload.address) {
+    const existingHospital = await prisma.hospital.findFirst({
+      where: {
+        name: payload.name || hospital.name,
+        address: payload.address || hospital.address,
+        id: { not: id },
+      },
+    });
 
-//     if (existingHospital) {
-//       throw new AppError(
-//         httpStatus.CONFLICT,
-//         "Hospital with this name and address already exists",
-//       );
-//     }
-//   }
+    if (existingHospital) {
+      throw new AppError(
+        httpStatus.CONFLICT,
+        "Hospital with this name and address already exists",
+      );
+    }
+  }
 
-//   const updatedHospital = await prisma.hospital.update({
-//     where: { id },
-//     data: payload,
-//   });
+  const updatedHospital = await prisma.hospital.update({
+    where: { id },
+    data: payload,
+  });
 
-//   return updatedHospital;
-// };
+  return updatedHospital;
+};
 
 // /**
 //  * Delete Hospital - Admin only (Soft delete by setting status to INACTIVE)
@@ -306,7 +303,7 @@ export const HospitalService = {
   createHospital,
   getAllHospitals,
   getHospitalById,
-  //   updateHospital,
+  updateHospital,
   //   deleteHospital,
   getNearbyHospitals,
 };

@@ -39,18 +39,18 @@ const getHospitalById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const updateHospital = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const payload = req.body;
-//   const result = await HospitalService.updateHospital(id, payload);
+const updateHospital = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const result = await HospitalService.updateHospital(id as string, payload);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Hospital updated successfully.",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Hospital updated successfully.",
+    data: result,
+  });
+});
 
 // const deleteHospital = catchAsync(async (req: Request, res: Response) => {
 //   const { id } = req.params;
@@ -85,7 +85,7 @@ export const HospitalController = {
   createHospital,
   getAllHospitals,
   getHospitalById,
-  // updateHospital,
+  updateHospital,
   // deleteHospital,
   getNearbyHospitals,
 };
