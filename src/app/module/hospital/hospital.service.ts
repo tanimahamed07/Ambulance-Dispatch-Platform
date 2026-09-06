@@ -214,7 +214,6 @@ const deleteHospital = async (id: string) => {
   return deletedHospital;
 };
 
-
 const getNearbyHospitals = async (
   latitude: number,
   longitude: number,
@@ -299,6 +298,6 @@ export const HospitalService = {
   getAllHospitals,
   getHospitalById,
   updateHospital,
-    deleteHospital,
+  deleteHospital,
   getNearbyHospitals,
 };

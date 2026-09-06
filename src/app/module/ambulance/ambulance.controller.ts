@@ -102,7 +102,23 @@ const updateMyAmbulanceStatus = catchAsync(
 );
 
 const updateMyAmbulanceLocation = catchAsync(
-  async (req: Request, res: Response) => {},
+  async (req: Request, res: Response) => {
+    const userId = req.user?.userId!;
+    const { latitude, longitude } = req.body;
+
+    const result = await AmbulanceService.updateMyAmbulanceLocation(
+      userId,
+      latitude,
+      longitude,
+    );
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Ambulance location updated successfully.",
+      data: result,
+    });
+  },
 );
 
 export const AmbulanceController = {

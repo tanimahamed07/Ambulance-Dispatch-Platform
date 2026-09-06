@@ -64,12 +64,23 @@ const getDispatchById = catchAsync(async (req: Request, res: Response) => {
 
 const acceptDispatch = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await DispatchService.getDispatchById(id as string);
+  const userId = req.user?.userId!;
+
+  // First find driver by userId
+  const driver = await prisma.driver.findUnique({
+    where: { userId },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  const result = await DispatchService.acceptDispatch(id as string, driver.id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Dispatch accept successfully.",
+    message: "Dispatch accepted successfully. Trip has been created.",
     data: result,
   });
 });

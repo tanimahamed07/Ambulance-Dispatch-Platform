@@ -272,7 +272,7 @@ export type HospitalWhereInput = {
   status?: Prisma.EnumHospitalStatusFilter<"Hospital"> | $Enums.HospitalStatus
   createdAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
-  trips?: Prisma.TripListRelationFilter
+  trip?: Prisma.TripListRelationFilter
 }
 
 export type HospitalOrderByWithRelationInput = {
@@ -288,7 +288,7 @@ export type HospitalOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  trips?: Prisma.TripOrderByRelationAggregateInput
+  trip?: Prisma.TripOrderByRelationAggregateInput
 }
 
 export type HospitalWhereUniqueInput = Prisma.AtLeast<{
@@ -307,7 +307,7 @@ export type HospitalWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumHospitalStatusFilter<"Hospital"> | $Enums.HospitalStatus
   createdAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
-  trips?: Prisma.TripListRelationFilter
+  trip?: Prisma.TripListRelationFilter
 }, "id">
 
 export type HospitalOrderByWithAggregationInput = {
@@ -358,10 +358,10 @@ export type HospitalCreateInput = {
   longitude: number
   emergencyAvailable?: boolean
   specialties?: Prisma.HospitalCreatespecialtiesInput | string[]
-  status?: $Enums.HospitalStatus
+  status: $Enums.HospitalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripCreateNestedManyWithoutHospitalsInput
+  trip?: Prisma.TripCreateNestedManyWithoutHospitalInput
 }
 
 export type HospitalUncheckedCreateInput = {
@@ -374,10 +374,10 @@ export type HospitalUncheckedCreateInput = {
   longitude: number
   emergencyAvailable?: boolean
   specialties?: Prisma.HospitalCreatespecialtiesInput | string[]
-  status?: $Enums.HospitalStatus
+  status: $Enums.HospitalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripUncheckedCreateNestedManyWithoutHospitalsInput
+  trip?: Prisma.TripUncheckedCreateNestedManyWithoutHospitalInput
 }
 
 export type HospitalUpdateInput = {
@@ -393,7 +393,7 @@ export type HospitalUpdateInput = {
   status?: Prisma.EnumHospitalStatusFieldUpdateOperationsInput | $Enums.HospitalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUpdateManyWithoutHospitalsNestedInput
+  trip?: Prisma.TripUpdateManyWithoutHospitalNestedInput
 }
 
 export type HospitalUncheckedUpdateInput = {
@@ -409,7 +409,7 @@ export type HospitalUncheckedUpdateInput = {
   status?: Prisma.EnumHospitalStatusFieldUpdateOperationsInput | $Enums.HospitalStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUncheckedUpdateManyWithoutHospitalsNestedInput
+  trip?: Prisma.TripUncheckedUpdateManyWithoutHospitalNestedInput
 }
 
 export type HospitalCreateManyInput = {
@@ -422,7 +422,7 @@ export type HospitalCreateManyInput = {
   longitude: number
   emergencyAvailable?: boolean
   specialties?: Prisma.HospitalCreatespecialtiesInput | string[]
-  status?: $Enums.HospitalStatus
+  status: $Enums.HospitalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -518,14 +518,9 @@ export type HospitalSumOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
 }
 
-export type HospitalListRelationFilter = {
-  every?: Prisma.HospitalWhereInput
-  some?: Prisma.HospitalWhereInput
-  none?: Prisma.HospitalWhereInput
-}
-
-export type HospitalOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type HospitalNullableScalarRelationFilter = {
+  is?: Prisma.HospitalWhereInput | null
+  isNot?: Prisma.HospitalWhereInput | null
 }
 
 export type HospitalCreatespecialtiesInput = {
@@ -541,45 +536,23 @@ export type EnumHospitalStatusFieldUpdateOperationsInput = {
   set?: $Enums.HospitalStatus
 }
 
-export type HospitalCreateNestedManyWithoutTripsInput = {
-  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput> | Prisma.HospitalCreateWithoutTripsInput[] | Prisma.HospitalUncheckedCreateWithoutTripsInput[]
-  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripsInput | Prisma.HospitalCreateOrConnectWithoutTripsInput[]
-  connect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
+export type HospitalCreateNestedOneWithoutTripInput = {
+  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripInput, Prisma.HospitalUncheckedCreateWithoutTripInput>
+  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripInput
+  connect?: Prisma.HospitalWhereUniqueInput
 }
 
-export type HospitalUncheckedCreateNestedManyWithoutTripsInput = {
-  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput> | Prisma.HospitalCreateWithoutTripsInput[] | Prisma.HospitalUncheckedCreateWithoutTripsInput[]
-  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripsInput | Prisma.HospitalCreateOrConnectWithoutTripsInput[]
-  connect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
+export type HospitalUpdateOneWithoutTripNestedInput = {
+  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripInput, Prisma.HospitalUncheckedCreateWithoutTripInput>
+  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripInput
+  upsert?: Prisma.HospitalUpsertWithoutTripInput
+  disconnect?: Prisma.HospitalWhereInput | boolean
+  delete?: Prisma.HospitalWhereInput | boolean
+  connect?: Prisma.HospitalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HospitalUpdateToOneWithWhereWithoutTripInput, Prisma.HospitalUpdateWithoutTripInput>, Prisma.HospitalUncheckedUpdateWithoutTripInput>
 }
 
-export type HospitalUpdateManyWithoutTripsNestedInput = {
-  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput> | Prisma.HospitalCreateWithoutTripsInput[] | Prisma.HospitalUncheckedCreateWithoutTripsInput[]
-  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripsInput | Prisma.HospitalCreateOrConnectWithoutTripsInput[]
-  upsert?: Prisma.HospitalUpsertWithWhereUniqueWithoutTripsInput | Prisma.HospitalUpsertWithWhereUniqueWithoutTripsInput[]
-  set?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  disconnect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  delete?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  connect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  update?: Prisma.HospitalUpdateWithWhereUniqueWithoutTripsInput | Prisma.HospitalUpdateWithWhereUniqueWithoutTripsInput[]
-  updateMany?: Prisma.HospitalUpdateManyWithWhereWithoutTripsInput | Prisma.HospitalUpdateManyWithWhereWithoutTripsInput[]
-  deleteMany?: Prisma.HospitalScalarWhereInput | Prisma.HospitalScalarWhereInput[]
-}
-
-export type HospitalUncheckedUpdateManyWithoutTripsNestedInput = {
-  create?: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput> | Prisma.HospitalCreateWithoutTripsInput[] | Prisma.HospitalUncheckedCreateWithoutTripsInput[]
-  connectOrCreate?: Prisma.HospitalCreateOrConnectWithoutTripsInput | Prisma.HospitalCreateOrConnectWithoutTripsInput[]
-  upsert?: Prisma.HospitalUpsertWithWhereUniqueWithoutTripsInput | Prisma.HospitalUpsertWithWhereUniqueWithoutTripsInput[]
-  set?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  disconnect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  delete?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  connect?: Prisma.HospitalWhereUniqueInput | Prisma.HospitalWhereUniqueInput[]
-  update?: Prisma.HospitalUpdateWithWhereUniqueWithoutTripsInput | Prisma.HospitalUpdateWithWhereUniqueWithoutTripsInput[]
-  updateMany?: Prisma.HospitalUpdateManyWithWhereWithoutTripsInput | Prisma.HospitalUpdateManyWithWhereWithoutTripsInput[]
-  deleteMany?: Prisma.HospitalScalarWhereInput | Prisma.HospitalScalarWhereInput[]
-}
-
-export type HospitalCreateWithoutTripsInput = {
+export type HospitalCreateWithoutTripInput = {
   id?: string
   name: string
   phone: string
@@ -589,12 +562,12 @@ export type HospitalCreateWithoutTripsInput = {
   longitude: number
   emergencyAvailable?: boolean
   specialties?: Prisma.HospitalCreatespecialtiesInput | string[]
-  status?: $Enums.HospitalStatus
+  status: $Enums.HospitalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type HospitalUncheckedCreateWithoutTripsInput = {
+export type HospitalUncheckedCreateWithoutTripInput = {
   id?: string
   name: string
   phone: string
@@ -604,51 +577,28 @@ export type HospitalUncheckedCreateWithoutTripsInput = {
   longitude: number
   emergencyAvailable?: boolean
   specialties?: Prisma.HospitalCreatespecialtiesInput | string[]
-  status?: $Enums.HospitalStatus
+  status: $Enums.HospitalStatus
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
-export type HospitalCreateOrConnectWithoutTripsInput = {
+export type HospitalCreateOrConnectWithoutTripInput = {
   where: Prisma.HospitalWhereUniqueInput
-  create: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput>
+  create: Prisma.XOR<Prisma.HospitalCreateWithoutTripInput, Prisma.HospitalUncheckedCreateWithoutTripInput>
 }
 
-export type HospitalUpsertWithWhereUniqueWithoutTripsInput = {
-  where: Prisma.HospitalWhereUniqueInput
-  update: Prisma.XOR<Prisma.HospitalUpdateWithoutTripsInput, Prisma.HospitalUncheckedUpdateWithoutTripsInput>
-  create: Prisma.XOR<Prisma.HospitalCreateWithoutTripsInput, Prisma.HospitalUncheckedCreateWithoutTripsInput>
+export type HospitalUpsertWithoutTripInput = {
+  update: Prisma.XOR<Prisma.HospitalUpdateWithoutTripInput, Prisma.HospitalUncheckedUpdateWithoutTripInput>
+  create: Prisma.XOR<Prisma.HospitalCreateWithoutTripInput, Prisma.HospitalUncheckedCreateWithoutTripInput>
+  where?: Prisma.HospitalWhereInput
 }
 
-export type HospitalUpdateWithWhereUniqueWithoutTripsInput = {
-  where: Prisma.HospitalWhereUniqueInput
-  data: Prisma.XOR<Prisma.HospitalUpdateWithoutTripsInput, Prisma.HospitalUncheckedUpdateWithoutTripsInput>
+export type HospitalUpdateToOneWithWhereWithoutTripInput = {
+  where?: Prisma.HospitalWhereInput
+  data: Prisma.XOR<Prisma.HospitalUpdateWithoutTripInput, Prisma.HospitalUncheckedUpdateWithoutTripInput>
 }
 
-export type HospitalUpdateManyWithWhereWithoutTripsInput = {
-  where: Prisma.HospitalScalarWhereInput
-  data: Prisma.XOR<Prisma.HospitalUpdateManyMutationInput, Prisma.HospitalUncheckedUpdateManyWithoutTripsInput>
-}
-
-export type HospitalScalarWhereInput = {
-  AND?: Prisma.HospitalScalarWhereInput | Prisma.HospitalScalarWhereInput[]
-  OR?: Prisma.HospitalScalarWhereInput[]
-  NOT?: Prisma.HospitalScalarWhereInput | Prisma.HospitalScalarWhereInput[]
-  id?: Prisma.StringFilter<"Hospital"> | string
-  name?: Prisma.StringFilter<"Hospital"> | string
-  phone?: Prisma.StringFilter<"Hospital"> | string
-  email?: Prisma.StringNullableFilter<"Hospital"> | string | null
-  address?: Prisma.StringFilter<"Hospital"> | string
-  latitude?: Prisma.FloatFilter<"Hospital"> | number
-  longitude?: Prisma.FloatFilter<"Hospital"> | number
-  emergencyAvailable?: Prisma.BoolFilter<"Hospital"> | boolean
-  specialties?: Prisma.StringNullableListFilter<"Hospital">
-  status?: Prisma.EnumHospitalStatusFilter<"Hospital"> | $Enums.HospitalStatus
-  createdAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Hospital"> | Date | string
-}
-
-export type HospitalUpdateWithoutTripsInput = {
+export type HospitalUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -663,22 +613,7 @@ export type HospitalUpdateWithoutTripsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type HospitalUncheckedUpdateWithoutTripsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  phone?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  latitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  longitude?: Prisma.FloatFieldUpdateOperationsInput | number
-  emergencyAvailable?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  specialties?: Prisma.HospitalUpdatespecialtiesInput | string[]
-  status?: Prisma.EnumHospitalStatusFieldUpdateOperationsInput | $Enums.HospitalStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type HospitalUncheckedUpdateManyWithoutTripsInput = {
+export type HospitalUncheckedUpdateWithoutTripInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
@@ -699,11 +634,11 @@ export type HospitalUncheckedUpdateManyWithoutTripsInput = {
  */
 
 export type HospitalCountOutputType = {
-  trips: number
+  trip: number
 }
 
 export type HospitalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trips?: boolean | HospitalCountOutputTypeCountTripsArgs
+  trip?: boolean | HospitalCountOutputTypeCountTripArgs
 }
 
 /**
@@ -719,7 +654,7 @@ export type HospitalCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * HospitalCountOutputType without action
  */
-export type HospitalCountOutputTypeCountTripsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type HospitalCountOutputTypeCountTripArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TripWhereInput
 }
 
@@ -737,7 +672,7 @@ export type HospitalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   status?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  trips?: boolean | Prisma.Hospital$tripsArgs<ExtArgs>
+  trip?: boolean | Prisma.Hospital$tripArgs<ExtArgs>
   _count?: boolean | Prisma.HospitalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["hospital"]>
 
@@ -788,7 +723,7 @@ export type HospitalSelectScalar = {
 
 export type HospitalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "address" | "latitude" | "longitude" | "emergencyAvailable" | "specialties" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["hospital"]>
 export type HospitalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trips?: boolean | Prisma.Hospital$tripsArgs<ExtArgs>
+  trip?: boolean | Prisma.Hospital$tripArgs<ExtArgs>
   _count?: boolean | Prisma.HospitalCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HospitalIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -797,7 +732,7 @@ export type HospitalIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type $HospitalPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Hospital"
   objects: {
-    trips: Prisma.$TripPayload<ExtArgs>[]
+    trip: Prisma.$TripPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1206,7 +1141,7 @@ readonly fields: HospitalFieldRefs;
  */
 export interface Prisma__HospitalClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  trips<T extends Prisma.Hospital$tripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hospital$tripsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trip<T extends Prisma.Hospital$tripArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Hospital$tripArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1641,9 +1576,9 @@ export type HospitalDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Hospital.trips
+ * Hospital.trip
  */
-export type Hospital$tripsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Hospital$tripArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Trip
    */

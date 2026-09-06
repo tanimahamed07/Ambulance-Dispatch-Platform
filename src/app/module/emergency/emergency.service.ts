@@ -238,8 +238,57 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
     orderBy: {
       [sortBy]: sortOrder,
     },
-    include: {
-      dispatch: {},
+    select: {
+      id: true,
+      patientName: true,
+      patientPhone: true,
+      emergencyType: true,
+      description: true,
+      pickupAddress: true,
+      pickupLatitude: true,
+      pickupLongitude: true,
+      priority: true,
+      status: true,
+      cancellationReason: true,
+      cancelledAt: true,
+      createdAt: true,
+      updatedAt: true,
+      dispatch: {
+        select: {
+          id: true,
+          status: true,
+          dispatchedAt: true,
+          acceptedAt: true,
+          ambulance: {
+            select: {
+              id: true,
+              ambulanceNumber: true,
+              registrationNumber: true,
+              vehicleType: true,
+              model: true,
+              status: true,
+              currentLatitude: true,
+              currentLongitude: true,
+            },
+          },
+          driver: {
+            select: {
+              id: true,
+              contactNumber: true,
+              address: true,
+              isAvailable: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  profileUrl: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -280,8 +329,10 @@ const getEmergencyById = async (id: string) => {
           },
         },
       },
+
       dispatch: {
         include: {
+          trips: true,
           ambulance: {
             select: {
               id: true,

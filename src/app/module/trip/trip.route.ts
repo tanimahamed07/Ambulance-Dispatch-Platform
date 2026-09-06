@@ -1,52 +1,58 @@
-// import { Router } from "express";
-// import { Role } from "../../../generated/prisma/enums";
-// import { auth } from "../../middleware/checkAuth";
-// import { validateRequest } from "../../middleware/validateRequest";
-// import { TripController } from "./trip.controller";
-// import { TripValidation } from "./trip.validation";
+import { Router } from "express";
+import { Role } from "../../../generated/prisma/enums";
+import { auth } from "../../middleware/checkAuth";
+import { TripController } from "./trip.controller";
+import { validateRequest } from "../../middleware/validateRequest";
+import { TripValidation } from "./trip.validation";
 
-// const router = Router();
+const router = Router();
 
-// router.get("/", auth(Role.ADMIN, Role.DISPATCHER), TripController.getAllTrips);
+router.get("/", auth(Role.ADMIN, Role.DISPATCHER), TripController.getAllTrips);
 
-// router.get("/my-trips", auth(Role.DRIVER), TripController.getMyTrips);
+router.get("/my-trips", auth(Role.DRIVER), TripController.getMyTrips);
 
-// router.get(
-//   "/:id",
-//   auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
-//   TripController.getTripById,
-// );
+router.get(
+  "/:id",
+  auth(Role.ADMIN, Role.DISPATCHER, Role.DRIVER, Role.CALLER),
+  TripController.getTripById,
+);
 
-// // Driver — state machine transitions
-// router.patch("/:id/en-route", auth(Role.DRIVER), TripController.markEnRoute);
+// Calculate fare for a trip (before completing)
+router.get(
+  "/:id/calculate-fare",
+  auth(Role.DRIVER),
+  TripController.calculateFare,
+);
 
-// router.patch("/:id/pickup", auth(Role.DRIVER), TripController.markPickedUp);
+// Driver — state machine transitions
+router.patch("/:id/en-route", auth(Role.DRIVER), TripController.markEnRoute);
 
-// router.patch(
-//   "/:id/select-hospital",
-//   auth(Role.DRIVER),
-//   validateRequest(TripValidation.SelectHospitalZodSchema),
-//   TripController.selectHospital,
-// );
+router.patch("/:id/pickup", auth(Role.DRIVER), TripController.markPickedUp);
 
-// router.patch(
-//   "/:id/hospital-arrival",
-//   auth(Role.DRIVER),
-//   TripController.markHospitalArrival,
-// );
+router.patch(
+  "/:id/select-hospital",
+  auth(Role.DRIVER),
+  TripController.selectHospital,
+);
 
-// router.patch(
-//   "/:id/complete",
-//   auth(Role.DRIVER),
-//   validateRequest(TripValidation.CompleteTripZodSchema),
-//   TripController.completeTrip,
-// );
+router.patch(
+  "/:id/hospital-arrival",
+  auth(Role.DRIVER),
+  TripController.markHospitalArrival,
+);
 
-// // Admin/Dispatcher — emergency cancel হলে trip-ও cancel
-// router.patch(
-//   "/:id/cancel",
-//   auth(Role.ADMIN, Role.DISPATCHER),
-//   TripController.cancelTrip,
-// );
+router.patch(
+  "/:id/complete",
+  auth(Role.DRIVER),
+  validateRequest(TripValidation.CompleteTripZodSchema),
+  TripController.completeTrip,
+);
 
-// export const TripRoutes = router;
+// Admin/Dispatcher — emergency cancel হলে trip-ও cancel
+router.patch(
+  "/:id/cancel",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  TripController.cancelTrip,
+);
+
+export const TripRoutes = router;

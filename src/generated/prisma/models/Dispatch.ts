@@ -217,7 +217,7 @@ export type DispatchWhereInput = {
   emergency?: Prisma.XOR<Prisma.EmergencyRequestScalarRelationFilter, Prisma.EmergencyRequestWhereInput>
   ambulance?: Prisma.XOR<Prisma.AmbulanceScalarRelationFilter, Prisma.AmbulanceWhereInput>
   driver?: Prisma.XOR<Prisma.DriverScalarRelationFilter, Prisma.DriverWhereInput>
-  trips?: Prisma.TripListRelationFilter
+  trips?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
 }
 
 export type DispatchOrderByWithRelationInput = {
@@ -233,7 +233,7 @@ export type DispatchOrderByWithRelationInput = {
   emergency?: Prisma.EmergencyRequestOrderByWithRelationInput
   ambulance?: Prisma.AmbulanceOrderByWithRelationInput
   driver?: Prisma.DriverOrderByWithRelationInput
-  trips?: Prisma.TripOrderByRelationAggregateInput
+  trips?: Prisma.TripOrderByWithRelationInput
 }
 
 export type DispatchWhereUniqueInput = Prisma.AtLeast<{
@@ -252,7 +252,7 @@ export type DispatchWhereUniqueInput = Prisma.AtLeast<{
   emergency?: Prisma.XOR<Prisma.EmergencyRequestScalarRelationFilter, Prisma.EmergencyRequestWhereInput>
   ambulance?: Prisma.XOR<Prisma.AmbulanceScalarRelationFilter, Prisma.AmbulanceWhereInput>
   driver?: Prisma.XOR<Prisma.DriverScalarRelationFilter, Prisma.DriverWhereInput>
-  trips?: Prisma.TripListRelationFilter
+  trips?: Prisma.XOR<Prisma.TripNullableScalarRelationFilter, Prisma.TripWhereInput> | null
 }, "id" | "emergencyId">
 
 export type DispatchOrderByWithAggregationInput = {
@@ -295,7 +295,7 @@ export type DispatchCreateInput = {
   emergency: Prisma.EmergencyRequestCreateNestedOneWithoutDispatchInput
   ambulance: Prisma.AmbulanceCreateNestedOneWithoutDispatchesInput
   driver: Prisma.DriverCreateNestedOneWithoutDispatchesInput
-  trips?: Prisma.TripCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchUncheckedCreateInput = {
@@ -308,7 +308,7 @@ export type DispatchUncheckedCreateInput = {
   acceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripUncheckedCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripUncheckedCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchUpdateInput = {
@@ -321,7 +321,7 @@ export type DispatchUpdateInput = {
   emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutDispatchNestedInput
   ambulance?: Prisma.AmbulanceUpdateOneRequiredWithoutDispatchesNestedInput
   driver?: Prisma.DriverUpdateOneRequiredWithoutDispatchesNestedInput
-  trips?: Prisma.TripUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateInput = {
@@ -334,7 +334,7 @@ export type DispatchUncheckedUpdateInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUncheckedUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUncheckedUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchCreateManyInput = {
@@ -569,7 +569,7 @@ export type DispatchCreateWithoutAmbulanceInput = {
   updatedAt?: Date | string
   emergency: Prisma.EmergencyRequestCreateNestedOneWithoutDispatchInput
   driver: Prisma.DriverCreateNestedOneWithoutDispatchesInput
-  trips?: Prisma.TripCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchUncheckedCreateWithoutAmbulanceInput = {
@@ -581,7 +581,7 @@ export type DispatchUncheckedCreateWithoutAmbulanceInput = {
   acceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripUncheckedCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripUncheckedCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchCreateOrConnectWithoutAmbulanceInput = {
@@ -634,7 +634,7 @@ export type DispatchCreateWithoutDriverInput = {
   updatedAt?: Date | string
   emergency: Prisma.EmergencyRequestCreateNestedOneWithoutDispatchInput
   ambulance: Prisma.AmbulanceCreateNestedOneWithoutDispatchesInput
-  trips?: Prisma.TripCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchUncheckedCreateWithoutDriverInput = {
@@ -646,7 +646,7 @@ export type DispatchUncheckedCreateWithoutDriverInput = {
   acceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripUncheckedCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripUncheckedCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchCreateOrConnectWithoutDriverInput = {
@@ -684,7 +684,7 @@ export type DispatchCreateWithoutEmergencyInput = {
   updatedAt?: Date | string
   ambulance: Prisma.AmbulanceCreateNestedOneWithoutDispatchesInput
   driver: Prisma.DriverCreateNestedOneWithoutDispatchesInput
-  trips?: Prisma.TripCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchUncheckedCreateWithoutEmergencyInput = {
@@ -696,7 +696,7 @@ export type DispatchUncheckedCreateWithoutEmergencyInput = {
   acceptedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  trips?: Prisma.TripUncheckedCreateNestedManyWithoutDispatchInput
+  trips?: Prisma.TripUncheckedCreateNestedOneWithoutDispatchInput
 }
 
 export type DispatchCreateOrConnectWithoutEmergencyInput = {
@@ -724,7 +724,7 @@ export type DispatchUpdateWithoutEmergencyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ambulance?: Prisma.AmbulanceUpdateOneRequiredWithoutDispatchesNestedInput
   driver?: Prisma.DriverUpdateOneRequiredWithoutDispatchesNestedInput
-  trips?: Prisma.TripUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateWithoutEmergencyInput = {
@@ -736,7 +736,7 @@ export type DispatchUncheckedUpdateWithoutEmergencyInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUncheckedUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUncheckedUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchCreateWithoutTripsInput = {
@@ -823,7 +823,7 @@ export type DispatchUpdateWithoutAmbulanceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutDispatchNestedInput
   driver?: Prisma.DriverUpdateOneRequiredWithoutDispatchesNestedInput
-  trips?: Prisma.TripUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateWithoutAmbulanceInput = {
@@ -835,7 +835,7 @@ export type DispatchUncheckedUpdateWithoutAmbulanceInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUncheckedUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUncheckedUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateManyWithoutAmbulanceInput = {
@@ -869,7 +869,7 @@ export type DispatchUpdateWithoutDriverInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutDispatchNestedInput
   ambulance?: Prisma.AmbulanceUpdateOneRequiredWithoutDispatchesNestedInput
-  trips?: Prisma.TripUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateWithoutDriverInput = {
@@ -881,7 +881,7 @@ export type DispatchUncheckedUpdateWithoutDriverInput = {
   acceptedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  trips?: Prisma.TripUncheckedUpdateManyWithoutDispatchNestedInput
+  trips?: Prisma.TripUncheckedUpdateOneWithoutDispatchNestedInput
 }
 
 export type DispatchUncheckedUpdateManyWithoutDriverInput = {
@@ -895,35 +895,6 @@ export type DispatchUncheckedUpdateManyWithoutDriverInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-
-/**
- * Count Type DispatchCountOutputType
- */
-
-export type DispatchCountOutputType = {
-  trips: number
-}
-
-export type DispatchCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  trips?: boolean | DispatchCountOutputTypeCountTripsArgs
-}
-
-/**
- * DispatchCountOutputType without action
- */
-export type DispatchCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the DispatchCountOutputType
-   */
-  select?: Prisma.DispatchCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * DispatchCountOutputType without action
- */
-export type DispatchCountOutputTypeCountTripsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TripWhereInput
-}
 
 
 export type DispatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -940,7 +911,6 @@ export type DispatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   ambulance?: boolean | Prisma.AmbulanceDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.DriverDefaultArgs<ExtArgs>
   trips?: boolean | Prisma.Dispatch$tripsArgs<ExtArgs>
-  _count?: boolean | Prisma.DispatchCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["dispatch"]>
 
 export type DispatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -991,7 +961,6 @@ export type DispatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   ambulance?: boolean | Prisma.AmbulanceDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.DriverDefaultArgs<ExtArgs>
   trips?: boolean | Prisma.Dispatch$tripsArgs<ExtArgs>
-  _count?: boolean | Prisma.DispatchCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DispatchIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
@@ -1010,7 +979,7 @@ export type $DispatchPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     emergency: Prisma.$EmergencyRequestPayload<ExtArgs>
     ambulance: Prisma.$AmbulancePayload<ExtArgs>
     driver: Prisma.$DriverPayload<ExtArgs>
-    trips: Prisma.$TripPayload<ExtArgs>[]
+    trips: Prisma.$TripPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1419,7 +1388,7 @@ export interface Prisma__DispatchClient<T, Null = never, ExtArgs extends runtime
   emergency<T extends Prisma.EmergencyRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmergencyRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__EmergencyRequestClient<runtime.Types.Result.GetResult<Prisma.$EmergencyRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   ambulance<T extends Prisma.AmbulanceDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AmbulanceDefaultArgs<ExtArgs>>): Prisma.Prisma__AmbulanceClient<runtime.Types.Result.GetResult<Prisma.$AmbulancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   driver<T extends Prisma.DriverDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DriverDefaultArgs<ExtArgs>>): Prisma.Prisma__DriverClient<runtime.Types.Result.GetResult<Prisma.$DriverPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  trips<T extends Prisma.Dispatch$tripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Dispatch$tripsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  trips<T extends Prisma.Dispatch$tripsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Dispatch$tripsArgs<ExtArgs>>): Prisma.Prisma__TripClient<runtime.Types.Result.GetResult<Prisma.$TripPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1875,11 +1844,6 @@ export type Dispatch$tripsArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.TripInclude<ExtArgs> | null
   where?: Prisma.TripWhereInput
-  orderBy?: Prisma.TripOrderByWithRelationInput | Prisma.TripOrderByWithRelationInput[]
-  cursor?: Prisma.TripWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TripScalarFieldEnum | Prisma.TripScalarFieldEnum[]
 }
 
 /**

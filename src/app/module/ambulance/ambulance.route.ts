@@ -69,6 +69,7 @@ router.patch(
 router.patch(
   "/me/location",
   auth(Role.DRIVER),
+  validateRequest(AmbulanceValidation.UpdateLocationZodSchema),
   AmbulanceController.updateMyAmbulanceLocation,
 );
 

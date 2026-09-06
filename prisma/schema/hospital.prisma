@@ -1,19 +1,21 @@
 model Hospital {
-id String @id @default(uuid())
-name String
-phone String
-email String?
-address String
-latitude Float
-longitude Float
-emergencyAvailable Boolean @default(true)
-specialties String[]
-status HospitalStatus @default(ACTIVE)
-trips Trip[]
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-@@index([status])
-@@index([emergencyAvailable])
+  id                 String         @id @default(uuid())
+  name               String
+  phone              String
+  email              String?
+  address            String
+  latitude           Float
+  longitude          Float
+  emergencyAvailable Boolean        @default(true)
+  specialties        String[]
+  status             HospitalStatus
 
-@@map("hospitals")
+  trip Trip[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([emergencyAvailable])
+  @@map("hospitals")
 }

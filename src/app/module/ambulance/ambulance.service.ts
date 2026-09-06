@@ -491,7 +491,63 @@ const unassignDriver = async (ambulanceId: string) => {
 
 const updateMyAmbulanceStatus = async () => {};
 
-const updateMyAmbulanceLocation = async () => {};
+/**
+ * Update My Ambulance Location - Driver updates their assigned ambulance location
+ */
+const updateMyAmbulanceLocation = async (
+  userId: string,
+  latitude: number,
+  longitude: number,
+) => {
+  // Find driver by userId with their ambulance
+  const driver = await prisma.driver.findUnique({
+    where: { userId },
+    select: {
+      id: true,
+      ambulanceId: true,
+      isAvailable: true,
+      approvalStatus: true,
+    },
+  });
+
+  if (!driver) {
+    throw new AppError(httpStatus.NOT_FOUND, "Driver profile not found");
+  }
+
+  if (driver.approvalStatus !== DriverApprovalStatus.APPROVED) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Only approved drivers can update ambulance location",
+    );
+  }
+
+  if (!driver.ambulanceId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "No ambulance assigned to this driver",
+    );
+  }
+
+  // Update ambulance location
+  const ambulance = await prisma.ambulance.update({
+    where: { id: driver.ambulanceId },
+    data: {
+      currentLatitude: latitude,
+      currentLongitude: longitude,
+      updatedAt: new Date(),
+    },
+    select: {
+      id: true,
+      ambulanceNumber: true,
+      currentLatitude: true,
+      currentLongitude: true,
+      status: true,
+      updatedAt: true,
+    },
+  });
+
+  return ambulance;
+};
 
 export const AmbulanceService = {
   createAmbulance,

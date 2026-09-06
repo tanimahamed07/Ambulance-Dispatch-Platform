@@ -286,7 +286,7 @@ export type TripWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   emergency?: Prisma.XOR<Prisma.EmergencyRequestScalarRelationFilter, Prisma.EmergencyRequestWhereInput>
   dispatch?: Prisma.XOR<Prisma.DispatchScalarRelationFilter, Prisma.DispatchWhereInput>
-  hospitals?: Prisma.HospitalListRelationFilter
+  hospital?: Prisma.XOR<Prisma.HospitalNullableScalarRelationFilter, Prisma.HospitalWhereInput> | null
 }
 
 export type TripOrderByWithRelationInput = {
@@ -305,7 +305,7 @@ export type TripOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   emergency?: Prisma.EmergencyRequestOrderByWithRelationInput
   dispatch?: Prisma.DispatchOrderByWithRelationInput
-  hospitals?: Prisma.HospitalOrderByRelationAggregateInput
+  hospital?: Prisma.HospitalOrderByWithRelationInput
 }
 
 export type TripWhereUniqueInput = Prisma.AtLeast<{
@@ -327,7 +327,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   emergency?: Prisma.XOR<Prisma.EmergencyRequestScalarRelationFilter, Prisma.EmergencyRequestWhereInput>
   dispatch?: Prisma.XOR<Prisma.DispatchScalarRelationFilter, Prisma.DispatchWhereInput>
-  hospitals?: Prisma.HospitalListRelationFilter
+  hospital?: Prisma.XOR<Prisma.HospitalNullableScalarRelationFilter, Prisma.HospitalWhereInput> | null
 }, "id" | "emergencyId" | "dispatchId">
 
 export type TripOrderByWithAggregationInput = {
@@ -372,7 +372,6 @@ export type TripScalarWhereWithAggregatesInput = {
 
 export type TripCreateInput = {
   id?: string
-  hospitalId?: string | null
   status?: $Enums.TripStatus
   startedAt?: Date | string | null
   pickedUpAt?: Date | string | null
@@ -384,7 +383,7 @@ export type TripCreateInput = {
   updatedAt?: Date | string
   emergency: Prisma.EmergencyRequestCreateNestedOneWithoutTripsInput
   dispatch: Prisma.DispatchCreateNestedOneWithoutTripsInput
-  hospitals?: Prisma.HospitalCreateNestedManyWithoutTripsInput
+  hospital?: Prisma.HospitalCreateNestedOneWithoutTripInput
 }
 
 export type TripUncheckedCreateInput = {
@@ -401,12 +400,10 @@ export type TripUncheckedCreateInput = {
   fare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  hospitals?: Prisma.HospitalUncheckedCreateNestedManyWithoutTripsInput
 }
 
 export type TripUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -418,7 +415,7 @@ export type TripUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutTripsNestedInput
   dispatch?: Prisma.DispatchUpdateOneRequiredWithoutTripsNestedInput
-  hospitals?: Prisma.HospitalUpdateManyWithoutTripsNestedInput
+  hospital?: Prisma.HospitalUpdateOneWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateInput = {
@@ -435,7 +432,6 @@ export type TripUncheckedUpdateInput = {
   fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hospitals?: Prisma.HospitalUncheckedUpdateManyWithoutTripsNestedInput
 }
 
 export type TripCreateManyInput = {
@@ -456,7 +452,6 @@ export type TripCreateManyInput = {
 
 export type TripUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -482,6 +477,11 @@ export type TripUncheckedUpdateManyInput = {
   fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type TripNullableScalarRelationFilter = {
+  is?: Prisma.TripWhereInput | null
+  isNot?: Prisma.TripWhereInput | null
 }
 
 export type TripListRelationFilter = {
@@ -552,46 +552,36 @@ export type TripSumOrderByAggregateInput = {
   fare?: Prisma.SortOrder
 }
 
-export type TripCreateNestedManyWithoutDispatchInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput> | Prisma.TripCreateWithoutDispatchInput[] | Prisma.TripUncheckedCreateWithoutDispatchInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput | Prisma.TripCreateOrConnectWithoutDispatchInput[]
-  createMany?: Prisma.TripCreateManyDispatchInputEnvelope
-  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+export type TripCreateNestedOneWithoutDispatchInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput
+  connect?: Prisma.TripWhereUniqueInput
 }
 
-export type TripUncheckedCreateNestedManyWithoutDispatchInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput> | Prisma.TripCreateWithoutDispatchInput[] | Prisma.TripUncheckedCreateWithoutDispatchInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput | Prisma.TripCreateOrConnectWithoutDispatchInput[]
-  createMany?: Prisma.TripCreateManyDispatchInputEnvelope
-  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
+export type TripUncheckedCreateNestedOneWithoutDispatchInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput
+  connect?: Prisma.TripWhereUniqueInput
 }
 
-export type TripUpdateManyWithoutDispatchNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput> | Prisma.TripCreateWithoutDispatchInput[] | Prisma.TripUncheckedCreateWithoutDispatchInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput | Prisma.TripCreateOrConnectWithoutDispatchInput[]
-  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutDispatchInput | Prisma.TripUpsertWithWhereUniqueWithoutDispatchInput[]
-  createMany?: Prisma.TripCreateManyDispatchInputEnvelope
-  set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  update?: Prisma.TripUpdateWithWhereUniqueWithoutDispatchInput | Prisma.TripUpdateWithWhereUniqueWithoutDispatchInput[]
-  updateMany?: Prisma.TripUpdateManyWithWhereWithoutDispatchInput | Prisma.TripUpdateManyWithWhereWithoutDispatchInput[]
-  deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+export type TripUpdateOneWithoutDispatchNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput
+  upsert?: Prisma.TripUpsertWithoutDispatchInput
+  disconnect?: Prisma.TripWhereInput | boolean
+  delete?: Prisma.TripWhereInput | boolean
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutDispatchInput, Prisma.TripUpdateWithoutDispatchInput>, Prisma.TripUncheckedUpdateWithoutDispatchInput>
 }
 
-export type TripUncheckedUpdateManyWithoutDispatchNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput> | Prisma.TripCreateWithoutDispatchInput[] | Prisma.TripUncheckedCreateWithoutDispatchInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput | Prisma.TripCreateOrConnectWithoutDispatchInput[]
-  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutDispatchInput | Prisma.TripUpsertWithWhereUniqueWithoutDispatchInput[]
-  createMany?: Prisma.TripCreateManyDispatchInputEnvelope
-  set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  update?: Prisma.TripUpdateWithWhereUniqueWithoutDispatchInput | Prisma.TripUpdateWithWhereUniqueWithoutDispatchInput[]
-  updateMany?: Prisma.TripUpdateManyWithWhereWithoutDispatchInput | Prisma.TripUpdateManyWithWhereWithoutDispatchInput[]
-  deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+export type TripUncheckedUpdateOneWithoutDispatchNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutDispatchInput
+  upsert?: Prisma.TripUpsertWithoutDispatchInput
+  disconnect?: Prisma.TripWhereInput | boolean
+  delete?: Prisma.TripWhereInput | boolean
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutDispatchInput, Prisma.TripUpdateWithoutDispatchInput>, Prisma.TripUncheckedUpdateWithoutDispatchInput>
 }
 
 export type TripCreateNestedManyWithoutEmergencyInput = {
@@ -636,41 +626,45 @@ export type TripUncheckedUpdateManyWithoutEmergencyNestedInput = {
   deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
 }
 
-export type TripCreateNestedManyWithoutHospitalsInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput> | Prisma.TripCreateWithoutHospitalsInput[] | Prisma.TripUncheckedCreateWithoutHospitalsInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalsInput | Prisma.TripCreateOrConnectWithoutHospitalsInput[]
+export type TripCreateNestedManyWithoutHospitalInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput> | Prisma.TripCreateWithoutHospitalInput[] | Prisma.TripUncheckedCreateWithoutHospitalInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalInput | Prisma.TripCreateOrConnectWithoutHospitalInput[]
+  createMany?: Prisma.TripCreateManyHospitalInputEnvelope
   connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
 }
 
-export type TripUncheckedCreateNestedManyWithoutHospitalsInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput> | Prisma.TripCreateWithoutHospitalsInput[] | Prisma.TripUncheckedCreateWithoutHospitalsInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalsInput | Prisma.TripCreateOrConnectWithoutHospitalsInput[]
+export type TripUncheckedCreateNestedManyWithoutHospitalInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput> | Prisma.TripCreateWithoutHospitalInput[] | Prisma.TripUncheckedCreateWithoutHospitalInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalInput | Prisma.TripCreateOrConnectWithoutHospitalInput[]
+  createMany?: Prisma.TripCreateManyHospitalInputEnvelope
   connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
 }
 
-export type TripUpdateManyWithoutHospitalsNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput> | Prisma.TripCreateWithoutHospitalsInput[] | Prisma.TripUncheckedCreateWithoutHospitalsInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalsInput | Prisma.TripCreateOrConnectWithoutHospitalsInput[]
-  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutHospitalsInput | Prisma.TripUpsertWithWhereUniqueWithoutHospitalsInput[]
+export type TripUpdateManyWithoutHospitalNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput> | Prisma.TripCreateWithoutHospitalInput[] | Prisma.TripUncheckedCreateWithoutHospitalInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalInput | Prisma.TripCreateOrConnectWithoutHospitalInput[]
+  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutHospitalInput | Prisma.TripUpsertWithWhereUniqueWithoutHospitalInput[]
+  createMany?: Prisma.TripCreateManyHospitalInputEnvelope
   set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  update?: Prisma.TripUpdateWithWhereUniqueWithoutHospitalsInput | Prisma.TripUpdateWithWhereUniqueWithoutHospitalsInput[]
-  updateMany?: Prisma.TripUpdateManyWithWhereWithoutHospitalsInput | Prisma.TripUpdateManyWithWhereWithoutHospitalsInput[]
+  update?: Prisma.TripUpdateWithWhereUniqueWithoutHospitalInput | Prisma.TripUpdateWithWhereUniqueWithoutHospitalInput[]
+  updateMany?: Prisma.TripUpdateManyWithWhereWithoutHospitalInput | Prisma.TripUpdateManyWithWhereWithoutHospitalInput[]
   deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
 }
 
-export type TripUncheckedUpdateManyWithoutHospitalsNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput> | Prisma.TripCreateWithoutHospitalsInput[] | Prisma.TripUncheckedCreateWithoutHospitalsInput[]
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalsInput | Prisma.TripCreateOrConnectWithoutHospitalsInput[]
-  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutHospitalsInput | Prisma.TripUpsertWithWhereUniqueWithoutHospitalsInput[]
+export type TripUncheckedUpdateManyWithoutHospitalNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput> | Prisma.TripCreateWithoutHospitalInput[] | Prisma.TripUncheckedCreateWithoutHospitalInput[]
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutHospitalInput | Prisma.TripCreateOrConnectWithoutHospitalInput[]
+  upsert?: Prisma.TripUpsertWithWhereUniqueWithoutHospitalInput | Prisma.TripUpsertWithWhereUniqueWithoutHospitalInput[]
+  createMany?: Prisma.TripCreateManyHospitalInputEnvelope
   set?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   disconnect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   delete?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
   connect?: Prisma.TripWhereUniqueInput | Prisma.TripWhereUniqueInput[]
-  update?: Prisma.TripUpdateWithWhereUniqueWithoutHospitalsInput | Prisma.TripUpdateWithWhereUniqueWithoutHospitalsInput[]
-  updateMany?: Prisma.TripUpdateManyWithWhereWithoutHospitalsInput | Prisma.TripUpdateManyWithWhereWithoutHospitalsInput[]
+  update?: Prisma.TripUpdateWithWhereUniqueWithoutHospitalInput | Prisma.TripUpdateWithWhereUniqueWithoutHospitalInput[]
+  updateMany?: Prisma.TripUpdateManyWithWhereWithoutHospitalInput | Prisma.TripUpdateManyWithWhereWithoutHospitalInput[]
   deleteMany?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
 }
 
@@ -688,7 +682,6 @@ export type NullableDecimalFieldUpdateOperationsInput = {
 
 export type TripCreateWithoutDispatchInput = {
   id?: string
-  hospitalId?: string | null
   status?: $Enums.TripStatus
   startedAt?: Date | string | null
   pickedUpAt?: Date | string | null
@@ -699,7 +692,7 @@ export type TripCreateWithoutDispatchInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   emergency: Prisma.EmergencyRequestCreateNestedOneWithoutTripsInput
-  hospitals?: Prisma.HospitalCreateNestedManyWithoutTripsInput
+  hospital?: Prisma.HospitalCreateNestedOneWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDispatchInput = {
@@ -715,7 +708,6 @@ export type TripUncheckedCreateWithoutDispatchInput = {
   fare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  hospitals?: Prisma.HospitalUncheckedCreateNestedManyWithoutTripsInput
 }
 
 export type TripCreateOrConnectWithoutDispatchInput = {
@@ -723,49 +715,49 @@ export type TripCreateOrConnectWithoutDispatchInput = {
   create: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
 }
 
-export type TripCreateManyDispatchInputEnvelope = {
-  data: Prisma.TripCreateManyDispatchInput | Prisma.TripCreateManyDispatchInput[]
-  skipDuplicates?: boolean
-}
-
-export type TripUpsertWithWhereUniqueWithoutDispatchInput = {
-  where: Prisma.TripWhereUniqueInput
+export type TripUpsertWithoutDispatchInput = {
   update: Prisma.XOR<Prisma.TripUpdateWithoutDispatchInput, Prisma.TripUncheckedUpdateWithoutDispatchInput>
   create: Prisma.XOR<Prisma.TripCreateWithoutDispatchInput, Prisma.TripUncheckedCreateWithoutDispatchInput>
+  where?: Prisma.TripWhereInput
 }
 
-export type TripUpdateWithWhereUniqueWithoutDispatchInput = {
-  where: Prisma.TripWhereUniqueInput
+export type TripUpdateToOneWithWhereWithoutDispatchInput = {
+  where?: Prisma.TripWhereInput
   data: Prisma.XOR<Prisma.TripUpdateWithoutDispatchInput, Prisma.TripUncheckedUpdateWithoutDispatchInput>
 }
 
-export type TripUpdateManyWithWhereWithoutDispatchInput = {
-  where: Prisma.TripScalarWhereInput
-  data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutDispatchInput>
+export type TripUpdateWithoutDispatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalArrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  distanceKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutTripsNestedInput
+  hospital?: Prisma.HospitalUpdateOneWithoutTripNestedInput
 }
 
-export type TripScalarWhereInput = {
-  AND?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
-  OR?: Prisma.TripScalarWhereInput[]
-  NOT?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
-  id?: Prisma.StringFilter<"Trip"> | string
-  emergencyId?: Prisma.StringFilter<"Trip"> | string
-  dispatchId?: Prisma.StringFilter<"Trip"> | string
-  hospitalId?: Prisma.StringNullableFilter<"Trip"> | string | null
-  status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
-  startedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  pickedUpAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  hospitalArrivalAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  completedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  distanceKm?: Prisma.FloatNullableFilter<"Trip"> | number | null
-  fare?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
+export type TripUncheckedUpdateWithoutDispatchInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  emergencyId?: Prisma.StringFieldUpdateOperationsInput | string
+  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
+  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hospitalArrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  distanceKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TripCreateWithoutEmergencyInput = {
   id?: string
-  hospitalId?: string | null
   status?: $Enums.TripStatus
   startedAt?: Date | string | null
   pickedUpAt?: Date | string | null
@@ -776,7 +768,7 @@ export type TripCreateWithoutEmergencyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   dispatch: Prisma.DispatchCreateNestedOneWithoutTripsInput
-  hospitals?: Prisma.HospitalCreateNestedManyWithoutTripsInput
+  hospital?: Prisma.HospitalCreateNestedOneWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutEmergencyInput = {
@@ -792,7 +784,6 @@ export type TripUncheckedCreateWithoutEmergencyInput = {
   fare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  hospitals?: Prisma.HospitalUncheckedCreateNestedManyWithoutTripsInput
 }
 
 export type TripCreateOrConnectWithoutEmergencyInput = {
@@ -821,9 +812,27 @@ export type TripUpdateManyWithWhereWithoutEmergencyInput = {
   data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutEmergencyInput>
 }
 
-export type TripCreateWithoutHospitalsInput = {
+export type TripScalarWhereInput = {
+  AND?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+  OR?: Prisma.TripScalarWhereInput[]
+  NOT?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
+  id?: Prisma.StringFilter<"Trip"> | string
+  emergencyId?: Prisma.StringFilter<"Trip"> | string
+  dispatchId?: Prisma.StringFilter<"Trip"> | string
+  hospitalId?: Prisma.StringNullableFilter<"Trip"> | string | null
+  status?: Prisma.EnumTripStatusFilter<"Trip"> | $Enums.TripStatus
+  startedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  pickedUpAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  hospitalArrivalAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  completedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  distanceKm?: Prisma.FloatNullableFilter<"Trip"> | number | null
+  fare?: Prisma.DecimalNullableFilter<"Trip"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
+}
+
+export type TripCreateWithoutHospitalInput = {
   id?: string
-  hospitalId?: string | null
   status?: $Enums.TripStatus
   startedAt?: Date | string | null
   pickedUpAt?: Date | string | null
@@ -837,11 +846,10 @@ export type TripCreateWithoutHospitalsInput = {
   dispatch: Prisma.DispatchCreateNestedOneWithoutTripsInput
 }
 
-export type TripUncheckedCreateWithoutHospitalsInput = {
+export type TripUncheckedCreateWithoutHospitalInput = {
   id?: string
   emergencyId: string
   dispatchId: string
-  hospitalId?: string | null
   status?: $Enums.TripStatus
   startedAt?: Date | string | null
   pickedUpAt?: Date | string | null
@@ -853,87 +861,30 @@ export type TripUncheckedCreateWithoutHospitalsInput = {
   updatedAt?: Date | string
 }
 
-export type TripCreateOrConnectWithoutHospitalsInput = {
+export type TripCreateOrConnectWithoutHospitalInput = {
   where: Prisma.TripWhereUniqueInput
-  create: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput>
 }
 
-export type TripUpsertWithWhereUniqueWithoutHospitalsInput = {
-  where: Prisma.TripWhereUniqueInput
-  update: Prisma.XOR<Prisma.TripUpdateWithoutHospitalsInput, Prisma.TripUncheckedUpdateWithoutHospitalsInput>
-  create: Prisma.XOR<Prisma.TripCreateWithoutHospitalsInput, Prisma.TripUncheckedCreateWithoutHospitalsInput>
+export type TripCreateManyHospitalInputEnvelope = {
+  data: Prisma.TripCreateManyHospitalInput | Prisma.TripCreateManyHospitalInput[]
+  skipDuplicates?: boolean
 }
 
-export type TripUpdateWithWhereUniqueWithoutHospitalsInput = {
+export type TripUpsertWithWhereUniqueWithoutHospitalInput = {
   where: Prisma.TripWhereUniqueInput
-  data: Prisma.XOR<Prisma.TripUpdateWithoutHospitalsInput, Prisma.TripUncheckedUpdateWithoutHospitalsInput>
+  update: Prisma.XOR<Prisma.TripUpdateWithoutHospitalInput, Prisma.TripUncheckedUpdateWithoutHospitalInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutHospitalInput, Prisma.TripUncheckedCreateWithoutHospitalInput>
 }
 
-export type TripUpdateManyWithWhereWithoutHospitalsInput = {
+export type TripUpdateWithWhereUniqueWithoutHospitalInput = {
+  where: Prisma.TripWhereUniqueInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutHospitalInput, Prisma.TripUncheckedUpdateWithoutHospitalInput>
+}
+
+export type TripUpdateManyWithWhereWithoutHospitalInput = {
   where: Prisma.TripScalarWhereInput
-  data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutHospitalsInput>
-}
-
-export type TripCreateManyDispatchInput = {
-  id?: string
-  emergencyId: string
-  hospitalId?: string | null
-  status?: $Enums.TripStatus
-  startedAt?: Date | string | null
-  pickedUpAt?: Date | string | null
-  hospitalArrivalAt?: Date | string | null
-  completedAt?: Date | string | null
-  distanceKm?: number | null
-  fare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type TripUpdateWithoutDispatchInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  hospitalArrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  distanceKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  emergency?: Prisma.EmergencyRequestUpdateOneRequiredWithoutTripsNestedInput
-  hospitals?: Prisma.HospitalUpdateManyWithoutTripsNestedInput
-}
-
-export type TripUncheckedUpdateWithoutDispatchInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyId?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  hospitalArrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  distanceKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hospitals?: Prisma.HospitalUncheckedUpdateManyWithoutTripsNestedInput
-}
-
-export type TripUncheckedUpdateManyWithoutDispatchInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  emergencyId?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
-  startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  hospitalArrivalAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  completedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  distanceKm?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutHospitalInput>
 }
 
 export type TripCreateManyEmergencyInput = {
@@ -953,7 +904,6 @@ export type TripCreateManyEmergencyInput = {
 
 export type TripUpdateWithoutEmergencyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -964,7 +914,7 @@ export type TripUpdateWithoutEmergencyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   dispatch?: Prisma.DispatchUpdateOneRequiredWithoutTripsNestedInput
-  hospitals?: Prisma.HospitalUpdateManyWithoutTripsNestedInput
+  hospital?: Prisma.HospitalUpdateOneWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutEmergencyInput = {
@@ -980,7 +930,6 @@ export type TripUncheckedUpdateWithoutEmergencyInput = {
   fare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hospitals?: Prisma.HospitalUncheckedUpdateManyWithoutTripsNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutEmergencyInput = {
@@ -998,9 +947,23 @@ export type TripUncheckedUpdateManyWithoutEmergencyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type TripUpdateWithoutHospitalsInput = {
+export type TripCreateManyHospitalInput = {
+  id?: string
+  emergencyId: string
+  dispatchId: string
+  status?: $Enums.TripStatus
+  startedAt?: Date | string | null
+  pickedUpAt?: Date | string | null
+  hospitalArrivalAt?: Date | string | null
+  completedAt?: Date | string | null
+  distanceKm?: number | null
+  fare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type TripUpdateWithoutHospitalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1014,11 +977,10 @@ export type TripUpdateWithoutHospitalsInput = {
   dispatch?: Prisma.DispatchUpdateOneRequiredWithoutTripsNestedInput
 }
 
-export type TripUncheckedUpdateWithoutHospitalsInput = {
+export type TripUncheckedUpdateWithoutHospitalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyId?: Prisma.StringFieldUpdateOperationsInput | string
   dispatchId?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1030,11 +992,10 @@ export type TripUncheckedUpdateWithoutHospitalsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type TripUncheckedUpdateManyWithoutHospitalsInput = {
+export type TripUncheckedUpdateManyWithoutHospitalInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   emergencyId?: Prisma.StringFieldUpdateOperationsInput | string
   dispatchId?: Prisma.StringFieldUpdateOperationsInput | string
-  hospitalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTripStatusFieldUpdateOperationsInput | $Enums.TripStatus
   startedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   pickedUpAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1046,35 +1007,6 @@ export type TripUncheckedUpdateManyWithoutHospitalsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-
-/**
- * Count Type TripCountOutputType
- */
-
-export type TripCountOutputType = {
-  hospitals: number
-}
-
-export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  hospitals?: boolean | TripCountOutputTypeCountHospitalsArgs
-}
-
-/**
- * TripCountOutputType without action
- */
-export type TripCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TripCountOutputType
-   */
-  select?: Prisma.TripCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * TripCountOutputType without action
- */
-export type TripCountOutputTypeCountHospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.HospitalWhereInput
-}
 
 
 export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1093,8 +1025,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
-  hospitals?: boolean | Prisma.Trip$hospitalsArgs<ExtArgs>
-  _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
 export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1113,6 +1044,7 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
 export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1131,6 +1063,7 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   updatedAt?: boolean
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
 export type TripSelectScalar = {
@@ -1153,16 +1086,17 @@ export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
-  hospitals?: boolean | Prisma.Trip$hospitalsArgs<ExtArgs>
-  _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }
 export type TripIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }
 export type TripIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   emergency?: boolean | Prisma.EmergencyRequestDefaultArgs<ExtArgs>
   dispatch?: boolean | Prisma.DispatchDefaultArgs<ExtArgs>
+  hospital?: boolean | Prisma.Trip$hospitalArgs<ExtArgs>
 }
 
 export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1170,7 +1104,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     emergency: Prisma.$EmergencyRequestPayload<ExtArgs>
     dispatch: Prisma.$DispatchPayload<ExtArgs>
-    hospitals: Prisma.$HospitalPayload<ExtArgs>[]
+    hospital: Prisma.$HospitalPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1582,7 +1516,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   emergency<T extends Prisma.EmergencyRequestDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmergencyRequestDefaultArgs<ExtArgs>>): Prisma.Prisma__EmergencyRequestClient<runtime.Types.Result.GetResult<Prisma.$EmergencyRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   dispatch<T extends Prisma.DispatchDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DispatchDefaultArgs<ExtArgs>>): Prisma.Prisma__DispatchClient<runtime.Types.Result.GetResult<Prisma.$DispatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  hospitals<T extends Prisma.Trip$hospitalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$hospitalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HospitalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hospital<T extends Prisma.Trip$hospitalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$hospitalArgs<ExtArgs>>): Prisma.Prisma__HospitalClient<runtime.Types.Result.GetResult<Prisma.$HospitalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2026,9 +1960,9 @@ export type TripDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * Trip.hospitals
+ * Trip.hospital
  */
-export type Trip$hospitalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Trip$hospitalArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Hospital
    */
@@ -2042,11 +1976,6 @@ export type Trip$hospitalsArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.HospitalInclude<ExtArgs> | null
   where?: Prisma.HospitalWhereInput
-  orderBy?: Prisma.HospitalOrderByWithRelationInput | Prisma.HospitalOrderByWithRelationInput[]
-  cursor?: Prisma.HospitalWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.HospitalScalarFieldEnum | Prisma.HospitalScalarFieldEnum[]
 }
 
 /**

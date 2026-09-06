@@ -12,7 +12,7 @@ model Dispatch {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  trips     Trip[]
+  trips     Trip?
 
   @@index([ambulanceId])
   @@map("dispatches")

@@ -82,9 +82,9 @@ enum EmergencyStatus {
   ASSIGNED
   DISPATCHED
   EN_ROUTE
-  PICKED
-  UP_AT
-  HOSPITAL_COMPLETED
+  PICKED_UP
+  AT_HOSPITAL
+  COMPLETED
   CANCELLED
 }
 
@@ -112,8 +112,7 @@ enum TripStatus {
   CANCELLED
 }
 
-
 enum HospitalStatus {
-ACTIVE
-INACTIVE
+  ACTIVE
+  INACTIVE
 }
