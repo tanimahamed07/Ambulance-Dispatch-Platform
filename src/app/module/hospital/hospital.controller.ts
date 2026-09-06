@@ -52,17 +52,17 @@ const updateHospital = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// const deleteHospital = catchAsync(async (req: Request, res: Response) => {
-//   const { id } = req.params;
-//   const result = await HospitalService.deleteHospital(id);
+const deleteHospital = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await HospitalService.deleteHospital(id as string);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Hospital deleted successfully.",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Hospital deleted successfully.",
+    data: result,
+  });
+});
 
 const getNearbyHospitals = catchAsync(async (req: Request, res: Response) => {
   const { latitude, longitude, radius } = req.query;
@@ -86,6 +86,6 @@ export const HospitalController = {
   getAllHospitals,
   getHospitalById,
   updateHospital,
-  // deleteHospital,
+  deleteHospital,
   getNearbyHospitals,
 };

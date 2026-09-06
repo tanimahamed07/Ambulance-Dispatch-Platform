@@ -176,50 +176,45 @@ const updateHospital = async (id: string, payload: IUpdateHospital) => {
   return updatedHospital;
 };
 
-// /**
-//  * Delete Hospital - Admin only (Soft delete by setting status to INACTIVE)
-//  */
-// const deleteHospital = async (id: string) => {
-//   // Check if hospital exists
-//   const hospital = await prisma.hospital.findUnique({
-//     where: { id },
-//   });
+const deleteHospital = async (id: string) => {
+  // Check if hospital exists
+  const hospital = await prisma.hospital.findUnique({
+    where: { id },
+  });
 
-//   if (!hospital) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
-//   }
+  if (!hospital) {
+    throw new AppError(httpStatus.NOT_FOUND, "Hospital not found");
+  }
 
-//   // Check if hospital has active trips
-//   const activeTripsCount = await prisma.trip.count({
-//     where: {
-//       hospitalId: id,
-//       status: {
-//         notIn: ["COMPLETED", "CANCELLED"],
-//       },
-//     },
-//   });
+  // Check if hospital has active trips
+  const activeTripsCount = await prisma.trip.count({
+    where: {
+      hospitalId: id,
+      status: {
+        notIn: ["COMPLETED", "CANCELLED"],
+      },
+    },
+  });
 
-//   if (activeTripsCount > 0) {
-//     throw new AppError(
-//       httpStatus.BAD_REQUEST,
-//       "Cannot delete hospital with active trips. Please complete or cancel all trips first.",
-//     );
-//   }
+  if (activeTripsCount > 0) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Cannot delete hospital with active trips. Please complete or cancel all trips first.",
+    );
+  }
 
-//   // Soft delete by setting status to INACTIVE
-//   const deletedHospital = await prisma.hospital.update({
-//     where: { id },
-//     data: {
-//       status: HospitalStatus.INACTIVE,
-//     },
-//   });
+  // Soft delete by setting status to INACTIVE
+  const deletedHospital = await prisma.hospital.update({
+    where: { id },
+    data: {
+      status: HospitalStatus.INACTIVE,
+    },
+  });
 
-//   return deletedHospital;
-// };
+  return deletedHospital;
+};
 
-// /**
-//  * Get Nearby Hospitals - Based on coordinates
-//  */
+
 const getNearbyHospitals = async (
   latitude: number,
   longitude: number,
@@ -304,6 +299,6 @@ export const HospitalService = {
   getAllHospitals,
   getHospitalById,
   updateHospital,
-  //   deleteHospital,
+    deleteHospital,
   getNearbyHospitals,
 };
