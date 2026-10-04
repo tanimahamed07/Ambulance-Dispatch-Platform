@@ -31,12 +31,15 @@ app.set("trust proxy", 1);
 app.use(
   cors({
     origin: [
+      "https://rescue-jade.vercel.app",
       "http://localhost:3000",
       "https://ambulance-dispatch-platform.vercel.app",
       config.frontend_url,
     ].filter(Boolean) as string[],
     credentials: true,
-  })
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+  })       
 );
 
 // Enable URL-encoded form data parsing
@@ -64,6 +67,11 @@ app.get("/", async (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({
     success: true,
     message: "Welcome to PH Healthcare System Backend",
+    environment: config.node_env,
+    cookieSettings: {
+      secure: config.node_env === "production",
+      sameSite: config.node_env === "production" ? "none" : "lax",
+    },
   });
 });
 
