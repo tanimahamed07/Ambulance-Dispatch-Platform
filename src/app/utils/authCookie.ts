@@ -8,7 +8,7 @@ const isProduction = config.node_env === "production";
 const cookieOptions = {
   httpOnly: true,
   secure: isProduction, // Production e https required for cross-site cookies
-  sameSite:  // Production e cross-site, dev e same-site
+  sameSite: isProduction ? ("none" as const) : ("lax" as const), // Production e cross-site, dev e same-site
 };
 
 export const setAuthCookies = (
