@@ -3,6 +3,7 @@ import {
 	EmergencyStatus,
 	EmergencyType,
 	Priority,
+	Role,
 } from "../../../generated/prisma/enums";
 import type { EmergencyRequestWhereInput } from "../../../generated/prisma/models";
 import type { IQuery } from "../../interface";
@@ -13,6 +14,7 @@ import type {
 	ICreateEmergencyPayload,
 	IUpdateEmergencyPriority,
 } from "./emergency.interface";
+import { IRequestUser } from "../auth/auth.interface";
 
 const createEmergency = async (
 	callerId: string,
@@ -173,12 +175,7 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
 	const sortBy = query.sortBy || "createdAt";
 	const sortOrder = query.sortOrder || "desc";
 
-	const andConditions: EmergencyRequestWhereInput[] = [];
-
-	// Filter by caller ID
-	andConditions.push({
-		callerId,
-	});
+	const andConditions: EmergencyRequestWhereInput[] = [{ callerId }];
 
 	// Search by patientName or patientPhone or pickupAddress
 	if (query.searchTerm) {
@@ -227,8 +224,7 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
 		});
 	}
 
-	const whereConditions =
-		andConditions.length > 0 ? { AND: andConditions } : {};
+	const whereConditions = { AND: andConditions };
 
 	const emergencies = await prisma.emergencyRequest.findMany({
 		where: whereConditions,
@@ -237,53 +233,12 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
 		orderBy: {
 			[sortBy]: sortOrder,
 		},
-		select: {
-			id: true,
-			patientName: true,
-			patientPhone: true,
-			emergencyType: true,
-			description: true,
-			pickupAddress: true,
-			pickupLatitude: true,
-			pickupLongitude: true,
-			priority: true,
-			status: true,
-			cancellationReason: true,
-			cancelledAt: true,
-			createdAt: true,
-			updatedAt: true,
+		include: {
 			dispatch: {
 				select: {
-					id: true,
-					status: true,
-					dispatchedAt: true,
-					acceptedAt: true,
 					ambulance: {
 						select: {
-							id: true,
-							ambulanceNumber: true,
-							registrationNumber: true,
-							vehicleType: true,
-							model: true,
 							status: true,
-							currentLatitude: true,
-							currentLongitude: true,
-						},
-					},
-					driver: {
-						select: {
-							id: true,
-							contactNumber: true,
-							address: true,
-							isAvailable: true,
-							user: {
-								select: {
-									id: true,
-									name: true,
-									email: true,
-									profileUrl: true,
-								},
-							},
 						},
 					},
 				},
@@ -306,57 +261,74 @@ const getMyEmergencies = async (callerId: string, query: IQuery) => {
 	};
 };
 
-const getEmergencyById = async (id: string) => {
-	const emergency = await prisma.emergencyRequest.findUnique({
-		where: {
-			id,
-		},
+const getEmergencyById = async (id: string, user: IRequestUser) => {
+	const isStaff = user.role === Role.ADMIN || user.role === Role.DISPATCHER;
+
+	let where: EmergencyRequestWhereInput = { id };
+
+	if (user.role === Role.CALLER) {
+		where = { id, caller: { userId: user.userId } };
+	} else if (user.role === Role.DRIVER) {
+		where = { id, dispatch: { driver: { userId: user.userId } } };
+	}
+
+	const emergency = await prisma.emergencyRequest.findFirst({
+		where,
 		include: {
-			caller: {
-				select: {
-					id: true,
-					contactNumber: true,
-					bloodGroup: true,
-					gender: true,
-					address: true,
-					user: {
+			caller: isStaff
+				? {
 						select: {
-							name: true,
-							email: true,
-							profileUrl: true,
+							id: true,
+							contactNumber: true,
+							bloodGroup: true,
+							gender: true,
+							address: true,
+							user: { select: { name: true, email: true, profileUrl: true } },
 						},
-					},
-				},
-			},
+					}
+				: false,
 
 			dispatch: {
 				include: {
-					trips: true,
 					ambulance: {
 						select: {
 							id: true,
 							ambulanceNumber: true,
-							registrationNumber: true,
 							vehicleType: true,
 							model: true,
 							status: true,
 							currentLatitude: true,
 							currentLongitude: true,
+							...(isStaff && { registrationNumber: true }),
 						},
 					},
 					driver: {
 						select: {
 							id: true,
 							contactNumber: true,
-							address: true,
-							isAvailable: true,
+							...(isStaff && { address: true, isAvailable: true }),
 							user: {
 								select: {
 									name: true,
-									email: true,
 									profileUrl: true,
+									...(isStaff && { email: true }),
 								},
 							},
+						},
+					},
+					trips: {
+						include: {
+							hospital: {
+								select: {
+									id: true,
+									name: true,
+									phone: true,
+									address: true,
+									latitude: true,
+									longitude: true,
+								},
+							},
+							payment: user.role !== Role.DRIVER,
 						},
 					},
 				},

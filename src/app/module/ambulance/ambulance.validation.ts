@@ -15,16 +15,26 @@ const CreateAmbulanceZodSchema = z.object({
 		.max(100, "Registration number must not exceed 100 characters"),
 	registrationExpiry: z
 		.string("Registration expiry is required")
-		.min(1, "Registration expiry cannot be empty"),
+		.min(1, "Registration expiry cannot be empty")
+		.refine((value) => !Number.isNaN(new Date(value).getTime()), {
+			message: "Invalid date format",
+		})
+		.refine(
+			(value) => {
+				const expiry = new Date(value).toISOString().slice(0, 10);
+				const today = new Date().toISOString().slice(0, 10);
+				return expiry >= today;
+			},
+			{ message: "Registration expiry must be today or a future date" },
+		),
 	vehicleType: z.nativeEnum(AmbulanceType, "Invalid vehicle type"),
 	model: z
 		.string()
-		.min(1, "Model cannot be empty if provided")
+		.min(1, "Model cannot be empty")
 		.max(100, "Model must not exceed 100 characters"),
 	capacity: z
 		.number("Capacity must be a number")
 		.int("Capacity must be an integer")
-		.positive("Capacity must be a positive number")
 		.min(1, "Capacity must be at least 1")
 		.max(20, "Capacity must not exceed 20"),
 });

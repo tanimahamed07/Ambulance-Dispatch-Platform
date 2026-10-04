@@ -23,6 +23,7 @@ import type {
 	ILoginUserPayload,
 	IRegisterCallerPayload,
 	IRequestUser,
+	IResendVerificationCodePayload,
 	IResetPasswordPayload,
 	IVerifyEmailPayload,
 } from "./auth.interface";
@@ -31,7 +32,6 @@ const registerPatient = async (payload: IRegisterCallerPayload) => {
 	const { name, password, caller: callerData } = payload;
 
 	const email = payload.email.trim().toLowerCase();
-
 	const isUserExists = await prisma.user.findUnique({
 		where: { email },
 	});
@@ -43,12 +43,33 @@ const registerPatient = async (payload: IRegisterCallerPayload) => {
 		);
 	}
 
+	// Register r resend ek-i cooldown share kore, tai bar bar register hit kore mail bombing kora jabe na
+	const cooldownKey = `caller-registration-otp-resend-cooldown:${email}`;
+	const isClaimed = await redisClient.set(cooldownKey, "locked", {
+		condition: "NX",
+		expiration: {
+			type: "EX",
+			value: 60,
+		},
+	});
+
+	if (isClaimed === null) {
+		const remainingSeconds = await redisClient.ttl(cooldownKey);
+
+		throw new AppError(
+			httpStatus.TOO_MANY_REQUESTS,
+			`Please wait ${remainingSeconds > 0 ? remainingSeconds : 60} seconds before requesting a new verification code`,
+		);
+	}
+
 	const hashedPassword = await bcrypt.hash(password, 8);
 
 	const expirationSeconds = 5 * 60;
 
 	const otpKey = `caller-registration-otp:${email}`;
 	const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+	console.log("========>", otpValue)
 
 	await redisClient.set(otpKey, otpValue, {
 		expiration: {
@@ -210,6 +231,100 @@ const verifyCallerEmail = async (payload: IVerifyEmailPayload) => {
 		accessToken,
 		refreshToken,
 	};
+};
+
+const resendVerificationCode = async (
+	payload: IResendVerificationCodePayload,
+) => {
+	const email = payload.email.trim().toLowerCase();
+
+	const isUserExist = await prisma.user.findUnique({
+		where: { email },
+	});
+
+	if (isUserExist?.status === "BLOCKED") {
+		throw new AppError(httpStatus.FORBIDDEN, "User is Blocked");
+	}
+
+	if (isUserExist?.emailVerified) {
+		throw new AppError(httpStatus.CONFLICT, "Email Already Verified");
+	}
+
+	if (isUserExist?.isDeleted || isUserExist?.status === "DELETED") {
+		throw new AppError(httpStatus.GONE, "User is Deleted");
+	}
+
+	// Pending registration na thakle verify kora possible na, tai code pathano bondho
+	const callerRegistrationKey = `caller-registration-data:${email}`;
+	const redisCallerData = await redisClient.get(callerRegistrationKey);
+
+	if (!redisCallerData) {
+		throw new AppError(
+			httpStatus.NOT_FOUND,
+			"No Pending Registration Found. Please Register Again",
+		);
+	}
+
+	const callerPayload: IRegisterCallerPayload = JSON.parse(redisCallerData);
+
+	// SET NX atomic, tai parallel request e duibar code jabe na
+	const cooldownKey = `caller-registration-otp-resend-cooldown:${email}`;
+	const isClaimed = await redisClient.set(cooldownKey, "locked", {
+		condition: "NX",
+		expiration: {
+			type: "EX",
+			value: 60,
+		},
+	});
+
+	if (isClaimed === null) {
+		const remainingSeconds = await redisClient.ttl(cooldownKey);
+
+		throw new AppError(
+			httpStatus.TOO_MANY_REQUESTS,
+			`Please wait ${remainingSeconds > 0 ? remainingSeconds : 60} seconds before requesting a new verification code`,
+		);
+	}
+
+	const expirationSeconds = 5 * 60;
+
+	const otpKey = `caller-registration-otp:${email}`;
+	const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+	console.log("========>", otpValue)
+
+
+	// Same key overwrite hoy, tai purono OTP r kaj korbe na
+	await redisClient.set(otpKey, otpValue, {
+		expiration: {
+			type: "EX",
+			value: expirationSeconds,
+		},
+	});
+
+	// Registration data-o notun OTP-r shathe alive thakbe
+	await redisClient.expire(callerRegistrationKey, expirationSeconds);
+
+	const templatePath = path.join(
+		process.cwd(),
+		"src/app/templates/registration-user-otp.ejs",
+	);
+
+	const templateData = {
+		name: callerPayload.name,
+		email,
+		otp: otpValue,
+		expirationMinutes: expirationSeconds / 60,
+	};
+
+	const html = await ejs.renderFile(templatePath, templateData);
+
+	await transporter.sendMail({
+		from: config.email_sender,
+		to: email,
+		subject: "Email Verification Code Resent",
+		html,
+	});
 };
 
 const loginUser = async (payload: ILoginUserPayload) => {
@@ -564,81 +679,85 @@ const forgotPassword = async (payload: IForgotPasswordPayload) => {
 };
 
 const resetPassword = async (payload: IResetPasswordPayload) => {
-	const { email, otp, newPassword } = payload;
+    const { email, otp, newPassword } = payload;
 
-	const isUserExist = await prisma.user.findUnique({
-		where: {
-			email,
-		},
-	});
+    const isUserExist = await prisma.user.findUnique({
+        where: {
+            email,
+        },
+    });
 
-	if (!isUserExist) {
-		throw new AppError(httpStatus.NOT_FOUND, "User Does Not Exist!");
-	}
+    if (!isUserExist) {
+        throw new AppError(httpStatus.NOT_FOUND, "User Does Not Exist!");
+    }
 
-	if (isUserExist.status === "BLOCKED") {
-		throw new AppError(httpStatus.FORBIDDEN, "User is Blocked");
-	}
+    if (isUserExist.status === "BLOCKED") {
+        throw new AppError(httpStatus.FORBIDDEN, "User is Blocked");
+    }
 
-	if (!isUserExist.emailVerified) {
-		throw new AppError(httpStatus.FORBIDDEN, "User Not Verified");
-	}
+    if (!isUserExist.emailVerified) {
+        throw new AppError(httpStatus.FORBIDDEN, "User Not Verified");
+    }
 
-	if (isUserExist.isDeleted || isUserExist.status === "DELETED") {
-		throw new AppError(httpStatus.GONE, "User is Deleted");
-	}
+    if (isUserExist.isDeleted || isUserExist.status === "DELETED") {
+        throw new AppError(httpStatus.GONE, "User is Deleted");
+    }
 
-	if (isUserExist.googleId && isUserExist.authProvider === "GOOGLE") {
-		throw new AppError(httpStatus.BAD_REQUEST, "User Has Account With Google");
-	}
+    if (isUserExist.googleId && isUserExist.authProvider === "GOOGLE") {
+        throw new AppError(httpStatus.BAD_REQUEST, "User Has Account With Google");
+    }
 
-	const key = `forgot-password-otp:${isUserExist.email}`;
+    const key = `forgot-password-otp:${isUserExist.email}`;
 
-	const redisOtp = await redisClient.get(key);
+    const redisOtp = await redisClient.get(key);
 
-	if (!redisOtp) {
-		throw new AppError(httpStatus.BAD_REQUEST, "Invalid OTP");
-	}
+    if (!redisOtp) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST, 
+            "OTP has expired or is invalid. Please request a new code."
+        );
+    }
 
-	if (redisOtp !== otp) {
-		throw new AppError(httpStatus.BAD_REQUEST, "OTP Does Not Match");
-	}
+    if (redisOtp !== otp) {
+        throw new AppError(
+            httpStatus.BAD_REQUEST, 
+            "Invalid OTP code. Please check and try again."
+        );
+    }
 
-	const hashedNewPassword = await bcrypt.hash(
-		newPassword,
-		Number(config.bcrypt_salt_rounds),
-	);
+    const hashedNewPassword = await bcrypt.hash(
+        newPassword,
+        Number(config.bcrypt_salt_rounds),
+    );
 
-	await prisma.user.update({
-		where: {
-			email: isUserExist.email,
-		},
-		data: {
-			password: hashedNewPassword,
-		},
-	});
+    await prisma.user.update({
+        where: {
+            email: isUserExist.email,
+        },
+        data: {
+            password: hashedNewPassword,
+        },
+    });
 
-	await redisClient.del([key]);
+    await redisClient.del([key]);
 
-	const templatePath = path.join(
-		process.cwd(),
-		"src/app/templates/reset-password-success.ejs",
-	);
+    const templatePath = path.join(
+        process.cwd(),
+        "src/app/templates/reset-password-success.ejs",
+    );
 
-	const templateData = {
-		name: isUserExist.name,
-	};
+    const templateData = {
+        name: isUserExist.name,
+    };
 
-	const html = await ejs.renderFile(templatePath, templateData);
+    const html = await ejs.renderFile(templatePath, templateData);
 
-	await transporter.sendMail({
-		from: config.email_sender,
-		to: isUserExist.email,
-		subject: "Password Changed",
-		// text : `Your OTP is ${otp}`
-		// html: `<h1>Your Password Is Changed</h1>`
-		html,
-	});
+    await transporter.sendMail({
+        from: config.email_sender,
+        to: isUserExist.email,
+        subject: "Password Changed",
+        html,
+    });
 };
 
 export const AuthService = {
@@ -647,6 +766,7 @@ export const AuthService = {
 	getMe,
 	refreshToken,
 	verifyCallerEmail,
+	resendVerificationCode,
 	googleLogin,
 	forgotPassword,
 	resetPassword,

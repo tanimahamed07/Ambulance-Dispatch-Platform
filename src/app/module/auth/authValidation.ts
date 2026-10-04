@@ -21,9 +21,14 @@ const CallerRegistrationZodSchema = z.object({
 		})
 		.optional(),
 });
+
 const CallerEmailVerifyZodSchema = z.object({
 	email: z.email("Not email!!"),
 	otp: z.string().length(6),
+});
+
+const ResendVerificationCodeZodSchema = z.object({
+	email: z.email("Not email!!"),
 });
 
 const LoginZodSchema = z.object({
@@ -58,6 +63,7 @@ const ResetPasswordZodSchema = z.object({
 export const UserValidation = {
 	CallerRegistrationZodSchema,
 	CallerEmailVerifyZodSchema,
+	ResendVerificationCodeZodSchema,
 	LoginZodSchema,
 	ForgotPasswordZodSchema,
 	ResetPasswordZodSchema,

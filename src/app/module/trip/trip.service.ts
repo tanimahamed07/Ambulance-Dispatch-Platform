@@ -276,12 +276,6 @@ const getMyTrips = async (driverId: string, query: IQuery) => {
 		select: {
 			id: true,
 			status: true,
-			startedAt: true,
-			pickedUpAt: true,
-			hospitalArrivalAt: true,
-			completedAt: true,
-			distanceKm: true,
-			fare: true,
 			createdAt: true,
 			emergency: {
 				select: {
@@ -292,32 +286,6 @@ const getMyTrips = async (driverId: string, query: IQuery) => {
 					priority: true,
 					status: true,
 					pickupAddress: true,
-					pickupLatitude: true,
-					pickupLongitude: true,
-					description: true,
-				},
-			},
-			dispatch: {
-				select: {
-					id: true,
-					dispatchedAt: true,
-					acceptedAt: true,
-					ambulance: {
-						select: {
-							id: true,
-							ambulanceNumber: true,
-							vehicleType: true,
-						},
-					},
-				},
-			},
-			hospital: {
-				select: {
-					id: true,
-					name: true,
-					address: true,
-					latitude: true,
-					longitude: true,
 				},
 			},
 		},
@@ -358,23 +326,6 @@ const getTripById = async (tripId: string) => {
 							},
 						},
 					},
-				},
-			},
-			dispatch: {
-				include: {
-					driver: {
-						include: {
-							user: {
-								select: {
-									id: true,
-									name: true,
-									email: true,
-									profileUrl: true,
-								},
-							},
-						},
-					},
-					ambulance: true,
 				},
 			},
 			hospital: true,

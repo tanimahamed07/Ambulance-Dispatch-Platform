@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/suspicious/noNonNullAssertedOptionalChain: <explanation> */
+/** biome-ignore-all lint/style/noNonNullAssertion: <explanation> */
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
@@ -67,7 +69,7 @@ const getMyEmergencies = catchAsync(async (req: Request, res: Response) => {
 
 const getEmergencyById = catchAsync(async (req: Request, res: Response) => {
 	const id = req.params.id;
-	const result = await EmergencyService.getEmergencyById(id as string);
+	const result = await EmergencyService.getEmergencyById(id as string, req.user);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,

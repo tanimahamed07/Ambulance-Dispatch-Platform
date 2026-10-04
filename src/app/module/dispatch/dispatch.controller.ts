@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noNonNullAssertedOptionalChain: <explanation> */
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";

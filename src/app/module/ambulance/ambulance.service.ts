@@ -52,7 +52,7 @@ const createAmbulance = async (payload: ICreateAmbulancePayload) => {
 		data: {
 			ambulanceNumber,
 			registrationNumber,
-			registrationExpiry,
+			registrationExpiry: new Date(registrationExpiry),
 			vehicleType,
 			model,
 			capacity,
@@ -64,113 +64,116 @@ const createAmbulance = async (payload: ICreateAmbulancePayload) => {
 };
 
 const getAllAmbulances = async (query: IQuery) => {
-	const limit = query.limit ? Number(query.limit) : 10;
-	const page = query.page ? Number(query.page) : 1;
-	const skip = (page - 1) * limit;
+    const limit = query.limit ? Number(query.limit) : 10;
+    const page = query.page ? Number(query.page) : 1;
+    const skip = (page - 1) * limit;
 
-	const sortBy = query.sortBy || "createdAt";
-	const sortOrder = query.sortOrder || "desc";
+    const sortBy = query.sortBy || "createdAt";
+    const sortOrder = query.sortOrder || "desc";
 
-	const andConditions: AmbulanceWhereInput[] = [];
+    const andConditions: AmbulanceWhereInput[] = [];
 
-	// Search
-	if (query.searchTerm) {
-		andConditions.push({
-			OR: [
-				{
-					ambulanceNumber: {
-						contains: query.searchTerm,
-						mode: "insensitive",
-					},
-				},
-				{
-					registrationNumber: {
-						contains: query.searchTerm,
-						mode: "insensitive",
-					},
-				},
-				{
-					model: {
-						contains: query.searchTerm,
-						mode: "insensitive",
-					},
-				},
-			],
-		});
-	}
+    // Search
+    if (query.searchTerm) {
+        andConditions.push({
+            OR: [
+                {
+                    ambulanceNumber: {
+                        contains: query.searchTerm,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    registrationNumber: {
+                        contains: query.searchTerm,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    model: {
+                        contains: query.searchTerm,
+                        mode: "insensitive",
+                    },
+                },
+            ],
+        });
+    }
 
-	// Vehicle type filter
-	if (query.vehicleType) {
-		andConditions.push({
-			vehicleType: query.vehicleType,
-		});
-	}
+    // Vehicle type filter
+    if (query.vehicleType) {
+        andConditions.push({
+            vehicleType: query.vehicleType,
+        });
+    }
 
-	// Status filter
-	if (query.status) {
-		andConditions.push({
-			status: query.status,
-		});
-	}
+    // Status filter
+    if (query.status) {
+        andConditions.push({
+            status: query.status,
+        });
+    }
 
-	// Soft deleted ambulance বাদ
-	andConditions.push({
-		isDeleted: false,
-	});
+    // 👇 Driver Assignment Filter - এটা add করতে হবে
+    if (query.driverAssignment) {
+        if (query.driverAssignment === "ASSIGNED") {
+            // যেসব ambulance-এ driver আছে
+            andConditions.push({
+                driver: { isNot: null },
+            });
+        } else if (query.driverAssignment === "UNASSIGNED") {
+            // যেসব ambulance-এ driver নেই
+            andConditions.push({
+                driver: { is: null },
+            });
+        }
+        // "ALL" হলে কোনো condition add করব না
+    }
 
-	if (query.status === AmbulanceStatus.OFFLINE) {
-		andConditions.push({
-			driver: { is: null },
-		});
-	}
+    // Soft deleted ambulance বাদ
+    andConditions.push({
+        isDeleted: false,
+    });
 
-	const ambulances = await prisma.ambulance.findMany({
-		where: {
-			AND: andConditions,
-		},
+    // 👇 এই condition টা remove করুন - কারণ এখন আলাদা driverAssignment filter আছে
+    // if (query.status === AmbulanceStatus.OFFLINE) {
+    //     andConditions.push({
+    //         driver: { is: null },
+    //     });
+    // }
 
-		take: limit,
-		skip,
+    const ambulances = await prisma.ambulance.findMany({
+        where: {
+            AND: andConditions,
+        },
+        include: {
+            driver: {
+                include: {
+                    user: true, // driver এর user info আনার জন্য
+                },
+            },
+        },
+        take: limit,
+        skip,
+        orderBy: {
+            [sortBy]: sortOrder,
+        },
+    });
 
-		orderBy: {
-			[sortBy]: sortOrder,
-		},
+    const totalAmbulancesCount = await prisma.ambulance.count({
+        where: {
+            AND: andConditions,
+        },
+    });
 
-		include: {
-			driver: {
-				select: {
-					id: true,
-					contactNumber: true,
-					approvalStatus: true,
-					isAvailable: true,
-					user: {
-						select: {
-							id: true,
-							name: true,
-							email: true,
-						},
-					},
-				},
-			},
-		},
-	});
-
-	const totalAmbulancesCount = await prisma.ambulance.count({
-		where: {
-			AND: andConditions,
-		},
-	});
-
-	return {
-		data: ambulances,
-
-		meta: {
-			page,
-			limit,
-			total: totalAmbulancesCount,
-			totalPages: Math.ceil(totalAmbulancesCount / limit),
-		},
-	};
+    return {
+        data: ambulances,
+        meta: {
+            page,
+            limit,
+            total: totalAmbulancesCount,
+            totalPages: Math.ceil(totalAmbulancesCount / limit),
+        },
+    };
 };
 
 const getAvailableAmbulances = async (query: IQuery) => {

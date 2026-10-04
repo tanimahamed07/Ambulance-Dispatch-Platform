@@ -327,17 +327,17 @@ const getDispatchById = async (id: string) => {
 					},
 				},
 			},
-			driver: {
-				include: {
-					user: {
-						select: {
-							name: true,
-							email: true,
-							profileUrl: true,
-						},
-					},
-				},
-			},
+			// driver: {
+			// 	include: {
+			// 		user: {
+			// 			select: {
+			// 				name: true,
+			// 				email: true,
+			// 				profileUrl: true,
+			// 			},
+			// 		},
+			// 	},
+			// },
 			ambulance: true,
 		},
 	});
@@ -446,25 +446,25 @@ const getMyDispatches = async (driverId: string, query: IQuery) => {
 					pickupAddress: true,
 				},
 			},
-			driver: {
-				select: {
-					id: true,
-					user: {
-						select: {
-							name: true,
-							email: true,
-						},
-					},
-				},
-			},
-			ambulance: {
-				select: {
-					id: true,
-					ambulanceNumber: true,
-					vehicleType: true,
-					status: true,
-				},
-			},
+			// driver: {
+			// 	select: {
+			// 		id: true,
+			// 		user: {
+			// 			select: {
+			// 				name: true,
+			// 				email: true,
+			// 			},
+			// 		},
+			// 	},
+			// },
+			// ambulance: {
+			// 	select: {
+			// 		id: true,
+			// 		ambulanceNumber: true,
+			// 		vehicleType: true,
+			// 		status: true,
+			// 	},
+			// },
 		},
 	});
 

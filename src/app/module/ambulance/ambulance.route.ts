@@ -33,6 +33,7 @@ router.get(
 	AmbulanceController.getAmbulanceById,
 );
 
+
 router.patch(
 	"/:id",
 	auth(Role.ADMIN),
@@ -69,3 +70,5 @@ router.patch(
 );
 
 export const AmbulanceRoutes = router;
+
+

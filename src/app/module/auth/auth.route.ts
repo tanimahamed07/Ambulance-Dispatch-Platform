@@ -20,6 +20,12 @@ router.post(
 );
 
 router.post(
+	"/resend-verification-code",
+	validateRequest(UserValidation.ResendVerificationCodeZodSchema),
+	AuthController.resendVerificationCode,
+);
+
+router.post(
 	"/login",
 	validateRequest(UserValidation.LoginZodSchema),
 	AuthController.loginUser,
@@ -44,5 +50,7 @@ router.post(
 	validateRequest(UserValidation.ResetPasswordZodSchema),
 	AuthController.resetPassword,
 );
+
+router.post("/logout", AuthController.logout);
 
 export const AuthRoutes = router;

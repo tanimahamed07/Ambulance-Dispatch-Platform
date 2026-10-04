@@ -1,7 +1,9 @@
+
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
+import { clearAuthCookies, setAuthCookies } from "../../utils/authCookie";
 import type { IRequestUser } from "./auth.interface";
 import { AuthService } from "./auth.service";
 
@@ -51,18 +53,7 @@ const verifyCallerEmail = catchAsync(async (req: Request, res: Response) => {
 
 	const { accessToken, refreshToken, user, caller } = result;
 
-	res.cookie("accessToken", accessToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-	});
-	res.cookie("refreshToken", refreshToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-	});
+	setAuthCookies(res, accessToken, refreshToken);
 
 	sendResponse(res, {
 		statusCode: httpStatus.CREATED,
@@ -77,23 +68,27 @@ const verifyCallerEmail = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const resendVerificationCode = catchAsync(
+	async (req: Request, res: Response) => {
+		const payload = req.body;
+
+		await AuthService.resendVerificationCode(payload);
+
+		sendResponse(res, {
+			statusCode: httpStatus.OK,
+			success: true,
+			message: `Verification Code Resent To Email : ${payload.email}`,
+			data: null,
+		});
+	},
+);
+
 const loginUser = catchAsync(async (req: Request, res: Response) => {
 	const payload = req.body;
 	const result = await AuthService.loginUser(payload);
 	const { accessToken, refreshToken } = result;
 
-	res.cookie("accessToken", accessToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-	});
-	res.cookie("refreshToken", refreshToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-	});
+	setAuthCookies(res, accessToken, refreshToken);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
@@ -129,18 +124,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 	const result = await AuthService.refreshToken(req.cookies.refreshToken);
 	const { accessToken, refreshToken: newRefreshToken } = result;
 
-	res.cookie("accessToken", accessToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-	});
-	res.cookie("refreshToken", newRefreshToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-	});
+	setAuthCookies(res, accessToken, newRefreshToken);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
@@ -160,18 +144,7 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 
 	const { accessToken, refreshToken } = result;
 
-	res.cookie("accessToken", accessToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
-	});
-	res.cookie("refreshToken", refreshToken, {
-		httpOnly: true,
-		secure: false,
-		sameSite: "none",
-		maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-	});
+	setAuthCookies(res, accessToken, refreshToken);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
@@ -210,13 +183,27 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+const logout = catchAsync(async (req: Request, res: Response) => {
+  clearAuthCookies(res);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User Logged Out Successfully",
+    data: null,
+  });
+});
+
 export const AuthController = {
 	registerPatient,
 	loginUser,
 	getMe,
 	refreshToken,
 	verifyCallerEmail,
+	resendVerificationCode,
 	googleLogin,
 	forgotPassword,
 	resetPassword,
+	logout
 };
+

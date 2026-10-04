@@ -13,10 +13,10 @@ const router = Router();
  * Caller initiates payment for their trip
  */
 router.post(
-	"/initiate",
-	auth(Role.CALLER),
-	validateRequest(PaymentValidation.InitiatePaymentZodSchema),
-	PaymentController.initiatePayment,
+  "/initiate",
+  auth(Role.CALLER),
+  validateRequest(PaymentValidation.InitiatePaymentZodSchema),
+  PaymentController.initiatePayment,
 );
 
 /**
@@ -25,18 +25,11 @@ router.post(
  * Caller retries payment for a trip
  */
 router.post(
-	"/retry",
-	auth(Role.CALLER),
-	validateRequest(PaymentValidation.RetryPaymentZodSchema),
-	PaymentController.retryPayment,
+  "/retry",
+  auth(Role.CALLER),
+  validateRequest(PaymentValidation.RetryPaymentZodSchema),
+  PaymentController.retryPayment,
 );
-
-/**
- * Payment Callback from bKash
- * GET /api/payment/callback
- * Public endpoint - no auth needed (bKash will call this)
- */
-router.get("/callback", PaymentController.paymentCallback);
 
 /**
  * Get My Payment Details
@@ -44,9 +37,9 @@ router.get("/callback", PaymentController.paymentCallback);
  * Caller gets their payment details for a specific trip
  */
 router.get(
-	"/my-payment/:tripId",
-	auth(Role.CALLER),
-	PaymentController.getMyPayment,
+  "/my-payment/:tripId",
+  auth(Role.CALLER),
+  PaymentController.getMyPayment,
 );
 
 /**
@@ -55,9 +48,21 @@ router.get(
  * Admin or Dispatcher can query payment status from bKash
  */
 router.post(
-	"/query-status",
-	auth(Role.ADMIN, Role.DISPATCHER),
-	PaymentController.queryPaymentStatus,
+  "/query-status",
+  auth(Role.ADMIN, Role.DISPATCHER),
+  PaymentController.queryPaymentStatus,
 );
 
 export const PaymentRoutes = router;
+
+// Separate router for callback (no auth needed)
+const callbackRouter = Router();
+
+/**
+ * Payment Callback from bKash
+ * GET /payment/callback
+ * Public endpoint - no auth needed (bKash will call this)
+ */
+callbackRouter.get("/callback", PaymentController.paymentCallback);
+
+export const PaymentCallbackRoutes = callbackRouter;

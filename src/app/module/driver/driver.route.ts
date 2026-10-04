@@ -13,6 +13,7 @@ router.post(
 	DriverController.applyAsDriver,
 );
 
+
 router.patch(
 	"/approve-driver",
 	auth(Role.ADMIN),
@@ -37,16 +38,34 @@ router.get(
 	DriverController.getApplicationById,
 );
 
+
+
+
 router.get(
 	"/all-driver",
 	auth(Role.ADMIN, Role.DISPATCHER),
 	DriverController.getAllApprovedDriver,
 );
+
+
 router.get(
 	"/all-driver/:id",
 	auth(Role.ADMIN, Role.DISPATCHER),
 	DriverController.getApprovedDriverById,
 );
+
+router.get(
+	"/dispatchable-drivers",
+	auth(Role.ADMIN, Role.DISPATCHER),
+	DriverController.getDispatchableDrivers,
+);
+
+router.get(
+	"/me/profile",
+	auth(Role.DRIVER),
+	DriverController.getMyProfile,
+);
+
 router.patch(
 	"/me/status",
 	auth(Role.DRIVER),

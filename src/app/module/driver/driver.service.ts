@@ -1,6 +1,6 @@
 import { differenceInDays } from "date-fns";
 import httpStatus from "http-status";
-import { DriverApprovalStatus, Role } from "../../../generated/prisma/enums";
+import { AmbulanceStatus, DispatchStatus, DriverApprovalStatus, Role } from "../../../generated/prisma/enums";
 import type { DriverWhereInput } from "../../../generated/prisma/models";
 import type { IQuery } from "../../interface";
 import { prisma } from "../../lib/prisma";
@@ -101,7 +101,7 @@ const approveDriver = async (payload: IApproveDriverPayload) => {
 		);
 	}
 
-	let updatedDriver;
+	let updatedDriver: NonNullable<typeof driver>;
 
 	if (approvalStatus === DriverApprovalStatus.APPROVED) {
 		// Handle Approval Logic
@@ -253,9 +253,14 @@ const getAllApplications = async (query: IQuery) => {
 		});
 	}
 
-	andConditions.push({
-		isDeleted: false,
-		approvalStatus: DriverApprovalStatus.PENDING,
+if (query.approvalStatus) {
+  andConditions.push({
+    approvalStatus: query.approvalStatus as DriverApprovalStatus,
+  });
+}
+
+ 	andConditions.push({
+  isDeleted: false,
 	});
 
 	const applications = await prisma.driver.findMany({
@@ -300,7 +305,6 @@ const getApplicationById = async (id: string) => {
 		where: {
 			id,
 			isDeleted: false,
-			approvalStatus: DriverApprovalStatus.PENDING,
 		},
 		include: {
 			user: {
@@ -371,6 +375,26 @@ const getAllApprovedDriver = async (query: IQuery) => {
 		});
 	}
 
+
+	if (query.assignable === "true") {
+	andConditions.push({
+		isAvailable: true,
+		ambulanceId: { not: null },
+		ambulance: {
+			is: {
+				status: AmbulanceStatus.AVAILABLE,
+				isDeleted: false,
+			},
+		},
+	});
+}
+
+
+if (query.hasAmbulance !== undefined) {
+	andConditions.push({
+		ambulanceId: query.hasAmbulance === "true" ? { not: null } : null,
+	});
+}
 	if (query.email) {
 		andConditions.push({
 			user: {
@@ -442,6 +466,139 @@ const getAllApprovedDriver = async (query: IQuery) => {
 	};
 };
 
+/**
+ * Get all dispatchable drivers
+ * Conditions:
+ * 1. Driver is APPROVED
+ * 2. Driver is currently available (isAvailable = true)
+ * 3. Driver has an assigned ambulance
+ * 4. Ambulance status is AVAILABLE
+ * 5. Driver has NO active dispatch (PENDING or ACCEPTED)
+ * 6. Driver is not deleted
+ */
+const getDispatchableDrivers = async (query: IQuery) => {
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
+	const sortBy = query.sortBy ? query.sortBy : "createdAt";
+	const sortOrder = query.sortOrder ? query.sortOrder : "desc";
+
+	const andConditions: DriverWhereInput[] = [];
+
+	// Search term filter
+	if (query.searchTerm) {
+		andConditions.push({
+			OR: [
+				{
+					licenseNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					contactNumber: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					address: {
+						contains: query.searchTerm,
+						mode: "insensitive",
+					},
+				},
+				{
+					user: {
+						name: {
+							contains: query.searchTerm,
+							mode: "insensitive",
+						},
+					},
+				},
+			],
+		});
+	}
+
+	// Core dispatchable conditions
+	andConditions.push({
+		// Driver must be approved
+		approvalStatus: DriverApprovalStatus.APPROVED,
+		// Driver must be on duty (available)
+		isAvailable: true,
+		// Driver must have an assigned ambulance
+		ambulanceId: { not: null },
+		// Driver must not be deleted
+		isDeleted: false,
+		// Ambulance must be available
+		ambulance: {
+			is: {
+				status: AmbulanceStatus.AVAILABLE,
+				isDeleted: false,
+			},
+		},
+		// Driver must NOT have any active dispatch
+		dispatches: {
+			none: {
+				status: {
+					in: [DispatchStatus.PENDING, DispatchStatus.ACCEPTED],
+				},
+			},
+		},
+	});
+
+	const drivers = await prisma.driver.findMany({
+		where: {
+			AND: andConditions.length > 0 ? andConditions : undefined,
+		},
+		omit: {
+			rejectionReason: true,
+			rejectionNote: true,
+			rejectedAt: true,
+		},
+		take: limit,
+		skip: skip,
+		orderBy: {
+			[sortBy]: sortOrder,
+		},
+		include: {
+			user: {
+				omit: {
+					password: true,
+				},
+			},
+			ambulance: {
+				select: {
+					id: true,
+					ambulanceNumber: true,
+					registrationNumber: true,
+					vehicleType: true,
+					model: true,
+					capacity: true,
+					status: true,
+					currentLatitude: true,
+					currentLongitude: true,
+				},
+			},
+		},
+	});
+
+	const totalCount = await prisma.driver.count({
+		where: {
+			AND: andConditions,
+		},
+	});
+
+	return {
+		data: drivers,
+		meta: {
+			page: page,
+			limit: limit,
+			total: totalCount,
+			totalPages: Math.ceil(totalCount / limit),
+		},
+	};
+};
+
 const getApprovedDriverById = async (id: string) => {
 	const driver = await prisma.driver.findUnique({
 		where: {
@@ -463,6 +620,32 @@ const getApprovedDriverById = async (id: string) => {
 	if (!driver) {
 		throw new AppError(httpStatus.NOT_FOUND, "Driver not found.");
 	}
+	return driver;
+};
+
+const getMyProfile = async (userId: string) => {
+	const driver = await prisma.driver.findUnique({
+		where: {
+			userId,
+			isDeleted: false,
+			approvalStatus: DriverApprovalStatus.APPROVED,
+		},
+		include: {
+			user: {
+				omit: {
+					password: true,
+				},
+			},
+		},
+	});
+
+	if (!driver) {
+		throw new AppError(
+			httpStatus.NOT_FOUND,
+			"Approved driver profile not found.",
+		);
+	}
+
 	return driver;
 };
 
@@ -512,5 +695,7 @@ export const DriverService = {
 	getApplicationById,
 	getAllApprovedDriver,
 	getApprovedDriverById,
+	getMyProfile,
 	updateDutyStatus,
+	getDispatchableDrivers,
 };

@@ -97,19 +97,44 @@ const getApprovedDriverById = catchAsync(
 	},
 );
 
-const updateDutyStatus = catchAsync(async (req: Request, res: Response) => {
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
 	const { userId } = req.user!;
-	const payload = req.body;
-
-	const result = await DriverService.updateDutyStatus(userId, payload);
+	const result = await DriverService.getMyProfile(userId);
 
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: `Driver duty status updated to ${payload.isAvailable ? "AVAILABLE" : "OFF_DUTY"} successfully.`,
+		message: "Driver profile retrieved successfully.",
 		data: result,
 	});
 });
+
+const updateDutyStatus = catchAsync(async (req: Request, res: Response) => {
+	const { userId } = req.user!;
+	const { isAvailable } = req.body;
+
+	const result = await DriverService.updateDutyStatus(userId, isAvailable);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: `Driver duty status updated to ${isAvailable ? "AVAILABLE" : "OFF_DUTY"} successfully.`,
+		data: result,
+	});
+});
+
+const getDispatchableDrivers = catchAsync(
+	async (req: Request, res: Response) => {
+		const result = await DriverService.getDispatchableDrivers(req.query);
+
+		sendResponse(res, {
+			statusCode: httpStatus.OK,
+			success: true,
+			message: "Dispatchable drivers retrieved successfully.",
+			data: result,
+		});
+	},
+);
 
 export const DriverController = {
 	applyAsDriver,
@@ -119,5 +144,7 @@ export const DriverController = {
 	getApplicationById,
 	getAllApprovedDriver,
 	getApprovedDriverById,
+	getMyProfile,
 	updateDutyStatus,
+	getDispatchableDrivers,
 };

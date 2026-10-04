@@ -1,9 +1,9 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, {
-	type Application,
-	type Request,
-	type Response,
+  type Application,
+  type Request,
+  type Response,
 } from "express";
 import httpStatus from "http-status";
 import config from "./app/config";
@@ -15,17 +15,28 @@ import { DispatchRoutes } from "./app/module/dispatch/dispatch.route";
 import { DriverRoutes } from "./app/module/driver/driver.route";
 import { EmergencyRoutes } from "./app/module/emergency/emergency.route";
 import { HospitalRoutes } from "./app/module/hospital/hospital.route";
-import { PaymentRoutes } from "./app/module/payment/payment.route";
+import {
+  PaymentRoutes,
+  PaymentCallbackRoutes,
+} from "./app/module/payment/payment.route";
 import { TripRoutes } from "./app/module/trip/trip.route";
 import { UserRoutes } from "./app/module/user/user.route";
 
 const app: Application = express();
 
+// Trust the first proxy hop (Vercel) so req.ip resolves to the real client address for per-IP rate limiting
+app.set("trust proxy", 1);
+
+// CORS configuration - Support both same-origin and cross-origin requests
 app.use(
-	cors({
-		origin: config.frontend_url,
-		credentials: true,
-	}),
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://ambulance-dispatch-platform.vercel.app",
+      config.frontend_url,
+    ].filter(Boolean) as string[],
+    credentials: true,
+  })
 );
 
 // Enable URL-encoded form data parsing
@@ -34,6 +45,9 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware to parse JSON bodies
 app.use(express.json());
 app.use(cookieParser());
+
+// Payment callback route (must be before api/v1 routes for bKash webhook)
+app.use("/payment", PaymentCallbackRoutes);
 
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
@@ -47,10 +61,10 @@ app.use("/api/v1/payment", PaymentRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
-	res.status(httpStatus.OK).json({
-		success: true,
-		message: "Welcome to PH Healthcare System Backend",
-	});
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Welcome to PH Healthcare System Backend",
+  });
 });
 
 app.use(globalErrorHandler);
