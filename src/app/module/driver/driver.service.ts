@@ -449,7 +449,7 @@ if (query.hasAmbulance !== undefined) {
 		},
 	});
 
-	const totalApplicationCount = await prisma.driver.count({
+	const totalDriversCount = await prisma.driver.count({
 		where: {
 			AND: andConditions,
 		},
@@ -460,8 +460,8 @@ if (query.hasAmbulance !== undefined) {
 		meta: {
 			page: page,
 			limit: limit,
-			total: totalApplicationCount,
-			totalPages: Math.ceil(totalApplicationCount / limit),
+			total: totalDriversCount,
+			totalPages: Math.ceil(totalDriversCount / limit),
 		},
 	};
 };
