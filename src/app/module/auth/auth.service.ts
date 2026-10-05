@@ -534,6 +534,7 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 
 				data: {
 					googleId: googleIdTokenPayload.sub,
+					profileUrl: googleIdTokenPayload.picture || ifCallerExistWithCredentials.profileUrl,
 				},
 			});
 		} else {
@@ -542,10 +543,16 @@ const googleLogin = async (payload: IGoogleLoginPayload) => {
 				data: {
 					name: googleIdTokenPayload.name,
 					email: googleIdTokenPayload.email,
+					profileUrl: googleIdTokenPayload.picture || undefined,
 					role: Role.CALLER,
 					googleId: googleIdTokenPayload.sub,
 					authProvider: AuthProvider.GOOGLE,
 					emailVerified: true,
+					caller: {
+						create: {
+							contactNumber: "",
+						},
+					},
 				},
 			});
 			const templatePath = path.join(
