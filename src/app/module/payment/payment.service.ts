@@ -596,18 +596,10 @@ const paymentCallback = async (query: Record<string, any>) => {
 
 /**
  * Get My Payment - Get payment details for a specific trip
+ * Works for both CALLER and DRIVER
  */
 const getMyPayment = async (user: IRequestUser, tripId: string) => {
-	// First verify caller profile
-	const caller = await prisma.caller.findUnique({
-		where: { userId: user.userId },
-	});
-
-	if (!caller) {
-		throw new AppError(httpStatus.NOT_FOUND, "Caller Profile Not Found");
-	}
-
-	// Get payment with only trip schema
+	// Get payment with trip schema
 	const payment = await prisma.payment.findUnique({
 		where: { tripId },
 		include: {
@@ -619,23 +611,63 @@ const getMyPayment = async (user: IRequestUser, tripId: string) => {
 		throw new AppError(httpStatus.NOT_FOUND, "No Payment Found For This Trip");
 	}
 
-	// Verify trip belongs to this caller
-	const trip = await prisma.trip.findUnique({
-		where: { id: payment.tripId },
-		select: {
-			emergency: {
-				select: {
-					callerId: true,
+	// Verify access based on user role
+	if (user.role === "CALLER") {
+		// Verify caller profile exists
+		const caller = await prisma.caller.findUnique({
+			where: { userId: user.userId },
+		});
+
+		if (!caller) {
+			throw new AppError(httpStatus.NOT_FOUND, "Caller Profile Not Found");
+		}
+
+		// Verify trip belongs to this caller
+		const trip = await prisma.trip.findUnique({
+			where: { id: payment.tripId },
+			select: {
+				emergency: {
+					select: {
+						callerId: true,
+					},
 				},
 			},
-		},
-	});
+		});
 
-	if (!trip || trip.emergency.callerId !== caller.id) {
-		throw new AppError(
-			httpStatus.FORBIDDEN,
-			"This Payment Does Not Belong To You",
-		);
+		if (!trip || trip.emergency.callerId !== caller.id) {
+			throw new AppError(
+				httpStatus.FORBIDDEN,
+				"This Payment Does Not Belong To You",
+			);
+		}
+	} else if (user.role === "DRIVER") {
+		// Verify driver profile exists
+		const driver = await prisma.driver.findUnique({
+			where: { userId: user.userId },
+		});
+
+		if (!driver) {
+			throw new AppError(httpStatus.NOT_FOUND, "Driver Profile Not Found");
+		}
+
+		// Verify trip was assigned to this driver
+		const trip = await prisma.trip.findUnique({
+			where: { id: payment.tripId },
+			select: {
+				dispatch: {
+					select: {
+						driverId: true,
+					},
+				},
+			},
+		});
+
+		if (!trip || trip.dispatch.driverId !== driver.id) {
+			throw new AppError(
+				httpStatus.FORBIDDEN,
+				"This Payment Does Not Belong To Your Trip",
+			);
+		}
 	}
 
 	return payment;
@@ -763,11 +795,72 @@ const queryPaymentStatus = async (paymentID: string) => {
 	});
 };
 
+/**
+ * Get Driver Payments - Get all payment details for driver's completed trips with pagination
+ */
+const getDriverPayments = async (user: IRequestUser, query: Record<string, any>) => {
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
+
+	const sortBy = query.sortBy || "paymentCreateTime";
+	const sortOrder = query.sortOrder === "asc" ? "asc" : "desc";
+
+	// Verify driver profile exists
+	const driver = await prisma.driver.findUnique({
+		where: { userId: user.userId },
+	});
+
+	if (!driver) {
+		throw new AppError(httpStatus.NOT_FOUND, "Driver Profile Not Found");
+	}
+
+	const whereConditions: any = {
+		trip: {
+			dispatch: {
+				driverId: driver.id,
+			},
+			status: TripStatus.COMPLETED, // Only completed trips
+		},
+	};
+
+	// Optional: Filter by status
+	if (query.status) {
+		whereConditions.status = query.status;
+	}
+
+	// Get total count
+	const totalPaymentsCount = await prisma.payment.count({
+		where: whereConditions,
+	});
+
+	// Get paginated payments (only payment schema, no nested relations)
+	const payments = await prisma.payment.findMany({
+		where: whereConditions,
+		take: limit,
+		skip: skip,
+		orderBy: {
+			[sortBy]: sortOrder,
+		},
+	});
+
+	return {
+		meta: {
+			page,
+			limit,
+			total: totalPaymentsCount,
+			totalPages: Math.ceil(totalPaymentsCount / limit),
+		},
+		data: payments,
+	};
+};
+
 export const PaymentService = {
 	initiatePayment,
 	retryPayment,
 	paymentCallback,
 	getMyPayment,
 	getAllMyPayments,
+	getDriverPayments,
 	queryPaymentStatus,
 };

@@ -105,11 +105,29 @@ const queryPaymentStatus = catchAsync(async (req: Request, res: Response) => {
 	});
 });
 
+/**
+ * Get Driver Payments - Get payment details for driver's completed trips
+ */
+const getDriverPayments = catchAsync(async (req: Request, res: Response) => {
+	const user = req.user as IRequestUser;
+
+	const result = await PaymentService.getDriverPayments(user, req.query);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "Driver Payments Retrieved Successfully",
+		meta: result.meta,
+		data: result.data,
+	});
+});
+
 export const PaymentController = {
 	initiatePayment,
 	retryPayment,
 	paymentCallback,
 	getMyPayment,
 	getAllMyPayments,
+	getDriverPayments,
 	queryPaymentStatus,
 };

@@ -38,7 +38,7 @@ router.post(
  */
 router.get(
   "/my-payment/:tripId",
-  auth(Role.CALLER),
+  auth(Role.CALLER, Role.DRIVER),
   PaymentController.getMyPayment,
 );
 
@@ -51,6 +51,17 @@ router.get(
   "/my-payments",
   auth(Role.CALLER),
   PaymentController.getAllMyPayments,
+);
+
+/**
+ * Get Driver Payments
+ * GET /api/payment/driver-payments
+ * Driver gets payment details for their completed trips
+ */
+router.get(
+  "/driver-payments",
+  auth(Role.DRIVER),
+  PaymentController.getDriverPayments,
 );
 
 /**
