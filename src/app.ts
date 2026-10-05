@@ -10,6 +10,7 @@ import config from "./app/config";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import { notFound } from "./app/middleware/notFound";
 import { AmbulanceRoutes } from "./app/module/ambulance/ambulance.route";
+import { AnalyticsRoutes } from "./app/module/analytics/analytics.route";
 import { AuthRoutes } from "./app/module/auth/auth.route";
 import { DispatchRoutes } from "./app/module/dispatch/dispatch.route";
 import { DriverRoutes } from "./app/module/driver/driver.route";
@@ -62,6 +63,7 @@ app.use("/api/v1/dispatch", DispatchRoutes);
 app.use("/api/v1/hospital", HospitalRoutes);
 app.use("/api/v1/trip", TripRoutes);
 app.use("/api/v1/payment", PaymentRoutes);
+app.use("/api/v1/analytics", AnalyticsRoutes);
 
 // Basic route
 app.get("/", async (req: Request, res: Response) => {
