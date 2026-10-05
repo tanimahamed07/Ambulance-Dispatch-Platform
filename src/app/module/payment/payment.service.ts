@@ -41,13 +41,6 @@ const initiatePayment = async (
 					},
 				},
 				payment: true,
-				dispatch: {
-					include: {
-						ambulance: true,
-						driver: { include: { user: true } },
-					},
-				},
-				hospital: true,
 			},
 		});
 
@@ -79,7 +72,7 @@ const initiatePayment = async (
 			);
 		}
 
-		// Check existing payment status (similar to existingAppointment check)
+		// Check existing payment status
 		if (trip.payment) {
 			if (trip.payment.status === PaymentStatus.PENDING) {
 				throw new AppError(
@@ -151,27 +144,8 @@ const initiatePayment = async (
 			);
 		}
 
-		// Create or update payment record in database
-		await tx.payment.upsert({
-			where: { tripId: trip.id },
-			create: {
-				tripId: trip.id,
-				amount: trip.fare,
-				currency: "BDT",
-				paymentGateway: "bkash",
-				merchantInvoiceNumber: trip.id,
-				bkashPaymentID: bkashCreatePaymentResult.paymentID,
-				payerReference: payerReference,
-				status: PaymentStatus.PENDING,
-				paymentCreateTime: new Date(),
-			},
-			update: {
-				bkashPaymentID: bkashCreatePaymentResult.paymentID,
-				status: PaymentStatus.PENDING,
-				paymentCreateTime: new Date(),
-				failureReason: null,
-			},
-		});
+		// DO NOT create payment record in database
+		// Payment will be created only on successful callback
 
 		return {
 			paymentUrl: bkashCreatePaymentResult.bkashURL,
@@ -221,23 +195,21 @@ const retryPayment = async (
 		throw new AppError(httpStatus.BAD_REQUEST, "Trip Is Not Completed Yet!");
 	}
 
-	// Check payment status
-	if (!trip.payment) {
-		throw new AppError(
-			httpStatus.NOT_FOUND,
-			"No Payment Record Found For This Trip",
-		);
-	}
+	// Check payment status - only allow retry for FAILED/CANCELLED
+	if (trip.payment) {
+		if (trip.payment.status === PaymentStatus.COMPLETED) {
+			throw new AppError(
+				httpStatus.BAD_REQUEST,
+				"This Trip Is Already Paid For",
+			);
+		}
 
-	if (trip.payment.status === PaymentStatus.COMPLETED) {
-		throw new AppError(httpStatus.BAD_REQUEST, "This Trip Is Already Paid For");
-	}
-
-	if (trip.payment.status === PaymentStatus.PENDING) {
-		throw new AppError(
-			httpStatus.BAD_REQUEST,
-			"Payment Is Already Pending. Please Complete That",
-		);
+		if (trip.payment.status === PaymentStatus.PENDING) {
+			throw new AppError(
+				httpStatus.BAD_REQUEST,
+				"Payment Is Already Pending. Please Complete That",
+			);
+		}
 	}
 
 	// Check fare
@@ -291,17 +263,8 @@ const retryPayment = async (
 		);
 	}
 
-	// Update payment record
-	await prisma.payment.update({
-		where: { tripId: trip.id },
-		data: {
-			bkashPaymentID: bkashCreatePaymentResult.paymentID,
-			merchantInvoiceNumber: bkashCreatePaymentResult.merchantInvoiceNumber,
-			status: PaymentStatus.PENDING,
-			paymentCreateTime: new Date(),
-			failureReason: null,
-		},
-	});
+	// DO NOT update payment record in database
+	// Payment will be created/updated only on successful callback
 
 	return {
 		paymentUrl: bkashCreatePaymentResult.bkashURL,
@@ -369,15 +332,22 @@ const paymentCallback = async (query: Record<string, any>) => {
 			) {
 				console.error("Payment execution failed:", executedPaymentResult);
 
-				// Update payment status to failed
-				await tx.payment.update({
-					where: { bkashPaymentID: paymentID },
-					data: {
-						status: PaymentStatus.FAILED,
-						failureReason:
-							executedPaymentResult.statusMessage || "Payment execution failed",
-					},
+				// Update payment status to failed (if record exists)
+				const existingPayment = await tx.payment.findUnique({
+					where: { tripId: executedPaymentResult.merchantInvoiceNumber },
 				});
+
+				if (existingPayment) {
+					await tx.payment.update({
+						where: { tripId: executedPaymentResult.merchantInvoiceNumber },
+						data: {
+							status: PaymentStatus.FAILED,
+							failureReason:
+								executedPaymentResult.statusMessage ||
+								"Payment execution failed",
+						},
+					});
+				}
 
 				return {
 					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=failure`,
@@ -422,7 +392,7 @@ const paymentCallback = async (query: Record<string, any>) => {
 					throw new AppError(httpStatus.NOT_FOUND, "Trip Not Found!");
 				}
 
-				// Update payment status
+				// Parse payment execute time
 				let paymentExecuteTime = new Date();
 				if (executedPaymentResult.paymentExecuteTime) {
 					const parsedDate = new Date(executedPaymentResult.paymentExecuteTime);
@@ -431,14 +401,36 @@ const paymentCallback = async (query: Record<string, any>) => {
 					}
 				}
 
-				await tx.payment.update({
+				// Get payer reference
+				const payerReference =
+					trip.emergency.caller.user.email ||
+					trip.emergency.caller.contactNumber ||
+					"N/A";
+
+				// Create or update payment record with COMPLETED status
+				await tx.payment.upsert({
 					where: {
 						tripId: executedPaymentResult.merchantInvoiceNumber,
 					},
-					data: {
+					create: {
+						tripId: executedPaymentResult.merchantInvoiceNumber,
+						amount: trip.fare || 0,
+						currency: "BDT",
+						paymentGateway: "bkash",
+						merchantInvoiceNumber: executedPaymentResult.merchantInvoiceNumber,
+						bkashPaymentID: paymentID,
+						payerReference: payerReference,
+						status: PaymentStatus.COMPLETED,
+						trxID: executedPaymentResult.trxID,
+						paymentCreateTime: new Date(),
+						paymentExecuteTime: paymentExecuteTime,
+					},
+					update: {
 						status: PaymentStatus.COMPLETED,
 						trxID: executedPaymentResult.trxID,
 						paymentExecuteTime: paymentExecuteTime,
+						bkashPaymentID: paymentID,
+						failureReason: null,
 					},
 				});
 
@@ -543,30 +535,46 @@ const paymentCallback = async (query: Record<string, any>) => {
 					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=success&tripId=${trip.id}`,
 				};
 			} else if (status === "failure") {
-				await tx.payment.update({
-					where: {
-						bkashPaymentID: paymentID,
-					},
-					data: {
-						status: PaymentStatus.FAILED,
-						failureReason:
-							executedPaymentResult.statusMessage || "Payment failed",
-					},
+				// Only update if payment record exists
+				const existingPayment = await tx.payment.findUnique({
+					where: { tripId: executedPaymentResult.merchantInvoiceNumber },
 				});
+
+				if (existingPayment) {
+					await tx.payment.update({
+						where: {
+							tripId: executedPaymentResult.merchantInvoiceNumber,
+						},
+						data: {
+							status: PaymentStatus.FAILED,
+							failureReason:
+								executedPaymentResult.statusMessage || "Payment failed",
+							bkashPaymentID: paymentID,
+						},
+					});
+				}
 
 				return {
 					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=failure`,
 				};
 			} else if (status === "cancel") {
-				await tx.payment.update({
-					where: {
-						bkashPaymentID: paymentID,
-					},
-					data: {
-						status: PaymentStatus.CANCELLED,
-						failureReason: "Payment cancelled by user",
-					},
+				// Only update if payment record exists
+				const existingPayment = await tx.payment.findUnique({
+					where: { tripId: executedPaymentResult.merchantInvoiceNumber },
 				});
+
+				if (existingPayment) {
+					await tx.payment.update({
+						where: {
+							tripId: executedPaymentResult.merchantInvoiceNumber,
+						},
+						data: {
+							status: PaymentStatus.CANCELLED,
+							failureReason: "Payment cancelled by user",
+							bkashPaymentID: paymentID,
+						},
+					});
+				}
 
 				return {
 					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=cancel`,
@@ -590,21 +598,20 @@ const paymentCallback = async (query: Record<string, any>) => {
  * Get My Payment - Get payment details for a specific trip
  */
 const getMyPayment = async (user: IRequestUser, tripId: string) => {
+	// First verify caller profile
+	const caller = await prisma.caller.findUnique({
+		where: { userId: user.userId },
+	});
+
+	if (!caller) {
+		throw new AppError(httpStatus.NOT_FOUND, "Caller Profile Not Found");
+	}
+
+	// Get payment with only trip schema
 	const payment = await prisma.payment.findUnique({
 		where: { tripId },
 		include: {
-			trip: {
-				include: {
-					emergency: { include: { caller: true } },
-					dispatch: {
-						include: {
-							ambulance: true,
-							driver: { include: { user: true } },
-						},
-					},
-					hospital: true,
-				},
-			},
+			trip: true, // Only trip schema, no nested relations
 		},
 	});
 
@@ -612,7 +619,19 @@ const getMyPayment = async (user: IRequestUser, tripId: string) => {
 		throw new AppError(httpStatus.NOT_FOUND, "No Payment Found For This Trip");
 	}
 
-	if (payment.trip.emergency.caller.userId !== user.userId) {
+	// Verify trip belongs to this caller
+	const trip = await prisma.trip.findUnique({
+		where: { id: payment.tripId },
+		select: {
+			emergency: {
+				select: {
+					callerId: true,
+				},
+			},
+		},
+	});
+
+	if (!trip || trip.emergency.callerId !== caller.id) {
 		throw new AppError(
 			httpStatus.FORBIDDEN,
 			"This Payment Does Not Belong To You",

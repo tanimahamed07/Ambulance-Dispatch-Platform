@@ -41,12 +41,20 @@ const retryPayment = catchAsync(async (req: Request, res: Response) => {
  * Payment Callback - Handle bKash callback
  * Similar to bookAppointmentCallback
  */
-const paymentCallback = catchAsync(async (req: Request, res: Response) => {
-	const result = await PaymentService.paymentCallback(req.query);
+const paymentCallback = async (req: Request, res: Response) => {
+	try {
+		const result = await PaymentService.paymentCallback(req.query);
 
-	// Redirect to frontend
-	return res.redirect(result.redirectUrl);
-});
+		// Redirect to frontend
+		return res.redirect(result.redirectUrl);
+	} catch (error) {
+		// If any error occurs, redirect to frontend error page
+		const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+		return res.redirect(
+			`${frontendUrl}/caller/payment-status?payment=error`,
+		);
+	}
+};
 
 /**
  * Get My Payment - Get payment details for a trip
