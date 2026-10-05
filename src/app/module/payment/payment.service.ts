@@ -380,7 +380,7 @@ const paymentCallback = async (query: Record<string, any>) => {
 				});
 
 				return {
-					redirectUrl: `${config.frontend_url}/dashboard/my-trips?status=failure`,
+					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=failure`,
 				};
 			}
 
@@ -540,7 +540,7 @@ const paymentCallback = async (query: Record<string, any>) => {
 				});
 
 				return {
-					redirectUrl: `${config.frontend_url}/dashboard/my-trips?status=success`,
+					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=success&tripId=${trip.id}`,
 				};
 			} else if (status === "failure") {
 				await tx.payment.update({
@@ -555,7 +555,7 @@ const paymentCallback = async (query: Record<string, any>) => {
 				});
 
 				return {
-					redirectUrl: `${config.frontend_url}/dashboard/my-trips?status=failure`,
+					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=failure`,
 				};
 			} else if (status === "cancel") {
 				await tx.payment.update({
@@ -569,11 +569,11 @@ const paymentCallback = async (query: Record<string, any>) => {
 				});
 
 				return {
-					redirectUrl: `${config.frontend_url}/dashboard/my-trips?status=cancel`,
+					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=cancel`,
 				};
 			} else {
 				return {
-					redirectUrl: `${config.frontend_url}/dashboard/my-trips?error=payment-failed`,
+					redirectUrl: `${config.frontend_url}/caller/payment-status?payment=error`,
 				};
 			}
 		},
@@ -620,6 +620,65 @@ const getMyPayment = async (user: IRequestUser, tripId: string) => {
 	}
 
 	return payment;
+};
+
+/**
+ * Get All My Payments - Get all payment history for logged-in caller with pagination
+ */
+const getAllMyPayments = async (user: IRequestUser, query: Record<string, any>) => {
+	const limit = query.limit ? Number(query.limit) : 10;
+	const page = query.page ? Number(query.page) : 1;
+	const skip = (page - 1) * limit;
+
+	const sortBy = query.sortBy || "paymentCreateTime";
+	const sortOrder = query.sortOrder === "asc" ? "asc" : "desc";
+
+	// Verify caller profile exists
+	const caller = await prisma.caller.findUnique({
+		where: { userId: user.userId },
+	});
+
+	if (!caller) {
+		throw new AppError(httpStatus.NOT_FOUND, "Caller Profile Not Found");
+	}
+
+	const whereConditions: any = {
+		trip: {
+			emergency: {
+				callerId: caller.id,
+			},
+		},
+	};
+
+	// Optional: Filter by status
+	if (query.status) {
+		whereConditions.status = query.status;
+	}
+
+	// Get total count
+	const totalPaymentsCount = await prisma.payment.count({
+		where: whereConditions,
+	});
+
+	// Get paginated payments (only payment schema, no nested relations)
+	const payments = await prisma.payment.findMany({
+		where: whereConditions,
+		take: limit,
+		skip: skip,
+		orderBy: {
+			[sortBy]: sortOrder,
+		},
+	});
+
+	return {
+		meta: {
+			page,
+			limit,
+			total: totalPaymentsCount,
+			totalPages: Math.ceil(totalPaymentsCount / limit),
+		},
+		data: payments,
+	};
 };
 
 /**
@@ -690,5 +749,6 @@ export const PaymentService = {
 	retryPayment,
 	paymentCallback,
 	getMyPayment,
+	getAllMyPayments,
 	queryPaymentStatus,
 };

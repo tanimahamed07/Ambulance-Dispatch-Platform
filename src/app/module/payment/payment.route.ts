@@ -43,6 +43,17 @@ router.get(
 );
 
 /**
+ * Get All My Payments
+ * GET /api/payment/my-payments
+ * Caller gets all their payment history
+ */
+router.get(
+  "/my-payments",
+  auth(Role.CALLER),
+  PaymentController.getAllMyPayments,
+);
+
+/**
  * Query Payment Status (Admin/Dispatcher)
  * POST /api/payment/query-status
  * Admin or Dispatcher can query payment status from bKash

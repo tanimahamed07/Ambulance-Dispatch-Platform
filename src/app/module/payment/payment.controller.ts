@@ -66,6 +66,23 @@ const getMyPayment = catchAsync(async (req: Request, res: Response) => {
 });
 
 /**
+ * Get All My Payments - Get all payment history for logged-in caller
+ */
+const getAllMyPayments = catchAsync(async (req: Request, res: Response) => {
+	const user = req.user as IRequestUser;
+
+	const result = await PaymentService.getAllMyPayments(user, req.query);
+
+	sendResponse(res, {
+		statusCode: httpStatus.OK,
+		success: true,
+		message: "All Payments Retrieved Successfully",
+		meta: result.meta,
+		data: result.data,
+	});
+});
+
+/**
  * Query Payment Status - Sync payment status with bKash
  */
 const queryPaymentStatus = catchAsync(async (req: Request, res: Response) => {
@@ -85,5 +102,6 @@ export const PaymentController = {
 	retryPayment,
 	paymentCallback,
 	getMyPayment,
+	getAllMyPayments,
 	queryPaymentStatus,
 };

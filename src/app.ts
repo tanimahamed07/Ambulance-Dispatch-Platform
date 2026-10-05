@@ -24,8 +24,6 @@ import { UserRoutes } from "./app/module/user/user.route";
 
 const app: Application = express();
 
-// Trust the first proxy hop (Vercel) so req.ip resolves to the real client address for per-IP rate limiting
-app.set("trust proxy", 1);
 
 // CORS configuration - Support both same-origin and cross-origin requests
 app.use(
@@ -50,7 +48,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Payment callback route (must be before api/v1 routes for bKash webhook)
-app.use("/payment", PaymentCallbackRoutes);
+// Payment callback route (must be before api/v1 routes for bKash webhook)
+app.use("/payment", PaymentCallbackRoutes);  // ✅ Correct
+// app.use("caller/payment", PaymentCallbackRoutes);  // ❌ Wrong - remove this
+
 
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/user", UserRoutes);
