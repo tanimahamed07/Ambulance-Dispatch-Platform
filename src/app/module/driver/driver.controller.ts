@@ -78,7 +78,7 @@ const getAllApprovedDriver = catchAsync(async (req: Request, res: Response) => {
 	sendResponse(res, {
 		statusCode: httpStatus.OK,
 		success: true,
-		message: "Driver applications retrieved successfully.",
+		message: "Driver Approved retrieved successfully.",
 		data: result,
 	});
 });

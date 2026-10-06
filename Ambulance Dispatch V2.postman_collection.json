@@ -55,7 +55,6 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Optional: Save user email for later use",
 									"const response = pm.response.json();",
 									"if (response.data && response.data.email) {",
 									"    pm.collectionVariables.set(\"userEmail\", response.data.email);",
@@ -78,13 +77,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Karim Ahmed\",\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\",\n  \"phone\": \"01712345678\",\n  \"address\": \"Dhanmondi, Dhaka\"\n}"
+							"raw": "{\n  \"name\": \"Karim Ahmed\",\n  \"email\": \"karim@example.com\",\n  \"password\": \"Password123!\",\n  \"caller\": {\n    \"contactNumber\": \"01712345678\"\n  }\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/auth/register",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "register"]
-						}
+						},
+						"description": "Register a new caller account. Password must contain at least 8 characters with uppercase, lowercase, number, and special character."
 					},
 					"response": []
 				},
@@ -109,7 +109,34 @@
 							"raw": "{{baseUrl}}/auth/verify-email",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "verify-email"]
-						}
+						},
+						"description": "Verify email address using 6-digit OTP sent during registration."
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Verification Code",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"karim@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/resend-verification-code",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "resend-verification-code"]
+						},
+						"description": "Resend verification OTP to the registered email address."
 					},
 					"response": []
 				},
@@ -149,12 +176,28 @@
 							"raw": "{{baseUrl}}/auth/login",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "login"]
-						}
+						},
+						"description": "Login with email and password. Returns access token and refresh token."
 					},
 					"response": []
 				},
 				{
 					"name": "Google Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"if (response.data && response.data.accessToken) {",
+									"    pm.collectionVariables.set(\"accessToken\", response.data.accessToken);",
+									"    console.log(\"Access token saved!\");",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "noauth"
@@ -174,7 +217,8 @@
 							"raw": "{{baseUrl}}/auth/google",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "google"]
-						}
+						},
+						"description": "Login or register using Google OAuth. Provide the ID token from Google."
 					},
 					"response": []
 				},
@@ -187,7 +231,8 @@
 							"raw": "{{baseUrl}}/auth/me",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "me"]
-						}
+						},
+						"description": "Get current logged-in user's profile information. Requires authentication."
 					},
 					"response": []
 				},
@@ -198,21 +243,13 @@
 							"type": "noauth"
 						},
 						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"refreshToken\": \"YOUR_REFRESH_TOKEN_HERE\"\n}"
-						},
+						"header": [],
 						"url": {
 							"raw": "{{baseUrl}}/auth/refresh-token",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "refresh-token"]
-						}
+						},
+						"description": "Refresh access token using refresh token stored in HTTP-only cookie."
 					},
 					"response": []
 				},
@@ -237,7 +274,8 @@
 							"raw": "{{baseUrl}}/auth/forgot-password",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "forgot-password"]
-						}
+						},
+						"description": "Request password reset OTP. OTP will be sent to the registered email."
 					},
 					"response": []
 				},
@@ -262,7 +300,25 @@
 							"raw": "{{baseUrl}}/auth/reset-password",
 							"host": ["{{baseUrl}}"],
 							"path": ["auth", "reset-password"]
-						}
+						},
+						"description": "Reset password using OTP received via email. New password must meet security requirements."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "logout"]
+						},
+						"description": "Logout and clear refresh token cookie."
 					},
 					"response": []
 				}
@@ -282,7 +338,8 @@
 								{
 									"key": "profileImage",
 									"type": "file",
-									"src": []
+									"src": [],
+									"description": "Image file (JPEG, PNG, etc.)"
 								}
 							]
 						},
@@ -290,7 +347,8 @@
 							"raw": "{{baseUrl}}/user/profile-image",
 							"host": ["{{baseUrl}}"],
 							"path": ["user", "profile-image"]
-						}
+						},
+						"description": "Upload or update profile image. Requires authentication. All roles can use this endpoint."
 					},
 					"response": []
 				}
@@ -317,7 +375,8 @@
 							"raw": "{{baseUrl}}/driver/apply-as-driver",
 							"host": ["{{baseUrl}}"],
 							"path": ["driver", "apply-as-driver"]
-						}
+						},
+						"description": "Caller applies to become a driver. Requires CALLER role."
 					},
 					"response": []
 				},
@@ -330,7 +389,8 @@
 							"raw": "{{baseUrl}}/driver/application-status",
 							"host": ["{{baseUrl}}"],
 							"path": ["driver", "application-status"]
-						}
+						},
+						"description": "Get current user's driver application status. Requires CALLER or DRIVER role."
 					},
 					"response": []
 				},
@@ -343,7 +403,8 @@
 							"raw": "{{baseUrl}}/driver/applications",
 							"host": ["{{baseUrl}}"],
 							"path": ["driver", "applications"]
-						}
+						},
+						"description": "Get all pending driver applications. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -362,7 +423,8 @@
 									"value": "APPLICATION_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get specific driver application by ID. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -384,7 +446,8 @@
 							"raw": "{{baseUrl}}/driver/approve-driver",
 							"host": ["{{baseUrl}}"],
 							"path": ["driver", "approve-driver"]
-						}
+						},
+						"description": "Approve a driver application. Changes user role from CALLER to DRIVER. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -412,7 +475,8 @@
 									"value": "10"
 								}
 							]
-						}
+						},
+						"description": "Get all approved drivers with pagination and search. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				},
@@ -431,7 +495,36 @@
 									"value": "DRIVER_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get approved driver details by ID. Requires ADMIN or DISPATCHER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dispatchable Drivers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/dispatchable-drivers",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "dispatchable-drivers"]
+						},
+						"description": "Get all drivers who are available and can be dispatched (ON_DUTY and not currently assigned). Requires ADMIN or DISPATCHER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Profile (Driver)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/driver/me/profile",
+							"host": ["{{baseUrl}}"],
+							"path": ["driver", "me", "profile"]
+						},
+						"description": "Get current driver's profile including assigned ambulance. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -447,18 +540,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"status\": \"ON_DUTY\"\n}",
-							"options": {
-								"raw": {
-									"headerFamily": "json"
-								}
-							}
+							"raw": "{\n  \"isAvailable\": true\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/driver/me/status",
 							"host": ["{{baseUrl}}"],
 							"path": ["driver", "me", "status"]
-						}
+						},
+						"description": "Update driver's duty status (available/unavailable). Requires DRIVER role."
 					},
 					"response": []
 				}
@@ -485,7 +574,8 @@
 							"raw": "{{baseUrl}}/ambulance/create-ambulance",
 							"host": ["{{baseUrl}}"],
 							"path": ["ambulance", "create-ambulance"]
-						}
+						},
+						"description": "Create a new ambulance. vehicleType can be AC or NON_AC. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -498,7 +588,8 @@
 							"raw": "{{baseUrl}}/ambulance/all-ambulance",
 							"host": ["{{baseUrl}}"],
 							"path": ["ambulance", "all-ambulance"]
-						}
+						},
+						"description": "Get all ambulances in the fleet. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				},
@@ -511,7 +602,8 @@
 							"raw": "{{baseUrl}}/ambulance/available",
 							"host": ["{{baseUrl}}"],
 							"path": ["ambulance", "available"]
-						}
+						},
+						"description": "Get all ambulances with AVAILABLE status. Requires DISPATCHER role."
 					},
 					"response": []
 				},
@@ -530,7 +622,8 @@
 									"value": "AMBULANCE_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get ambulance details by ID. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				},
@@ -546,7 +639,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"capacity\": 2,\n  \"vehicleType\": \"NON_AC\"\n}"
+							"raw": "{\n  \"capacity\": 2,\n  \"vehicleType\": \"NON_AC\",\n  \"status\": \"AVAILABLE\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/ambulance/:id",
@@ -558,7 +651,8 @@
 									"value": "AMBULANCE_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Update ambulance details. Status can be AVAILABLE, ON_TRIP, MAINTENANCE, or OUT_OF_SERVICE. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -577,7 +671,8 @@
 									"value": "AMBULANCE_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Soft delete an ambulance. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -605,7 +700,8 @@
 									"value": "AMBULANCE_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Assign a driver to an ambulance. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -624,29 +720,8 @@
 									"value": "AMBULANCE_ID_HERE"
 								}
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update My Ambulance Status (Driver)",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"status\": \"AVAILABLE\"\n}"
 						},
-						"url": {
-							"raw": "{{baseUrl}}/ambulance/me/status",
-							"host": ["{{baseUrl}}"],
-							"path": ["ambulance", "me", "status"]
-						}
+						"description": "Unassign driver from an ambulance. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -668,7 +743,8 @@
 							"raw": "{{baseUrl}}/ambulance/me/location",
 							"host": ["{{baseUrl}}"],
 							"path": ["ambulance", "me", "location"]
-						}
+						},
+						"description": "Update current ambulance location. Driver updates the location of their assigned ambulance. Requires DRIVER role."
 					},
 					"response": []
 				}
@@ -695,7 +771,8 @@
 							"raw": "{{baseUrl}}/emergency",
 							"host": ["{{baseUrl}}"],
 							"path": ["emergency"]
-						}
+						},
+						"description": "Create a new emergency request. emergencyType can be CARDIAC, ACCIDENT, STROKE, RESPIRATORY, TRAUMA, MATERNITY, GENERAL. Requires CALLER role."
 					},
 					"response": []
 				},
@@ -712,7 +789,7 @@
 								{
 									"key": "status",
 									"value": "PENDING",
-									"description": "Filter by status"
+									"description": "Filter by status: PENDING, DISPATCHED, CANCELLED, COMPLETED"
 								},
 								{
 									"key": "page",
@@ -723,7 +800,8 @@
 									"value": "10"
 								}
 							]
-						}
+						},
+						"description": "Get all emergencies with filtering and pagination. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				},
@@ -736,7 +814,8 @@
 							"raw": "{{baseUrl}}/emergency/my-emergencies",
 							"host": ["{{baseUrl}}"],
 							"path": ["emergency", "my-emergencies"]
-						}
+						},
+						"description": "Get all emergencies created by the current caller. Requires CALLER role."
 					},
 					"response": []
 				},
@@ -755,7 +834,8 @@
 									"value": "EMERGENCY_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get emergency details by ID. Requires ADMIN, DISPATCHER, DRIVER, or CALLER role."
 					},
 					"response": []
 				},
@@ -783,7 +863,8 @@
 									"value": "EMERGENCY_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Update emergency priority. Priority can be LOW, MEDIUM, HIGH, or CRITICAL. Requires DISPATCHER role."
 					},
 					"response": []
 				},
@@ -799,7 +880,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"cancelReason\": \"Patient no longer needs ambulance\"\n}"
+							"raw": "{\n  \"cancellationReason\": \"Patient no longer needs ambulance\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/emergency/:id/cancel",
@@ -811,7 +892,8 @@
 									"value": "EMERGENCY_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Cancel an emergency request. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				}
@@ -832,13 +914,14 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"emergencyId\": \"EMERGENCY_ID_HERE\",\n  \"ambulanceId\": \"AMBULANCE_ID_HERE\",\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
+							"raw": "{\n  \"emergencyId\": \"EMERGENCY_ID_HERE\",\n  \"driverId\": \"DRIVER_ID_HERE\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/dispatch/create-dispatch",
 							"host": ["{{baseUrl}}"],
 							"path": ["dispatch", "create-dispatch"]
-						}
+						},
+						"description": "Create a new dispatch assignment. The system automatically assigns the driver's ambulance. Requires DISPATCHER role."
 					},
 					"response": []
 				},
@@ -851,7 +934,8 @@
 							"raw": "{{baseUrl}}/dispatch",
 							"host": ["{{baseUrl}}"],
 							"path": ["dispatch"]
-						}
+						},
+						"description": "Get all dispatches. Requires DISPATCHER or ADMIN role."
 					},
 					"response": []
 				},
@@ -864,7 +948,8 @@
 							"raw": "{{baseUrl}}/dispatch/my-dispatches",
 							"host": ["{{baseUrl}}"],
 							"path": ["dispatch", "my-dispatches"]
-						}
+						},
+						"description": "Get all dispatches assigned to the current driver. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -883,7 +968,8 @@
 									"value": "DISPATCH_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get dispatch details by ID. Requires ADMIN, DISPATCHER, or DRIVER role."
 					},
 					"response": []
 				},
@@ -902,7 +988,8 @@
 									"value": "DISPATCH_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver accepts the dispatch assignment. Creates a trip and updates emergency status. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -921,7 +1008,8 @@
 									"value": "DISPATCH_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver rejects the dispatch assignment. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -940,7 +1028,8 @@
 									"value": "DISPATCH_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Cancel a dispatch assignment. Frees up the ambulance and driver. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				}
@@ -968,7 +1057,8 @@
 									"value": "10"
 								}
 							]
-						}
+						},
+						"description": "Get all trips with pagination. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				},
@@ -981,7 +1071,8 @@
 							"raw": "{{baseUrl}}/trip/my-trips",
 							"host": ["{{baseUrl}}"],
 							"path": ["trip", "my-trips"]
-						}
+						},
+						"description": "Get all trips assigned to the current driver. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1000,7 +1091,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Get trip details by ID. Requires ADMIN, DISPATCHER, DRIVER, or CALLER role."
 					},
 					"response": []
 				},
@@ -1019,7 +1111,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Calculate fare for a trip before completing. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1038,7 +1131,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver marks that they are en route to pickup location. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1057,7 +1151,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver marks that patient has been picked up. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1085,7 +1180,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver selects destination hospital after patient pickup. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1104,7 +1200,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver marks arrival at the hospital. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1120,7 +1217,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"totalDistanceKm\": 12.5,\n  \"notes\": \"Patient delivered safely\"\n}"
+							"raw": "{\n  \"distanceKm\": 12.5\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/trip/:id/complete",
@@ -1132,7 +1229,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Driver completes the trip with total distance traveled. Fare is calculated and ambulance becomes available. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1151,7 +1249,8 @@
 									"value": "TRIP_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Cancel a trip. Usually done when emergency is cancelled. Requires ADMIN or DISPATCHER role."
 					},
 					"response": []
 				}
@@ -1178,7 +1277,8 @@
 							"raw": "{{baseUrl}}/hospital",
 							"host": ["{{baseUrl}}"],
 							"path": ["hospital"]
-						}
+						},
+						"description": "Create a new hospital. Requires ADMIN role."
 					},
 					"response": []
 				},
@@ -1191,26 +1291,8 @@
 							"raw": "{{baseUrl}}/hospital",
 							"host": ["{{baseUrl}}"],
 							"path": ["hospital"]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Hospital By Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseUrl}}/hospital/:id",
-							"host": ["{{baseUrl}}"],
-							"path": ["hospital", ":id"],
-							"variable": [
-								{
-									"key": "id",
-									"value": "HOSPITAL_ID_HERE"
-								}
-							]
-						}
+						},
+						"description": "Get all hospitals. Requires ADMIN, DISPATCHER, or DRIVER role."
 					},
 					"response": []
 				},
@@ -1237,7 +1319,28 @@
 									"value": "10"
 								}
 							]
-						}
+						},
+						"description": "Get hospitals within a specified radius of given coordinates. Requires ADMIN, DISPATCHER, DRIVER, or CALLER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Hospital By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/hospital/:id",
+							"host": ["{{baseUrl}}"],
+							"path": ["hospital", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "HOSPITAL_ID_HERE"
+								}
+							]
+						},
+						"description": "Get hospital details by ID. Requires ADMIN, DISPATCHER, DRIVER, or CALLER role."
 					},
 					"response": []
 				},
@@ -1253,7 +1356,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"emergencyAvailable\": false,\n  \"phone\": \"+88028144401\"\n}"
+							"raw": "{\n  \"emergencyAvailable\": false,\n  \"phone\": \"+88028144401\",\n  \"status\": \"ACTIVE\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/hospital/:id",
@@ -1265,7 +1368,8 @@
 									"value": "HOSPITAL_ID_HERE"
 								}
 							]
-						}
+						},
+						"description": "Update hospital details. Status can be ACTIVE or INACTIVE. Requires ADMIN role."
 					},
 					"response": []
 				}
@@ -1308,7 +1412,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["payment", "initiate"]
 						},
-						"description": "Caller initiates payment for their completed trip. Returns bKash payment URL and payment ID."
+						"description": "Caller initiates payment for their completed trip. Returns bKash payment URL and payment ID. Requires CALLER role."
 					},
 					"response": []
 				},
@@ -1331,7 +1435,7 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["payment", "retry"]
 						},
-						"description": "Caller retries payment for a failed or cancelled payment. Creates a new payment record."
+						"description": "Caller retries payment for a failed or cancelled payment. Creates a new payment record. Requires CALLER role."
 					},
 					"response": []
 				},
@@ -1344,8 +1448,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/payment/callback?paymentID=PAYMENT_ID&status=success",
-							"host": ["{{baseUrl}}"],
+							"raw": "http://localhost:5001/payment/callback?paymentID=PAYMENT_ID&status=success",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5001",
 							"path": ["payment", "callback"],
 							"query": [
 								{
@@ -1360,12 +1466,12 @@
 								}
 							]
 						},
-						"description": "bKash callback endpoint after payment. This is called by bKash automatically. No authentication required."
+						"description": "bKash callback endpoint after payment. This is called by bKash automatically. No authentication required. NOTE: This endpoint is at /payment/callback (not /api/v1/payment/callback)."
 					},
 					"response": []
 				},
 				{
-					"name": "Get My Payment Details (Caller)",
+					"name": "Get My Payment Details (Caller/Driver)",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -1381,7 +1487,35 @@
 								}
 							]
 						},
-						"description": "Caller retrieves payment details for a specific trip they own."
+						"description": "Get payment details for a specific trip. Requires CALLER or DRIVER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All My Payments (Caller)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment/my-payments",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "my-payments"]
+						},
+						"description": "Caller gets all their payment history. Requires CALLER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Driver Payments (Driver)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/payment/driver-payments",
+							"host": ["{{baseUrl}}"],
+							"path": ["payment", "driver-payments"]
+						},
+						"description": "Driver gets payment details for their completed trips. Requires DRIVER role."
 					},
 					"response": []
 				},
@@ -1404,7 +1538,68 @@
 							"host": ["{{baseUrl}}"],
 							"path": ["payment", "query-status"]
 						},
-						"description": "Admin or Dispatcher queries payment status directly from bKash gateway. Useful for verification and troubleshooting."
+						"description": "Admin or Dispatcher queries payment status directly from bKash gateway. Useful for verification and troubleshooting. Requires ADMIN or DISPATCHER role."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Get Admin Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/admin",
+							"host": ["{{baseUrl}}"],
+							"path": ["analytics", "admin"]
+						},
+						"description": "Get admin dashboard analytics including total users, drivers, ambulances, emergencies, trips, revenue, and recent activity. Requires ADMIN role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dispatcher Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/dispatcher",
+							"host": ["{{baseUrl}}"],
+							"path": ["analytics", "dispatcher"]
+						},
+						"description": "Get dispatcher dashboard analytics including active emergencies, available ambulances, on-duty drivers, and pending dispatches. Requires DISPATCHER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Driver Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/driver",
+							"host": ["{{baseUrl}}"],
+							"path": ["analytics", "driver"]
+						},
+						"description": "Get driver dashboard analytics including total trips completed, total earnings, current status, and recent trips. Requires DRIVER role."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Caller Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/analytics/caller",
+							"host": ["{{baseUrl}}"],
+							"path": ["analytics", "caller"]
+						},
+						"description": "Get caller dashboard analytics including total emergencies created, trips taken, and recent activity. Requires CALLER role."
 					},
 					"response": []
 				}

@@ -441,6 +441,7 @@ if (query.hasAmbulance !== undefined) {
 			[sortBy]: sortOrder,
 		},
 		include: {
+			ambulance: true,
 			user: {
 				omit: {
 					password: true,
